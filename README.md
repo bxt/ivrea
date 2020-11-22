@@ -24,6 +24,10 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 * `I` / Current in amps / amperes, de: Strom / Stromstärke in Ampere
 * `R` / Resistor in ohms, de: Wiederstand in Ohm
 * Capacitor, de: Kondensator
+* Resistor, de: Widerstand
+* Solderless THT / through-hole technology / Beadboard / dual-in-line / DIP packaging / 0.1 inch, de: Steckboard, 2,54 mm
+* THT (not Solderless but also DIP with ), de: Lochrasterplatine
+* SMD / Surface-mounted device / PCP / "the very small chips", de: Platine, Leiterplatte
 * VCC / VDD / "5V", de: Pluspol, Spanunsquelle
 * GND / Ground / VSS / 0V, de: Minuspol, Masse
 
