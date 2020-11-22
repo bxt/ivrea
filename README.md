@@ -16,7 +16,17 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 
 ### References
 
-* (coming soon)
+* [«7400-series integrated circuits» on Wikipedia](https://en.wikipedia.org/wiki/7400-series_integrated_circuits) and the [list](https://en.wikipedia.org/wiki/List_of_7400-series_integrated_circuits) explain numbers like `SN74LS08`
+* [Arduino Foundations](https://www.arduino.cc/en/Tutorial/Foundations) portal into most documentation
+* [Arduino Built-In Examples](https://www.arduino.cc/en/Tutorial/BuiltInExamples), the codes form the examples menu but with circuits and explanations
+* [Arduino "language" reference](https://www.arduino.cc/reference/en/): with the API and yeah also C++ if you want
+* [Arduino nano](https://store.arduino.cc/arduino-nano), page about the board type I'm using, check the tech specs, docs and FAQ tabs as well
+* [JOY-IT nano V3](https://joy-it.net/de/products/ARD_NanoV3), the actual "Adruino-compatible" board I'm using, check the driver download and "ATmega328P (Old Bootloader)" instructions
+* [PROGMEM](https://www.arduino.cc/reference/en/language/variables/utilities/progmem/) and [AVR PGM Program Space Utilities](https://www.nongnu.org/avr-libc/user-manual/group__avr__pgmspace.html)
+* There's the [Arduino memory](https://www.arduino.cc/en/Tutorial/Foundations/Memory) page, but really think: Flash ~ CD with program, SRAM ~ RAM – duh, EEPROM ~ hard disk.
+* [ASCII table](https://de.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#ASCII-Tabelle) for converting bits / numbers to letters and back manually
+* Wikipedia articles about [ICs](https://en.wikipedia.org/wiki/Integrated_circuit)
+* Also in the shopping list below you can usually find the data sheets about the particular components
 
 ### Glosary and German translations
 
