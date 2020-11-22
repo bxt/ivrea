@@ -16,7 +16,9 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 
 ### References
 
-* [«7400-series integrated circuits» on Wikipedia](https://en.wikipedia.org/wiki/7400-series_integrated_circuits) and the [list](https://en.wikipedia.org/wiki/List_of_7400-series_integrated_circuits) explain numbers like `SN74LS08`
+* [Ben Eater's website](https://eater.net/) with the [parts list](https://eater.net/8bit/parts) and the [schematics](https://eater.net/8bit/schematics) for the 8 bit computer amongst mayn other things
+* [/r/beneater](https://www.reddit.com/r/beneater) with [lordmonoxide's posts](https://www.reddit.com/r/beneater/comments/dskbug/what_i_have_learned_a_master_list_of_what_to_do/) containing  and [CalliGuy's post](https://www.reddit.com/r/beneater/comments/ii113p/helpful_tips_and_recommendations_for_ben_eaters/) containing lots of gotchas
+* [«7400-series integrated circuits» on Wikipedia](https://en.wikipedia.org/wiki/7400-series_integrated_circuits) and the [list](https://en.wikipedia.org/wiki/List_of_7400-series_integrated_circuits) explain numbers like `SN74LS08`, as does [bigger-hammer's post](https://www.reddit.com/r/beneater/comments/js3ozw/8bit_parts_online_aliex/gby3g3l/)
 * [Arduino Foundations](https://www.arduino.cc/en/Tutorial/Foundations) portal into most documentation
 * [Arduino Built-In Examples](https://www.arduino.cc/en/Tutorial/BuiltInExamples), the codes form the examples menu but with circuits and explanations
 * [Arduino "language" reference](https://www.arduino.cc/reference/en/): with the API and yeah also C++ if you want
