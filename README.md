@@ -26,6 +26,7 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 * There's the [Arduino memory](https://www.arduino.cc/en/Tutorial/Foundations/Memory) page, but really think: Flash ~ CD with program, SRAM ~ RAM – duh, EEPROM ~ hard disk.
 * [ASCII table](https://de.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#ASCII-Tabelle) for converting bits / numbers to letters and back manually
 * Wikipedia articles about [ICs](https://en.wikipedia.org/wiki/Integrated_circuit)
+* [How to Use a Breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all) compehensive tutorial about the very basics
 * Also in the shopping list below you can usually find the data sheets about the particular components
 
 ### Glosary and German translations
