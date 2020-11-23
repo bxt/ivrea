@@ -7,7 +7,7 @@
 #define dah 2
 
 const PROGMEM uint8_t morseLookupTable[] = {
-  dit, dah, skip, skip,    // A
+  dit, dah, skip, skip,   // A
   dah, dit, dit, dit,     // B
   dah, dit, dah, dit,     // C
   dah, dit, dit, skip,    // D
@@ -53,6 +53,12 @@ void loop() {
       delay(ditLength * 4);
       return;
     }
+
+    // 11 extra dits for space, makes 14
+    if (incomingByte == 10) {
+      delay(ditLength * 11);
+      return;
+    }
     
     // Convert to upper case
     if (incomingByte >= 97 && incomingByte <= 122) {
@@ -63,8 +69,8 @@ void loop() {
     if (incomingByte >= 65 && incomingByte <= 90) {
       incomingByte -= 65;
 
-      for(int i = 0; i = 4; i++) {
-        uint8_t sign = pgm_read_byte_near(morseLookupTable + incomingByte + i);
+      for(int i = 0; i < 4; i++) {
+        uint8_t sign = pgm_read_byte_near(morseLookupTable + incomingByte * 4 + i);
 
         if (sign == dit) {
           digitalWrite(MORSE_LED, HIGH);
@@ -92,7 +98,7 @@ void loop() {
     }
 
     // We got something other than a letter or a space:
-    Serial.print(F("Well, that's weird, I received incomingByte: "));
+    Serial.print(F("Ignoring unknown byte "));
     Serial.println(incomingByte, DEC);
   }
 }
