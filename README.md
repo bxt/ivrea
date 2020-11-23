@@ -93,7 +93,7 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 ##### Bigger ICs
 
 * [Arduino nano clone](https://www.reichelt.de/arduino-kompatibles-nano-board-atmega328-mini-usb-ard-nano-v3-p225690.html?&nbc=1&trstct=lsbght_sldr::177331)
-* ["74189 64-bit RAM"](https://www.reichelt.de/sram-32-kb-4-k-x-8-4-5--5-5-v-dil-28-62256-80-p2673.html?&trstct=pol_4&nbc=1) **(I only got a bigger one)**
+* ["74189 64-bit RAM"](https://www.reichelt.de/sram-32-kb-4-k-x-8-4-5--5-5-v-dil-28-62256-80-p2673.html?&trstct=pol_4&nbc=1) **(I only got a bigger one, maybe [this post and links there](https://www.reddit.com/r/beneater/comments/hon6ar/74189_alternative/) help)**
 * [28C16 EEPROMs](https://www.reichelt.de/eeprom-64-kb-8-k-x-8-5-v-150-ns-pdip-28-28c64-150-p1946.html?r=1)
 * [LM-555 Timer ICs](https://www.reichelt.de/timer-ic-typ-555-dip-8-lm-555-cn-p187567.html?&trstct=pos_8&nbc=1)
 
