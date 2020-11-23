@@ -6,7 +6,7 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 
 * Planned: Make an LED blink
 * Planned: Control bargraph with poti?
-* In progress: [./morse](Morse): reading ASCII form serial, converting to morse, and making an LED blink
+* In progress: [Morse](./morse): reading ASCII form serial, converting to morse, and making an LED blink
 * Planned: Control multiple bargrahps with shift registers with nice visuals?
 * Planned: Well, the 8 bit CPU...
 
