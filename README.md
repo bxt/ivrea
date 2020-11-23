@@ -60,7 +60,10 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 
 #### Shopping list
 
-You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which I would recommend. But I was not sure about shipping to Germany (expecially with taxes) and I wanted some extra / custom parts, so I shopped everything indidually. I'm not sure wheter I have everything, and also some things are not 100% compatible and will require some tinkering, but for me it's useful to have a list of the exact parts in my inventory and maybe someone else can buy similar things.
+You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which I would recommend. But I was not sure about shipping to Germany (expecially with taxes) and I wanted some extra / custom parts, so I procured everything indidually. I'm not sure whether I have everything, and also some things are not 100% compatible and will require some tinkering, but for me it's useful to have a list of the exact parts in my inventory and maybe someone else can buy similar things.
+
+<details>
+  <summary>See Full shopping list</summart>
 
 ##### Tools and supplies
 
@@ -116,8 +119,6 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 * [74LS245 8-bit bus transceiver](https://www.reichelt.de/octal-bus-puffer-3-state-4-5--5-5-v-dil-20-74hct-245-p3356.html?&trstct=pol_1&nbc=1) 6×
 * [74LS283 4-bit binary adder](https://www.mouser.de/ProductDetail/Texas-Instruments/SN74LS283N?qs=RnzODY3cU8uVeiPelRVWjw%3D%3D) 2×
 
-
-
-
+</details>
 
 
