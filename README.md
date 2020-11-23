@@ -2,6 +2,14 @@
 
 A place for my electronics and Arduino experiments. Warning: I have no idea what I'm doing here, so don't use this unless you know what you're doing.
 
+## Projects / Sketches
+
+* Planned: Make an LED blink
+* Planned: Control bargraph with poti?
+* In progress: [./morse](Morse): reading ASCII form serial, converting to morse, and making an LED blink
+* Planned: Control multiple bargrahps with shift registers with nice visuals?
+* Planned: Well, the 8 bit CPU...
+
 ## Resources
 
 ### Instructional videos
@@ -60,7 +68,7 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 * [Wire stripper from Jokari](https://www.amazon.de/-/en/gp/product/B002BDNL4Q)
 * [Digital Multimeter from Crenova](https://www.amazon.de/-/en/gp/product/B01825GBK2)
 * [22 AWG solid wire kit](https://www.amazon.de/-/en/gp/product/B07V5FVSYL)
-* [jumper wire kit](https://www.reichelt.de/flexible-drahtbruecken-15-cm-mehrfarbig-65er-pack-rnd-255-00009-p253202.html?&nbc=1&trstct=lsbght_sldr::202832 )
+* [Jumper wire kit](https://www.reichelt.de/flexible-drahtbruecken-15-cm-mehrfarbig-65er-pack-rnd-255-00009-p253202.html?&nbc=1&trstct=lsbght_sldr::202832 )
 * Breadboards: [4k7v](https://www.reichelt.de/experimentier-steckboard-2560-700-kontakte-steckboard-4k7v-p67683.html?&trstct=pos_2&nbc=1), [BB830](https://www.mouser.de/ProductDetail/BusBoard-Prototype-Systems/BB830?qs=VEfmQw3KOauhPeTwYxNCaA%3D%3D), [BB830T](https://www.mouser.de/ProductDetail/BusBoard-Prototype-Systems/BB830T?qs=VEfmQw3KOauXY1NKV2FuEg%3D%3D)
 * Soldering station: is on my wishlist
 
@@ -101,7 +109,7 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 * [74LS107 dual J-K flip-flop](https://www.reichelt.de/flip-flop-d-type-dual-4-5--5-5-v-dil-14-74hct-107-p3309.html?search=74HCT+107) 1×
 * [74LS138 3-to-8 line decoder](https://www.reichelt.de/decoder-3-to-8-4-5--5-5-v-dil-16-74hct-138-p3318.html?&trstct=pos_0&nbc=1) 1×
 * [74LS139 2-to-4 line decoder](https://www.reichelt.de/dekoder-demultiplexer-2-auf-4-4-5--5-5-v-dip-16-74hct-139-p3319.html?&trstct=pos_0&nbc=1) 1×
-* [74LS161 4-bit binary counter](https://www.reichelt.de/counter-4-bit-4-75--5-25-v-dil-16-ls-163-p10630.html?&trstct=pol_0&nbc=1) 2× **I got the 163 with slightly different specs**
+* [74LS161 4-bit binary counter](https://www.reichelt.de/counter-4-bit-4-75--5-25-v-dil-16-ls-163-p10630.html?&trstct=pol_0&nbc=1) 2× **(I only got the 163 with slightly different specs)**
 * [74LS173 4-bit D register](https://www.mouser.de/ProductDetail/Texas-Instruments/SN74LS173AN?qs=nMmhAzRCgdAkY4Cck6ihbQ%3D%3D) 8×
 * [74LS273 8-bit D register](https://www.reichelt.de/flip-flop-d-type-octal-4-5--5-5-v-dil-20-74hct-273-p3363.html?&trstct=pol_0&nbc=1) 1×
 * [74HC595 8-bit shift register](https://www.reichelt.de/shift-register-3-state-ausgang-2--6-v-dil-16-74hc-595-p3269.html?&trstct=pol_2&nbc=1) 2×
