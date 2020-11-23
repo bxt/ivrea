@@ -4,6 +4,8 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 
 ## Projects / Sketches
 
+These are the projects I did and plan to do:
+
 * Planned: Make an LED blink
 * Planned: Control bargraph with poti?
 * In progress: [Morse](./morse): reading ASCII form serial, converting to morse, and making an LED blink
@@ -11,6 +13,8 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 * Planned: Well, the 8 bit CPU...
 
 ## Resources
+
+Over time, I collected some useful resources like [instructional videos](#instructional-videos), [references](#references), [glosary and german translations](#glosary-and-german-translations), [sourcing](#sourcing).
 
 ### Instructional videos
 
@@ -24,9 +28,15 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 
 ### References
 
+#### 8 bit CPU
+
 * [Ben Eater's website](https://eater.net/) with the [parts list](https://eater.net/8bit/parts) and the [schematics](https://eater.net/8bit/schematics) for the 8 bit computer amongst mayn other things
 * [/r/beneater](https://www.reddit.com/r/beneater) with [lordmonoxide's posts](https://www.reddit.com/r/beneater/comments/dskbug/what_i_have_learned_a_master_list_of_what_to_do/) containing  and [CalliGuy's post](https://www.reddit.com/r/beneater/comments/ii113p/helpful_tips_and_recommendations_for_ben_eaters/) containing lots of gotchas
 * [«7400-series integrated circuits» on Wikipedia](https://en.wikipedia.org/wiki/7400-series_integrated_circuits) and the [list](https://en.wikipedia.org/wiki/List_of_7400-series_integrated_circuits) explain numbers like `SN74LS08`, as does [bigger-hammer's post](https://www.reddit.com/r/beneater/comments/js3ozw/8bit_parts_online_aliex/gby3g3l/)
+* [Logic Signal Voltage Levels](https://www.allaboutcircuits.com/textbook/digital/chpt-3/logic-signal-voltage-levels/) cool comparison between TTL and CMOS / LS and HC from [this post](https://www.reddit.com/r/beneater/comments/j5ixle/can_i_mix_ls_and_hc_logic_gates/), see also [this answer](https://electronics.stackexchange.com/a/358628/268618)
+
+#### Arduino
+
 * [Arduino Foundations](https://www.arduino.cc/en/Tutorial/Foundations) portal into most documentation
 * [Arduino Built-In Examples](https://www.arduino.cc/en/Tutorial/BuiltInExamples), the codes form the examples menu but with circuits and explanations
 * [Arduino "language" reference](https://www.arduino.cc/reference/en/): with the API and yeah also C++ if you want
@@ -34,6 +44,9 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 * [JOY-IT nano V3](https://joy-it.net/de/products/ARD_NanoV3), the actual "Adruino-compatible" board I'm using, check the driver download and "ATmega328P (Old Bootloader)" instructions
 * [PROGMEM](https://www.arduino.cc/reference/en/language/variables/utilities/progmem/) and [AVR PGM Program Space Utilities](https://www.nongnu.org/avr-libc/user-manual/group__avr__pgmspace.html)
 * There's the [Arduino memory](https://www.arduino.cc/en/Tutorial/Foundations/Memory) page, but really think: Flash ~ CD with program, SRAM ~ RAM – duh, EEPROM ~ hard disk.
+
+#### General
+
 * [ASCII table](https://de.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#ASCII-Tabelle) for converting bits / numbers to letters and back manually
 * Wikipedia articles about [ICs](https://en.wikipedia.org/wiki/Integrated_circuit)
 * [How to Use a Breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all) compehensive tutorial about the very basics
