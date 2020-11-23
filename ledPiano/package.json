@@ -1,0 +1,25 @@
+{
+  "name": "ledpiano",
+  "version": "1.0.0",
+  "description": "Webserver for serving the web client, receiving the commands and passing them to the serial port",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bxt/ivrea.git"
+  },
+  "author": "Bernhard Häussner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bxt/ivrea/issues"
+  },
+  "homepage": "https://github.com/bxt/ivrea#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0",
+    "serialport": "^9.0.2",
+    "ws": "^7.4.0"
+  }
+}

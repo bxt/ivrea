@@ -1,0 +1,66 @@
+<title>ledPiano</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- this file is served by the server in index.js -->
+
+<style>
+  button {
+    width: 100px;
+    height: 100px;
+  }
+</style>
+
+<button>1</button>
+<button>2</button>
+<button>3</button>
+<button>4</button>
+<button>5</button>
+<button>6</button>
+
+<script>
+
+const webSocket = new WebSocket(`ws://${location.host}/piano`);
+
+const sendLow = pin => webSocket.send(`L${pin}`)
+const sendHigh = pin => webSocket.send(`H${pin}`)
+
+webSocket.onopen = () => {
+  document.addEventListener('keyup', (e) => {
+    const {key} = e;
+    if(key.match(/^\d$/)) {
+      sendLow(key - 1);
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    const {key} = e;
+    if(key.match(/^\d$/)) {
+      sendHigh(key - 1);
+    }
+  });
+
+  [...document.querySelectorAll('button')].forEach(element => {
+    element.addEventListener('mouseup', (e) => {
+      sendLow(e.target.firstChild.nodeValue - 1);
+    });
+    element.addEventListener('mousedown', (e) => {
+      sendHigh(e.target.firstChild.nodeValue - 1);
+    });
+    element.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      sendHigh(e.target.firstChild.nodeValue - 1);
+    });
+    element.addEventListener('touchend', (e) => {
+      sendLow(e.target.firstChild.nodeValue - 1);
+    });
+  });
+};
+
+webSocket.onerror = (error) => {
+  console.log({error})
+};
+
+webSocket.onmessage = (message) => {
+  console.log({message});
+}
+
+</script>
