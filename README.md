@@ -8,7 +8,7 @@ You can find my various [projects](#projects--sketches) here, as well as a curat
 
 These are the projects I did and plan to do:
 
-* Morse](./morse): reading ASCII form serial, converting to morse, and making an LED blink
+* [Morse](./morse): reading ASCII form serial, converting to morse, and making an LED blink
 * [Fade LED array](./fadeLedArray.ino): Smooth marquee of LEDs using PWM, poti for speed control
 * Planned: Control multiple bargrahps with shift registers with nice visuals? (like [here](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut))
 * Planned: Well, the 8 bit CPU...
