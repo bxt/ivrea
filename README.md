@@ -15,7 +15,7 @@ These are the projects I did and plan to do:
 
 ## Resources
 
-Over time, I collected some useful resources like [instructional videos](#instructional-videos), [references](#references), [glosary and german translations](#glosary-and-german-translations), [sourcing](#sourcing).
+Over time, I collected some useful resources like [instructional videos](#instructional-videos), [references](#references), a [glosary and german translations](#glosary-and-german-translations), info about [sourcing](#sourcing) components.
 
 ### Instructional videos
 
