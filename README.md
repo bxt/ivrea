@@ -10,6 +10,7 @@ These are the projects I did and plan to do:
 * Planned: Control bargraph with poti?
 * In progress: [Morse](./morse): reading ASCII form serial, converting to morse, and making an LED blink
 * Planned: Control multiple bargrahps with shift registers with nice visuals? (like [here](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut))
+* Planned: Using Ardiuno as a general purpose debugger / controller via [firmate](https://github.com/firmata/arduino) and some node app
 * Planned: Well, the 8 bit CPU...
 
 ## Resources
