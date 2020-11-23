@@ -52,7 +52,62 @@ A place for my electronics and Arduino experiments. Warning: I have no idea what
 
 #### Shopping list
 
-(coming soon)
+You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which I would recommend. But I was not sure about shipping to Germany (expecially with taxes) and I wanted some extra / custom parts, so I shopped everything indidually. I'm not sure wheter I have everything, and also some things are not 100% compatible and will require some tinkering, but for me it's useful to have a list of the exact parts in my inventory and maybe someone else can buy similar things.
+
+##### Tools and supplies
+
+* USB power supply, Screwdriver, wire cutters, pilers, and box cutter I already had
+* [Wire stripper from Jokari](https://www.amazon.de/-/en/gp/product/B002BDNL4Q)
+* [Digital Multimeter from Crenova](https://www.amazon.de/-/en/gp/product/B01825GBK2)
+* [22 AWG solid wire kit](https://www.amazon.de/-/en/gp/product/B07V5FVSYL)
+* [jumper wire kit](https://www.reichelt.de/flexible-drahtbruecken-15-cm-mehrfarbig-65er-pack-rnd-255-00009-p253202.html?&nbc=1&trstct=lsbght_sldr::202832 )
+* Breadboards: [4k7v](https://www.reichelt.de/experimentier-steckboard-2560-700-kontakte-steckboard-4k7v-p67683.html?&trstct=pos_2&nbc=1), [BB830](https://www.mouser.de/ProductDetail/BusBoard-Prototype-Systems/BB830?qs=VEfmQw3KOauhPeTwYxNCaA%3D%3D), [BB830T](https://www.mouser.de/ProductDetail/BusBoard-Prototype-Systems/BB830T?qs=VEfmQw3KOauXY1NKV2FuEg%3D%3D)
+* Soldering station: is on my wishlist
+
+##### Basic components
+
+* [Resistors](https://www.amazon.de/-/en/gp/product/B08DKT3STN)
+* [Electrolytic capacitors](https://www.amazon.de/-/en/gp/product/B07NWGDH2T)
+* [0.01µF ceramic capacitors](https://www.reichelt.de/tantalkondensator-100-nf-35-v-avx-tap104m035cc-p246447.html?&trstct=pos_0&nbc=1)
+* [1MΩ potentiometer](https://www.reichelt.de/drehpotentiometer-mono-1-0-mohm-4mm-linear-po4m-lin-1-0m-p88275.html?&trstct=pol_0&nbc=1)
+* [Slide switch](https://www.reichelt.de/schiebeschalter-gerade-rm5-08-1x-ein-ein-ss-25436-nh-p105713.html?&trstct=pol_2&nbc=1)
+* DIP switch [4-position](https://www.reichelt.de/dip-schalter-printmontage-liegend-4-polig-rnd-210-00164-p226385.html?&trstct=pos_3&nbc=1), [8-position](https://www.reichelt.de/dip-schalter-printmontage-liegend-8-polig-rnd-210-00166-p226387.html?&trstct=pos_1&nbc=1)
+* Momentary tact pushbutton/switch: ordered various, will pick one to list later
+
+##### LEDs
+
+* [LEDs sortiment](https://www.reichelt.de/led-sortiment-5-mm-superhell-vorwiderstaende-fassungen-quad-1801o004-p280142.html?&trstct=pos_4&nbc=1)
+* [7-segment LED displays, common cathode](https://www.reichelt.de/7-segment-anzeige-superrot-14-2mm-gem-kathode-sc-56-11-srt-p80388.html?&trstct=pos_0&nbc=1)
+* Bargraph [yellow](https://www.reichelt.de/bargraph-anzeige-10-elemente-gelb-ybg-1000-p22957.html?&trstct=pol_2&nbc=1), [green](https://www.reichelt.de/bargraph-anzeige-10-elemente-gruen-gbg-1000-p8141.html?&trstct=pol_1&nbc=1), [green/red](https://www.reichelt.de/bargraph-anzeige-10-elemente-3x-rot-7x-gruen-rgbg-1000-p31501.html?&trstct=pol_3&nbc=1)
+* 5V LEDs with resistor: [green](https://www.reichelt.de/led-5-mm-bedrahtet-5-v-gruen-20-mcd-30--kbt-l-7113gd-5v-p231091.html?&trstct=pol_12&nbc=1), [yellow](https://www.reichelt.de/led-5-mm-bedrahtet-5-v-gelb-20-mcd-30--kbt-l-7113yd-5v-p231097.html?&trstct=pol_8&nbc=1), [red](https://www.reichelt.de/led-5-mm-bedrahtet-5-v-rot-30-mcd-30--kbt-l-7113id-5v-p231093.html?&trstct=pol_1&nbc=1)
+* LED matrix / LED strip: are on my wishlist
+
+##### Bigger ICs
+
+* [Arduino nano clone](https://www.reichelt.de/arduino-kompatibles-nano-board-atmega328-mini-usb-ard-nano-v3-p225690.html?&nbc=1&trstct=lsbght_sldr::177331)
+* ["74189 64-bit RAM"](https://www.reichelt.de/sram-32-kb-4-k-x-8-4-5--5-5-v-dil-28-62256-80-p2673.html?&trstct=pol_4&nbc=1) **(I only got a bigger one)**
+* [28C16 EEPROMs](https://www.reichelt.de/eeprom-64-kb-8-k-x-8-5-v-150-ns-pdip-28-28c64-150-p1946.html?r=1)
+* [LM-555 Timer ICs](https://www.reichelt.de/timer-ic-typ-555-dip-8-lm-555-cn-p187567.html?&trstct=pos_8&nbc=1)
+
+##### 7400er ICs
+
+* [74LS04 Hex inverter](https://www.reichelt.de/inverter-hex-4-5--5-5-v-dil-14-74hct-04-p3306.html?&trstct=pos_0&nbc=1) 5×
+* [74LS08 Quad 2-input AND gate](https://www.reichelt.de/and-gate-2-element-4-5--5-5-v-dil-14-74hct-08-p3307.html?&trstct=pos_0&nbc=1) 3×
+* [74LS00 quad NAND gate](https://www.reichelt.de/nand-gate-2-input-4-5--5-5-v-dil-14-74hct-00-p3303.html?&trstct=pos_0&nbc=1) 2×
+* [74LS02 quad NOR gate](https://www.reichelt.de/nor-gate-2-input-4-5--5-5-v-dil-14-74hct-02-p3304.html?&trstct=pos_0&nbc=1) 1×
+* [74LS32 Quad 2-input OR gate](https://www.reichelt.de/4-fach-oder-gatter-je-2-eingaenge-4-5--5-5-v-dil-14-74hct-32-p3369.html?&trstct=pos_0&nbc=1) 1×
+* [74LS86 Quad XOR gate](https://www.reichelt.de/xor-gate-2-input-4-75--5-25-v-dil-14-ls-86-p10826.html?&trstct=pos_0&nbc=1) 2×
+* [74LS157 quad 2-1 line mux](https://www.reichelt.de/multiplexer-lp-schottky-4-75--5-25-v-dil-16-ls-157-p10625.html?&trstct=pos_0&nbc=1) 4×
+* [74LS107 dual J-K flip-flop](https://www.reichelt.de/flip-flop-d-type-dual-4-5--5-5-v-dil-14-74hct-107-p3309.html?search=74HCT+107) 1×
+* [74LS138 3-to-8 line decoder](https://www.reichelt.de/decoder-3-to-8-4-5--5-5-v-dil-16-74hct-138-p3318.html?&trstct=pos_0&nbc=1) 1×
+* [74LS139 2-to-4 line decoder](https://www.reichelt.de/dekoder-demultiplexer-2-auf-4-4-5--5-5-v-dip-16-74hct-139-p3319.html?&trstct=pos_0&nbc=1) 1×
+* [74LS161 4-bit binary counter](https://www.reichelt.de/counter-4-bit-4-75--5-25-v-dil-16-ls-163-p10630.html?&trstct=pol_0&nbc=1) 2× **I got the 163 with slightly different specs**
+* [74LS173 4-bit D register](https://www.mouser.de/ProductDetail/Texas-Instruments/SN74LS173AN?qs=nMmhAzRCgdAkY4Cck6ihbQ%3D%3D) 8×
+* [74LS273 8-bit D register](https://www.reichelt.de/flip-flop-d-type-octal-4-5--5-5-v-dil-20-74hct-273-p3363.html?&trstct=pol_0&nbc=1) 1×
+* [74HC595 8-bit shift register](https://www.reichelt.de/shift-register-3-state-ausgang-2--6-v-dil-16-74hc-595-p3269.html?&trstct=pol_2&nbc=1) 2×
+* [74LS245 8-bit bus transceiver](https://www.reichelt.de/octal-bus-puffer-3-state-4-5--5-5-v-dil-20-74hct-245-p3356.html?&trstct=pol_1&nbc=1) 6×
+* [74LS283 4-bit binary adder](https://www.mouser.de/ProductDetail/Texas-Instruments/SN74LS283N?qs=RnzODY3cU8uVeiPelRVWjw%3D%3D) 2×
+
 
 
 
