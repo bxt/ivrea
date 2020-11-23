@@ -34,6 +34,7 @@ Over time, I collected some useful resources like [instructional videos](#instru
 * [/r/beneater](https://www.reddit.com/r/beneater) with [lordmonoxide's posts](https://www.reddit.com/r/beneater/comments/dskbug/what_i_have_learned_a_master_list_of_what_to_do/) containing  and [CalliGuy's post](https://www.reddit.com/r/beneater/comments/ii113p/helpful_tips_and_recommendations_for_ben_eaters/) containing lots of gotchas
 * [«7400-series integrated circuits» on Wikipedia](https://en.wikipedia.org/wiki/7400-series_integrated_circuits) and the [list](https://en.wikipedia.org/wiki/List_of_7400-series_integrated_circuits) explain numbers like `SN74LS08`, as does [bigger-hammer's post](https://www.reddit.com/r/beneater/comments/js3ozw/8bit_parts_online_aliex/gby3g3l/)
 * [Logic Signal Voltage Levels](https://www.allaboutcircuits.com/textbook/digital/chpt-3/logic-signal-voltage-levels/) cool comparison between TTL and CMOS / LS and HC from [this post](https://www.reddit.com/r/beneater/comments/j5ixle/can_i_mix_ls_and_hc_logic_gates/), see also [this answer](https://electronics.stackexchange.com/a/358628/268618)
+* [A high-res picture of a finished build](https://i.imgur.com/um8YhA2.jpg)
 
 #### Arduino
 
