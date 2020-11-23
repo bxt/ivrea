@@ -76,7 +76,7 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 
 * [Resistors](https://www.amazon.de/-/en/gp/product/B08DKT3STN)
 * [Electrolytic capacitors](https://www.amazon.de/-/en/gp/product/B07NWGDH2T)
-* [0.01µF ceramic capacitors](https://www.reichelt.de/tantalkondensator-100-nf-35-v-avx-tap104m035cc-p246447.html?&trstct=pos_0&nbc=1)
+* [ceramic capacitors](https://www.amazon.de/gp/product/B07PP7SFY8), [0.01µF ones](https://www.reichelt.de/tantalkondensator-100-nf-35-v-avx-tap104m035cc-p246447.html?&trstct=pos_0&nbc=1)
 * [1MΩ potentiometer](https://www.reichelt.de/drehpotentiometer-mono-1-0-mohm-4mm-linear-po4m-lin-1-0m-p88275.html?&trstct=pol_0&nbc=1)
 * [Slide switch](https://www.reichelt.de/schiebeschalter-gerade-rm5-08-1x-ein-ein-ss-25436-nh-p105713.html?&trstct=pol_2&nbc=1)
 * DIP switch [4-position](https://www.reichelt.de/dip-schalter-printmontage-liegend-4-polig-rnd-210-00164-p226385.html?&trstct=pos_3&nbc=1), [8-position](https://www.reichelt.de/dip-schalter-printmontage-liegend-8-polig-rnd-210-00166-p226387.html?&trstct=pos_1&nbc=1)
