@@ -26,7 +26,6 @@ The [LED piano](./ledPiano) is a fun and debugging project. The arduino code is 
 
 ### Shift Registers
 
-![Video showing bar graphs controlled by two shift registers](shiftRegisters.gif?raw=true)
 
 After using basic LEDs only I wanted to try out the bargraphs and some ICs and started with the 74HC595 8-bit shift register, creating [Shift Registers](./shiftRegisters.ino). It can Control multiple bargrahps with shift registers and add some nice visuals. The project is a bit like [the shift out example](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut)) except that it generates some patterns to send and also accepts some commands form serial port to control:
 
@@ -34,11 +33,10 @@ After using basic LEDs only I wanted to try out the bargraphs and some ICs and s
 * `D0`, `D1`, `D2`: control delay when shifting out the bits, so you can watch either the sendout or the results
 * `R000`–`R999` control how long each "image" is shown after the serial transmission is complete
 
-The wiring is a bit more elaborate for this one, so I have a picture here:
+The wiring is a bit more elaborate for this one, so I have a [higher-res image showing how to wire things up on a breadboard](shiftRegisters.jpg?raw=true). White is the serial clock, blue is the output latch clock, yellow is the data and a small piece for cascading into the second shift register.
 
-![Image showing how to wire things up on a breadboard](shiftRegisters.jpg?raw=true)
+![Video showing bar graphs controlled by two shift registers](shiftRegisters.gif?raw=true)
 
-White is the serial clock, blue is the output latch clock, yellow is the data and a small piece for cascading into the second shift register.
 
 ### Planned projects / ideas
 
