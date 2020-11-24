@@ -40,17 +40,17 @@ webSocket.onopen = () => {
 
   [...document.querySelectorAll('button')].forEach(element => {
     element.addEventListener('mouseup', (e) => {
-      sendLow(e.target.firstChild.nodeValue - 1);
+      sendLow(e.target.firstChild.nodeValue[0] - 1);
     });
     element.addEventListener('mousedown', (e) => {
-      sendHigh(e.target.firstChild.nodeValue - 1);
+      sendHigh(e.target.firstChild.nodeValue[0] - 1);
     });
     element.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      sendHigh(e.target.firstChild.nodeValue - 1);
+      sendHigh(e.target.firstChild.nodeValue[0] - 1);
     });
     element.addEventListener('touchend', (e) => {
-      sendLow(e.target.firstChild.nodeValue - 1);
+      sendLow(e.target.firstChild.nodeValue[0] - 1);
     });
   });
 };
