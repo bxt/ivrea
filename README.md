@@ -11,7 +11,7 @@ These are the projects I did and plan to do:
 * [Morse](./morse): reading ASCII form serial, converting to morse, and making an LED blink
 * [Fade LED array](./fadeLedArray.ino): Smooth marquee of LEDs using PWM, poti for speed control
 * [LED piano](./ledPiano): Toggle pins from a browser, e.g. on a phone, using node.js and websockets
-* Planned: Control multiple bargrahps with shift registers with nice visuals? (like [here](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut))
+* [Shift Registers](./shiftRegisters.ino): Control multiple bargrahps with shift registers with nice visuals (a bit like [the shift out example](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut))
 * Planned: Well, the 8 bit CPU...
 * Maybe: Using Ardiuno as a general purpose debugger / controller via [firmata](https://github.com/firmata/arduino) and some node app
 
