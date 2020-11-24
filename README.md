@@ -1,8 +1,8 @@
-# Ivrea – A place for my electronics and Arduino experiments
+# Ivrea – a place for my electronics experiments
 
 **Warning:** I have no idea what I'm doing here, so don't use this unless you know what you're doing.
 
-This repository contains my various [projects](#projects--sketches) including code and some information, as well as a curated list of [resources](#resources).
+Recently, I started experimenting a bit with electronics, using Arduino, ICs and a ton of LEDs amongst other things. This repository contains information on various [projects I did](#projects--sketches), also including code, as well as a curated list of [resources](#resources) I found useful.
 
 ## Projects / Sketches
 
