@@ -2,7 +2,7 @@
 
 **Warning:** I have no idea what I'm doing here, so don't use this unless you know what you're doing.
 
-You can find my various [projects](#projects--sketches) here, as well as a curated list of [resources](#resources).
+This repository contains my various [projects](#projects--sketches) including code and some information, as well as a curated list of [resources](#resources).
 
 ## Projects / Sketches
 
@@ -10,28 +10,28 @@ Here are the projects I did and plan to do.
 
 ### Morse
 
-The [Morse](./morse) was my very first project, I wrote the code even before my Arduino arrived, it requires no wiring as it works with the built-in LED when the Arduino is connected to a computer via USB. It reads ASCII from the serial, converts to morse code, and then makes an LED blink. Of cource you could hook this up to a relay to drive an even bigger light.
+The [morse Arduino code](morse) was my very first project, I wrote the code even before my Arduino arrived, it requires no wiring as it works with the built-in LED when the Arduino is connected to a computer via USB. It reads ASCII from the serial, converts to morse code, and then makes an LED blink accordingly. Of cource you could hook this up to a relay to drive an even bigger light.
 
 ### Fade LED array
 
-My second project was to [Fade LED array](./fadeLedArray.ino). It creates a smooth marquee of LEDs using PWM, and also uses an input from a poti for speed control. This showcases the analog capabilities of the arduino unit. It requires some finetuning depending on the exact LED you use. The wiring is also very easy, just connect the LEDs to the PWP pins and ground with a resistor in series, and the middle pin from the poti to an analog pin. To smooth out the analog readings I used the code from [`readAnalogVoltageSmooth.ino`](./readAnalogVoltageSmooth.ino).
+My second project creates a smooth marquee of LEDs using PWM, and also uses an input from a poti for speed control. This showcases the analog capabilities of the arduino unit. The code in [`fadeLedArray.ino`](fadeLedArray.ino) might require some finetuning depending on the exact LED you use. The wiring is also very easy, just connect the LEDs to the PWP pins and ground with a resistor in series, and the middle pin from the poti to an analog pin. To smooth out the analog readings I used the code from [`readAnalogVoltageSmooth.ino`](readAnalogVoltageSmooth.ino).
 
 ![Animation of the fading LEDs](fadeLedArray.gif?raw=true)
 
 ### LED piano
 
-The [LED piano](./ledPiano) is a fun and debugging project. The arduino code is reading messages from the serial port like `H4`, `L1` etc. to toggle pins high and low. You could just send those from the serial monitor in Adruino IDE, but it's way faster and fun to do it from a browser. This way you can also do it on a phone, or some other computer in the same network. For that, there is a server written with [node.js](https://nodejs.org/), [express](https://expressjs.com/), [ws](https://github.com/websockets/ws) and [serialport](https://serialport.io/) libraries that will accept messages from a websocket connection and forward them to a serial port. It also serves a basic client file in plain JS that displays some buttons for control, and also accepts touch and keyboard input. Aside from driving LEDs, this can also be used to fiddle with ICs without having to wire many things and debouncing buttons and so on.
+The [LED piano](./ledPiano) is a fun and debugging project. The [arduino code](ledPiano/ledPiano.ino) is reading messages from the serial port like `H4`, `L1` etc. to toggle pins high and low. You could just send those from the serial monitor in Adruino IDE, but it's way faster and fun to do it from a browser. This way you can also do it on a phone, or some other computer in the same network. For that, there is [a server written](ledPiano/index.js) with [node.js](https://nodejs.org/), [express](https://expressjs.com/), [ws](https://github.com/websockets/ws) and [serialport](https://serialport.io/) libraries that will accept messages from a websocket connection and forward them to a serial port. It also serves a [basic client file in plain JS](ledPiano/public/index.html) that displays some buttons for control, and also accepts touch and keyboard input. Aside from driving LEDs, this can also be used to fiddle with ICs without having to wire many things and debouncing buttons and so on.
 
 ![Video of the leds being controlled by keyboard](ledPiano/ledPiano.gif?raw=true)
 
 ### Shift Registers
 
 
-After using basic LEDs only I wanted to try out the bargraphs and some ICs and started with the 74HC595 8-bit shift register, creating [Shift Registers](./shiftRegisters.ino). It can Control multiple bargrahps with shift registers and add some nice visuals. The project is a bit like [the shift out example](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut)) except that it generates some patterns to send and also accepts some commands form serial port to control:
+After using basic LEDs only I wanted to try out the bargraphs and some ICs and started with the 74HC595 8-bit shift register, creating [`shiftRegisters.ino`](shiftRegisters.ino). It can control two shift registers which in turn control bargrahps and show some nice visuals. The project is a bit like [this shift out example](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut)) except that it generates some patterns and also accepts some commands form serial port to control:
 
 * `I`: toggle wether to show interemediate register states or only latch once all bits are in place
 * `D0`, `D1`, `D2`: control delay when shifting out the bits, so you can watch either the sendout or the results
-* `R000`–`R999` control how long each "image" is shown after the serial transmission is complete
+* `R000`–`R999`: control how long each "image" is shown after the serial transmission is complete
 
 The wiring is a bit more elaborate for this one, so I have a [higher-res image showing how to wire things up on a breadboard](shiftRegisters.jpg?raw=true). White is the serial clock, blue is the output latch clock, yellow is the data and a small piece for cascading into the second shift register.
 
