@@ -143,7 +143,7 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 
 * [Arduino nano clone](https://www.reichelt.de/arduino-kompatibles-nano-board-atmega328-mini-usb-ard-nano-v3-p225690.html)
 * ["74189 64-bit RAM"](https://www.reichelt.de/sram-32-kb-4-k-x-8-4-5--5-5-v-dil-28-62256-80-p2673.html) **(I only got a bigger one, maybe [this post and links there](https://www.reddit.com/r/beneater/comments/hon6ar/74189_alternative/) help)**
-* [28C16 EEPROMs](https://www.reichelt.de/eeprom-64-kb-8-k-x-8-5-v-150-ns-pdip-28-28c64-150-p1946.html) and [mount](https://www.reichelt.de/praezisionsfassung-28-polig-rm-2-54-mpe-001-2-028-3-p213785.html)
+* [28C16 EEPROMs](https://www.reichelt.de/eeprom-64-kb-8-k-x-8-5-v-150-ns-pdip-28-28c64-150-p1946.html) and [mount](https://www.reichelt.de/praezisionsfassung-28-polig-rm-2-54-mpe-001-2-028-3-p213785.html) (the 16K ones are unavailable, so I got 64K)
 * [LM-555 Timer ICs](https://www.reichelt.de/timer-ic-typ-555-dip-8-lm-555-cn-p187567.html) and [mount](https://www.reichelt.de/praezisionsfassung-8-polig-rm-2-54-mpe-001-1-008-3-p213777.html)
 
 ##### 7400er ICs
