@@ -44,6 +44,7 @@ The wiring is a bit more elaborate for this one, so I have a [higher-res image s
 * Well, the 8 bit CPU...
 * As well as the "reliable data transmissions" series
 * Maybe: Using Ardiuno as a general purpose debugger / controller via [firmata](https://github.com/firmata/arduino) and some node / React app, basically the "LED piano" in fancy
+* Maybe: A 2048 inspired by [this Arduino code](https://github.com/zhaofengli/2048-arduino/blob/master/board.h) or [this JS code](https://github.com/gabrielecirulli/2048/blob/master/js/game_manager.js)
 
 ## Resources
 
