@@ -2,7 +2,6 @@
 // g++ -std=c++11 -Wall -o test test.cpp && ./test && rm test
 
 #include<cassert>
-#include<cstdio>
 #include<iostream>
 #include<list>
 #include<string>
