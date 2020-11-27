@@ -154,16 +154,28 @@ int main(int argc, char const *argv[]) {
   expectMorseOutput("=_===______________===_=_=_=___");
   std::cout << "✓" << std::endl;
 
-  std::cout << "Test message 1";
+  std::cout << "Test message 1 ";
   setupSerialBuffer("The quick brown fox");
   runIt();
   expectMorseOutput("===___=_=_=_=___=_______===_===_=_===___=_=_===___=_=___===_=_===_=___===_=_===_______===_=_=_=___=_===_=___===_===_===___=_===_===___===_=_______=_=_===_=___===_===_===___===_=_=_===___");
   std::cout << "✓" << std::endl;
 
-  std::cout << "Test message 2";
+  std::cout << "Test message 2 ";
   setupSerialBuffer("Jumps over the lazy dog");
   runIt();
   expectMorseOutput("=_===_===_===___=_=_===___===_===___=_===_===_=___=_=_=_______===_===_===___=_=_=_===___=___=_===_=_______===___=_=_=_=___=_______=_===_=_=___=_===___===_===_=_=___===_=_===_===_______===_=_=___===_===_===___===_===_=___");
+  std::cout << "✓" << std::endl;
+
+  std::cout << "Test numbers 0-4 ";
+  setupSerialBuffer("01234");
+  runIt();
+  expectMorseOutput("===_===_===_===_===___=_===_===_===_===___=_=_===_===_===___=_=_=_===_===___=_=_=_=_===___");
+  std::cout << "✓" << std::endl;
+
+  std::cout << "Test numbers 5-9 ";
+  setupSerialBuffer("56789");
+  runIt();
+  expectMorseOutput("=_=_=_=_=___===_=_=_=_=___===_===_=_=_=___===_===_===_=_=___===_===_===_===_=___");
   std::cout << "✓" << std::endl;
 
   std::cout << "Testing invalid letter ";

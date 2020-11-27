@@ -39,6 +39,25 @@ int incomingByte = 0;
 
 unsigned long ditLength = 1200/WPM;
 
+void sendSignAndADit(uint8_t sign) {
+  if (sign == dit) {
+    digitalWrite(MORSE_LED, HIGH);
+    delay(ditLength);
+    digitalWrite(MORSE_LED, LOW);
+    delay(ditLength);
+  } else if (sign == dah) {
+    digitalWrite(MORSE_LED, HIGH);
+    delay(ditLength * 3);
+    digitalWrite(MORSE_LED, LOW);
+    delay(ditLength);
+  } else if (sign == skip) {
+    // no-op, skip is just here for memory alignment
+  } else {
+    Serial.print(F("Tried to send invalid sign: "));
+    Serial.println(sign, DEC);
+  }
+}
+
 void setup() {
   Serial.begin(9600);
   pinMode(MORSE_LED, OUTPUT);
@@ -71,27 +90,27 @@ void loop() {
 
       for(int i = 0; i < 4; i++) {
         uint8_t sign = pgm_read_byte_near(morseLookupTable + incomingByte * 4 + i);
-
-        if (sign == dit) {
-          digitalWrite(MORSE_LED, HIGH);
-          delay(ditLength);
-          digitalWrite(MORSE_LED, LOW);
-          delay(ditLength);
-        } else if (sign == dah) {
-          digitalWrite(MORSE_LED, HIGH);
-          delay(ditLength * 3);
-          digitalWrite(MORSE_LED, LOW);
-          delay(ditLength);
-        } else if (sign == skip) {
-          // no-op, skip is just here for memory alignment
-        } else {
-          Serial.print(F("Okay, strange table says sign is: "));
-          Serial.println(sign, DEC);
-        }
-
+        sendSignAndADit(sign);
       }
 
       // 2 extra dits after letter, makes 3
+      delay(ditLength * 2);
+
+      return;
+    }
+
+    // Handle number
+    if (incomingByte >= '0' && incomingByte <= '9') {
+      incomingByte -= '0';
+
+      for(int i = 0; i < 5; i++) {
+        uint8_t sign = incomingByte > 5
+          ? (i >= incomingByte - 5 ? dit : dah)
+          : (i >= incomingByte ? dah : dit);
+        sendSignAndADit(sign);
+      }
+
+      // 2 extra dits after number, makes 3
       delay(ditLength * 2);
 
       return;
