@@ -7,11 +7,24 @@
 #include<list>
 #include<string>
 
+// Global state, representing the outside world to the Arduino mocks
+
+std::string morseOutput = "";
+
+const std::string initialSerialPrintlnStringOutput = "(was not set)";
+std::string serialPrintlnStringOutput = initialSerialPrintlnStringOutput;
+
+const long initialSerialPrintNumberOutput = -1;
+long serialPrintNumberOutput = initialSerialPrintNumberOutput;
+
+std::list<int> mockSerialBuffer = {};
+
+uint8_t mockPinValue = -1;
+
 // Mock Arduino SDK
-// See also /Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino
+// See also https://github.com/arduino/ArduinoCore-avr/tree/master/cores/arduino
 
 #define LED_BUILTIN 13
-#define PROGMEM
 
 #define OUTPUT 42
 
@@ -19,14 +32,6 @@
 #define LOW 0
 
 #define DEC 10
-
-std::string morseOutput = "";
-const std::string initialSerialPrintlnStringOutput = "(was not set)";
-std::string serialPrintlnStringOutput = initialSerialPrintlnStringOutput;
-const long initialSerialPrintNumberOutput = -1;
-long serialPrintNumberOutput = initialSerialPrintNumberOutput;
-std::list<int> mockSerialBuffer = {};
-uint8_t mockPinValue = -1;
 
 class Serial {
 public:
@@ -76,6 +81,11 @@ void digitalWrite(uint8_t pin, uint8_t value) {
   mockPinValue = value;
 }
 
+// Mock AVR "Data in Program Space"
+// See also https://www.nongnu.org/avr-libc/user-manual/pgmspace.html
+
+#define PROGMEM
+
 uint8_t pgm_read_byte_near(const uint8_t *position) {
   return *position;
 }
@@ -88,7 +98,8 @@ uint8_t pgm_read_byte_near(const uint8_t *position) {
 
 // Helpers
 
-void assertEqual(std::string expected, std::string actual, std::string headline) {
+template <class T>
+void assertEqual(T expected, T actual, std::string headline) {
   if(expected != actual) {
     std::cout << headline <<  std::endl;
     std::cout << "Expected: " << expected << std::endl;
@@ -108,12 +119,7 @@ void expectSerialPrintlnString(std::string expected) {
 }
 
 void expectSerialPrintNumber(long expected) {
-  if(expected != serialPrintNumberOutput) {
-    std::cout << "Serial output number was wrong" <<  std::endl;
-    std::cout << "Expected: " << expected << std::endl;
-    std::cout << "Actual:   " << serialPrintNumberOutput << std::endl;
-    assert(false);
-  }
+  assertEqual(expected, serialPrintNumberOutput, "Serial output number was wrong");
   serialPrintNumberOutput = -1;
 }
 
@@ -126,9 +132,9 @@ void setupSerialBuffer(std::string string) {
 
 void runIt() {
   setup();
-	for(int i = 0; i < 5000; i++) {
-		loop();
-	}
+  for(int i = 0; i < 5000; i++) {
+    loop();
+  }
 }
 
 // The actual tests
