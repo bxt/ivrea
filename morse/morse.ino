@@ -49,25 +49,25 @@ void loop() {
     incomingByte = Serial.read();
 
     // 4 extra dits for space, makes 7
-    if (incomingByte == 32) {
+    if (incomingByte == ' ') {
       delay(ditLength * 4);
       return;
     }
 
     // 11 extra dits for new line, makes 14
-    if (incomingByte == 10) {
+    if (incomingByte == '\n') {
       delay(ditLength * 11);
       return;
     }
 
     // Convert to upper case
-    if (incomingByte >= 97 && incomingByte <= 122) {
+    if (incomingByte >= 'a' && incomingByte <= 'z') {
       incomingByte -= 32;
     }
 
     // Handle letter
-    if (incomingByte >= 65 && incomingByte <= 90) {
-      incomingByte -= 65;
+    if (incomingByte >= 'A' && incomingByte <= 'Z') {
+      incomingByte -= 'A';
 
       for(int i = 0; i < 4; i++) {
         uint8_t sign = pgm_read_byte_near(morseLookupTable + incomingByte * 4 + i);
