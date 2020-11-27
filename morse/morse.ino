@@ -54,18 +54,18 @@ void loop() {
       return;
     }
 
-    // 11 extra dits for space, makes 14
+    // 11 extra dits for new line, makes 14
     if (incomingByte == 10) {
       delay(ditLength * 11);
       return;
     }
-    
+
     // Convert to upper case
     if (incomingByte >= 97 && incomingByte <= 122) {
       incomingByte -= 32;
     }
 
-    // Handle letter    
+    // Handle letter
     if (incomingByte >= 65 && incomingByte <= 90) {
       incomingByte -= 65;
 
@@ -88,7 +88,7 @@ void loop() {
           Serial.print(F("Okay, strange table says sign is: "));
           Serial.println(sign, DEC);
         }
-        
+
       }
 
       // 2 extra dits after letter, makes 3
