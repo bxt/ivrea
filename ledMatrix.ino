@@ -6,8 +6,10 @@
 // HG1A3FD0 (the side without the "1588BS")
 // 46BC7E52 (the side you're looking at with the "1588BS")
 // Letters are the columns and the cathodes/ground:
-uint8_t ledCathodes[] = {A0, A1, A2, A3, A4, A5, A6, A7};
+//       Matrix col:     A    B  C   D   E   F   G   H
+uint8_t ledCathodes[] = {A0, A1, A2, A3, A4, A5, 11, 12};
 // Numbers are the rows and the anodes:
+//       Matrix row:   0  1  2  3  4  5  6  7
 uint8_t ledAnodes[] = {2, 3, 4, 5, 6, 7, 8, 9};
 
 void setup() {
@@ -26,7 +28,7 @@ void loop() {
     pinMode(ledCathodes[x], OUTPUT);
     for(int y = 0; y < LED_SIZE; y++) {
       digitalWrite(ledAnodes[y], HIGH);
-      delay(300);
+      delay(100);
       digitalWrite(ledAnodes[y], LOW);
     }
     pinMode(ledCathodes[x], INPUT);
