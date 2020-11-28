@@ -141,7 +141,8 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 * Bargraph [yellow](https://www.reichelt.de/bargraph-anzeige-10-elemente-gelb-ybg-1000-p22957.html), [green](https://www.reichelt.de/bargraph-anzeige-10-elemente-gruen-gbg-1000-p8141.html), [green/red](https://www.reichelt.de/bargraph-anzeige-10-elemente-3x-rot-7x-gruen-rgbg-1000-p31501.html)
 * 5V LEDs with resistor: [green](https://www.reichelt.de/led-5-mm-bedrahtet-5-v-gruen-20-mcd-30--kbt-l-7113gd-5v-p231091.html), [yellow](https://www.reichelt.de/led-5-mm-bedrahtet-5-v-gelb-20-mcd-30--kbt-l-7113yd-5v-p231097.html), [red](https://www.reichelt.de/led-5-mm-bedrahtet-5-v-rot-30-mcd-30--kbt-l-7113id-5v-p231093.html)
 * [128x64 OLED screen](https://www.reichelt.de/entwicklerboards-display-0-96-oled-display-ssd1306-debo-oled2-0-96-p266107.html) ([SBC-OLED01](https://joy-it.net/de/products/SBC-OLED01), [Adafruit_SSD1306](https://github.com/adafruit/Adafruit_SSD1306), [GFX](https://learn.adafruit.com/adafruit-gfx-graphics-library))
-* LED matrix / LED strip: are on my wishlist
+* LED matrix: 1588BS from starter kit, [pinout](http://www.zpag.net/Electroniques/Arduino/8x8_dot_matrix_1588bs.html)
+* LED strip: is on my wishlist
 
 ##### Bigger ICs
 
