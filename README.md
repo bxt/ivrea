@@ -12,6 +12,8 @@ Here are the projects I did and plan to do.
 
 The [morse Arduino code](morse) was my very first project, I wrote the code even before my Arduino arrived, it requires no wiring as it works with the built-in LED when the Arduino is connected to a computer via USB. It reads ASCII from the serial, converts to morse code, and then makes an LED blink accordingly. Of cource you could hook this up to a relay to drive an even bigger light.
 
+After some time I decided to write a [test suite for this sketch in `test.cpp`](morse/test.cpp) inspired by [`rfielding/octaveRounder`'s tests](https://github.com/rfielding/octaveRounder/blob/master/test/harness.cpp) which allows me to write new features without having to connect an Arduino.
+
 ### Fade LED array
 
 My second project creates a smooth marquee of LEDs using PWM, and also uses an input from a poti for speed control. This showcases the analog capabilities of the arduino unit. The code in [`fadeLedArray.ino`](fadeLedArray.ino) might require some finetuning depending on the exact LED you use. The wiring is also very easy, just connect the LEDs to the PWP pins and ground with a resistor in series, and the middle pin from the poti to an analog pin. To smooth out the analog readings I used the code from [`readAnalogVoltageSmooth.ino`](readAnalogVoltageSmooth.ino).
