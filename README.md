@@ -40,7 +40,7 @@ The wiring is a bit more elaborate for this one, so I have a [higher-res image s
 
 ### LED Matrix
 
-When I got my hands on a `1588BS` 8x8 pixel LED matrix, I wanted to use the Arduino as a driver. Luckily it has more then 16 I/O pins available, so you can directly connect the 8 anodes and 8 cathodes (with a resistor). I my wiring it still became quite a mess, and I had to teste the matrix with the diode setting in the multimeter to even find out how the ports are laid out. I then wrote [`ledMatrix.ino`](ledMatrix.ino) first to test if everything is hooked up correctly and working, but then proceeded to add a dozen effects. I used a struct and funciton pointers to make it easy to configure the effects, otherwsie the code is rather unspectacular.
+When I got my hands on a `1588BS` 8x8 pixel LED matrix, I wanted to use the Arduino as a driver. Luckily it has more then 16 I/O pins available, so you can directly connect the 8 anodes and 8 cathodes (with a resistor). I my wiring is quite a mess, I had to test the matrix with the diode setting in the multimeter to even find out how the ports are laid out. I then wrote [`ledMatrix.ino`](ledMatrix.ino) first to test if everything is hooked up correctly and working, but then proceeded to add a dozen effects. I used a struct and funciton pointers to make it easy to configure the effects, otherwsie the code is rather unspectacular.
 
 ![Video showing the LED matrix show "hi! sup?" and a heart](ledMatrix.gif?raw=true)
 
