@@ -9,10 +9,9 @@ char mode = START_MODE;
 void setup() {
   Serial.begin(9600);
 
-  for(int i = 0; i < ledCount; i++) {
+  for (int i = 0; i < ledCount; i++) {
     pinMode(leds[i], OUTPUT);
   }
-
 }
 
 void loop() {

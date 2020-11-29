@@ -31,6 +31,6 @@ void loop() {
   sensorSmoothValueSum += sensorValues[sensorSmoothIndex];
 
   int smoothSensorValue = sensorSmoothValueSum / sensorSmoothPoints;
-  
+
   Serial.println(smoothSensorValue);
 }

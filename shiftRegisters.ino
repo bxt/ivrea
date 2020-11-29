@@ -16,20 +16,20 @@ unsigned int delayMode = DELAY_MODE_ANIMATED;
 unsigned int resultDelayTime = 500;
 
 void applyDelay() {
-  if(delayMode == DELAY_MODE_MINIMAL) {
+  if (delayMode == DELAY_MODE_MINIMAL) {
     delayMicroseconds(1);
   }
-  if(delayMode == DELAY_MODE_ANIMATED) {
+  if (delayMode == DELAY_MODE_ANIMATED) {
     delay(20);
   }
-  if(delayMode == DELAY_MODE_EDUCATIONAL) {
+  if (delayMode == DELAY_MODE_EDUCATIONAL) {
     delay(300);
   }
 }
 
 void writeValues() {
   for (int i = 0; i < LENGTH; i++) {
-    bool value =  values[i];
+    bool value = values[i];
     digitalWrite(SERIAL_IN, value ? HIGH : LOW);
     applyDelay();
     digitalWrite(SERIAL_CLOCK, HIGH);
@@ -48,7 +48,7 @@ void writeValues() {
 }
 
 void processSerial() {
-  while(Serial.available() > 0) {
+  while (Serial.available() > 0) {
     int incomingByte = Serial.read();
 
     if (incomingByte == ' ' || incomingByte == 10) {
@@ -59,7 +59,7 @@ void processSerial() {
     if (incomingByte == 'I') {
       showIntermediate = !showIntermediate;
     } else if (incomingByte == 'D') {
-       incomingByte = Serial.read();
+      incomingByte = Serial.read();
       if (incomingByte >= '0' && incomingByte < '3') {
         delayMode = incomingByte - '0';
       } else {
@@ -127,9 +127,9 @@ void loop() {
     processSerial();
   }
 
-  if(delayMode == DELAY_MODE_MINIMAL) {
+  if (delayMode == DELAY_MODE_MINIMAL) {
     for (int k = 0; k < LENGTH; k++) {
-     for (int i = 0; i < LENGTH; i++) {
+      for (int i = 0; i < LENGTH; i++) {
         values[i] = i < k;
       }
       writeValues();
@@ -137,10 +137,10 @@ void loop() {
     }
   }
 
-  if(delayMode == DELAY_MODE_MINIMAL) {
+  if (delayMode == DELAY_MODE_MINIMAL) {
     for (int j = 0; j < LENGTH; j++) {
       for (int k = j; k >= 0; k--) {
-       for (int i = 0; i < LENGTH; i++) {
+        for (int i = 0; i < LENGTH; i++) {
           values[i] = i > j || i == k;
         }
         writeValues();

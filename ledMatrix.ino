@@ -15,22 +15,22 @@ uint8_t ledAnodes[] = {2, 3, 4, 5, 6, 7, 8, 9};
 uint8_t buffer[LED_SIZE];
 
 void cleanBuffer() {
-  for(int i = 0; i < LED_SIZE; i++) {
+  for (int i = 0; i < LED_SIZE; i++) {
     buffer[i] = 0;
   }
 }
 
 void displayBuffer() {
-  for(int x = 0; x < LED_SIZE; x++) {
+  for (int x = 0; x < LED_SIZE; x++) {
     pinMode(ledCathodes[x], OUTPUT);
     uint8_t columnData = buffer[x];
-    for(int y = 0; y < LED_SIZE; y++) {
-      if(columnData & 0x80) {
+    for (int y = 0; y < LED_SIZE; y++) {
+      if (columnData & 0x80) {
         digitalWrite(ledAnodes[y], HIGH);
       }
       columnData <<= 1;
     }
-    for(int y = 0; y < LED_SIZE; y++) {
+    for (int y = 0; y < LED_SIZE; y++) {
       digitalWrite(ledAnodes[y], LOW);
     }
     pinMode(ledCathodes[x], INPUT);
@@ -38,14 +38,14 @@ void displayBuffer() {
 }
 
 void drawBitmap(const uint8_t *data, int xOffset, int yOffset) {
-  for(int i = 0; i < LED_SIZE; i++) {
+  for (int i = 0; i < LED_SIZE; i++) {
     uint8_t datum = pgm_read_byte(data + i);
     uint8_t shiftedDatum = yOffset < 0 ? (datum << -yOffset) : (datum >> yOffset);
     buffer[(i + xOffset) % LED_SIZE] |= shiftedDatum;
   }
 }
 
-typedef void (*effectFunction) (const int t);
+typedef void (*effectFunction)(const int t);
 
 struct effect {
   effectFunction function;
@@ -53,7 +53,7 @@ struct effect {
 };
 
 void lightAllOnce(const int t) {
-  buffer[(t/8) % LED_SIZE] = 1 << (t % LED_SIZE);
+  buffer[(t / 8) % LED_SIZE] = 1 << (t % LED_SIZE);
 }
 
 void lightRows(const int t) {
@@ -61,26 +61,26 @@ void lightRows(const int t) {
 }
 
 void lightColumns(const int t) {
-  for(int i = 0; i < LED_SIZE; i++) {
+  for (int i = 0; i < LED_SIZE; i++) {
     buffer[i] = 1 << (t % LED_SIZE);
   }
 }
 
 void binaryCounting(const int t) {
-  for(int i = 0; i < LED_SIZE; i++) {
-    if(t+i > 8) {
-      buffer[i] = (t+i-8) % 256;
+  for (int i = 0; i < LED_SIZE; i++) {
+    if (t + i > 8) {
+      buffer[i] = (t + i - 8) % 256;
     }
   }
 }
 
 void squares(const int t) {
-  int t2 = t/4;
-  int tl = t2 % 8 < 4 ? t2 % 4 : 3-(t2 % 4);
-  for(int x = 0; x < LED_SIZE; x++) {
-    for(int y = 0; y < LED_SIZE; y++) {
-      int xDist = (abs(x*2-7)-1)/2;
-      int yDist = (abs(y*2-7)-1)/2;
+  int t2 = t / 4;
+  int tl = t2 % 8 < 4 ? t2 % 4 : 3 - (t2 % 4);
+  for (int x = 0; x < LED_SIZE; x++) {
+    for (int y = 0; y < LED_SIZE; y++) {
+      int xDist = (abs(x * 2 - 7) - 1) / 2;
+      int yDist = (abs(y * 2 - 7) - 1) / 2;
       if ((xDist == tl && yDist <= tl) || (yDist == tl && xDist <= tl)) {
         buffer[x] = buffer[x] | (1 << y);
       }
@@ -177,10 +177,9 @@ const uint8_t PROGMEM questionMark[] = {
   B00000000,
 };
 
-
 void letters(const int t) {
   int len = 34;
-  int yOffset = (t/4) % len - len;
+  int yOffset = (t / 4) % len - len;
 
   if (yOffset < -26)
     drawBitmap(letterH, 0, yOffset + 34);
@@ -202,10 +201,9 @@ void letters(const int t) {
     drawBitmap(letterH, 0, yOffset);
 }
 
-
 void checkerboard(const int t) {
-  for(int i = 0; i < LED_SIZE; i++) {
-    buffer[i] = B10101010 ^ ((t/8 % 2 > 0) == (i & 1 > 0) ? 0xFF : 0);
+  for (int i = 0; i < LED_SIZE; i++) {
+    buffer[i] = B10101010 ^ ((t / 8 % 2 > 0) == (i & 1 > 0) ? 0xFF : 0);
   }
 }
 
@@ -225,10 +223,10 @@ void smile(const int t) {
 }
 
 void sierpinsky(const int t) {
-  int t2 = t/8;
-  for(int x = 0; x < LED_SIZE; x++) {
-    for(int y = 0; y < LED_SIZE; y++) {
-      if((x & y & t2) > 0) {
+  int t2 = t / 8;
+  for (int x = 0; x < LED_SIZE; x++) {
+    for (int y = 0; y < LED_SIZE; y++) {
+      if ((x & y & t2) > 0) {
         buffer[x] = buffer[x] | (1 << y);
       }
     }
@@ -236,31 +234,30 @@ void sierpinsky(const int t) {
 }
 
 void fill1(const int t) {
-  for(int i = 0; i < LED_SIZE; i++) {
-     int shift = 8-t+i;
-     buffer[i] = 0xFF << (shift > 0 ? shift : 0);
+  for (int i = 0; i < LED_SIZE; i++) {
+    int shift = 8 - t + i;
+    buffer[i] = 0xFF << (shift > 0 ? shift : 0);
   }
 }
 
 void empty1(const int t) {
-  for(int i = 0; i < LED_SIZE; i++) {
+  for (int i = 0; i < LED_SIZE; i++) {
     buffer[i] = 0xFF << t + i;
   }
 }
 
 void fill2(const int t) {
-  for(int i = 0; i < LED_SIZE; i++) {
-     int shift = 8-t+i;
-     buffer[7 - i] = 0xFF << (shift > 0 ? shift : 0);
+  for (int i = 0; i < LED_SIZE; i++) {
+    int shift = 8 - t + i;
+    buffer[7 - i] = 0xFF << (shift > 0 ? shift : 0);
   }
 }
 
 void empty2(const int t) {
-  for(int i = 0; i < LED_SIZE; i++) {
+  for (int i = 0; i < LED_SIZE; i++) {
     buffer[7 - i] = 0xFF << t + i;
   }
 }
-
 
 struct effect effects[] = {
   {lightAllOnce, 64},
@@ -283,15 +280,15 @@ unsigned long effectsLengthSum = 0;
 void setup() {
   cleanBuffer();
 
-  for(int i = 0; i < sizeof(effects) / sizeof(struct effect); i++) {
+  for (int i = 0; i < sizeof(effects) / sizeof(struct effect); i++) {
     effectsLengthSum += effects[i].length;
   }
 
-  for(int i = 0; i < LED_SIZE; i++) {
+  for (int i = 0; i < LED_SIZE; i++) {
     digitalWrite(ledCathodes[i], LOW);
     pinMode(ledCathodes[i], INPUT);
   }
-    for(int i = 0; i < LED_SIZE; i++) {
+  for (int i = 0; i < LED_SIZE; i++) {
     digitalWrite(ledAnodes[i], LOW);
     pinMode(ledAnodes[i], OUTPUT);
   }
@@ -301,7 +298,7 @@ void loop() {
   unsigned long t = (millis() / 32ul) % effectsLengthSum;
   cleanBuffer();
 
-  for(int i = 0; true; i++) {
+  for (int i = 0; true; i++) {
     if (t < effects[i].length) {
       (*(effects[i].function))(t);
       break;

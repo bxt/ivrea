@@ -37,7 +37,7 @@ const PROGMEM uint8_t morseLookupTable[] = {
 
 int incomingByte = 0;
 
-unsigned long ditLength = 1200/WPM;
+unsigned long ditLength = 1200 / WPM;
 
 void sendSignAndADit(uint8_t sign) {
   if (sign == dit) {
@@ -88,8 +88,9 @@ void loop() {
     if (incomingByte >= 'A' && incomingByte <= 'Z') {
       incomingByte -= 'A';
 
-      for(int i = 0; i < 4; i++) {
-        uint8_t sign = pgm_read_byte_near(morseLookupTable + incomingByte * 4 + i);
+      for (int i = 0; i < 4; i++) {
+        uint8_t sign =
+            pgm_read_byte_near(morseLookupTable + incomingByte * 4 + i);
         sendSignAndADit(sign);
       }
 
@@ -103,7 +104,7 @@ void loop() {
     if (incomingByte >= '0' && incomingByte <= '9') {
       incomingByte -= '0';
 
-      for(int i = 0; i < 5; i++) {
+      for (int i = 0; i < 5; i++) {
         uint8_t sign = incomingByte > 5
           ? (i >= incomingByte - 5 ? dit : dah)
           : (i >= incomingByte ? dah : dit);
