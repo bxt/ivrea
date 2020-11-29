@@ -67,9 +67,10 @@ void lightColumns(const int t) {
 }
 
 void binaryCounting(const int t) {
-  unsigned int t2 = t/2;
   for(int i = 0; i < LED_SIZE; i++) {
-    buffer[i] = (t2+i) % 256;
+    if(t+i > 8) {
+      buffer[i] = (t+i-8) % 256;
+    }
   }
 }
 
@@ -273,7 +274,7 @@ struct effect effects[] = {
   {squares, 96},
   {letters, 256},
   {hearts, 96},
-  {binaryCounting, 496},
+  {binaryCounting, 256},
   {lightRows, 8},
   {lightColumns, 8},
 };
