@@ -46,6 +46,12 @@ When I got my hands on a `1588BS` 8x8 pixel LED matrix, I wanted to use the Ardu
 
 ### Planned projects / ideas
 
+* Game similar to froggy on the LED Matrix
+* Kitchen timer set with poti, counting on 4 segments, and flashing RGB-LED and Buzzer when done.
+* Temperature sensor with LCD
+* Game controlled with remote control, maybe tic tac toe?
+* Maze game
+* Game controlled by distance?
 * Programming an EEPROM to drive the shift registers, so no Arduino is needed
 * Well, the 8 bit CPU...
 * As well as the "reliable data transmissions" series
