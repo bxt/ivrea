@@ -103,19 +103,19 @@ Paddle rightPaddle(RIGHT_POTENTIOMETER_PIN, (LED_SIZE - 1));
 
 class Ball {
 private:
-  uint8_t positionX;
-  uint8_t positionY;
-  uint8_t speedX;
-  uint8_t speedY;
+  int8_t positionX;
+  int8_t positionY;
+  int8_t speedX;
+  int8_t speedY;
   int ticksLeft;
 
-  void mirrorXAt(uint8_t x) {
+  void mirrorXAt(int8_t x) {
     this->speedX = -this->speedX;
     this->positionX = x - (this->positionX - x);
   }
-  void mirrorYAt(uint8_t x) {
+  void mirrorYAt(int8_t y) {
     this->speedY = -this->speedY;
-    this->positionY = x - (this->positionY - x);
+    this->positionY = y - (this->positionY - y);
   }
 
 public:
