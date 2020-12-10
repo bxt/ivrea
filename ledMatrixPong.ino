@@ -5,7 +5,8 @@
 #define INITIAL_BALL_TICKS 600
 #define STEP_BALL_TICKS 300
 
-#define SCORE_TICKS 500
+#define WINNING_TICKS 250
+#define SCORES_TICKS 500
 
 // Connect the potis to that the top pin is ground,
 // bottom bin is 5V and middle pin goes to:
@@ -185,7 +186,7 @@ public:
       return;
 
     this->player = player;
-    this->ticksLeft = SCORE_TICKS;
+    this->ticksLeft = WINNING_TICKS;
   }
 
   bool loopAndIsEnabled() {
@@ -193,7 +194,7 @@ public:
       return false;
 
     for (int i = 0; i < LED_SIZE; i++) {
-      int bars = this->ticksLeft * LED_SIZE / SCORE_TICKS;
+      int bars = this->ticksLeft * LED_SIZE / WINNING_TICKS;
       for (int k = 0; k < bars; k++) {
         int xPosition = this->player == left ? k : (LED_SIZE - 1 - k);
         buffer[i] |= 1 << xPosition;
@@ -203,7 +204,7 @@ public:
     this->ticksLeft--;
 
     if (this->ticksLeft < 0) {
-      ball.reset();
+      scores.setScorer(this->player);
     }
 
     return true;
@@ -211,6 +212,67 @@ public:
 };
 
 Winning winning;
+
+class Scores {
+private:
+  Player player;
+  int ticksLeft;
+  int scoreLeft;
+  int scoreRight;
+
+public:
+  Scores() {
+    this->player = none;
+    this->ticksLeft = -1;
+  }
+
+  void setScorer(Player player) {
+    if (player == none)
+      return;
+
+    this->player = player;
+    this->ticksLeft = SCORES_TICKS;
+  }
+
+  bool loopAndIsEnabled() {
+    if (this->ticksLeft < 0)
+      return false;
+
+    for (int i = 0; i < this->scoreLeft; i++) {
+      buffer[i % LED_SIZE] |= 1 << (i / LED_SIZE);
+    }
+
+    for (int i = 0; i < this->scoreRight; i++) {
+      buffer[i % LED_SIZE] |= 1 << (LED_SIZE - 1 - i / LED_SIZE);
+    }
+
+    int bars = 2 * this->ticksLeft * LED_SIZE / SCORES_TICKS / 3;
+    int x, y;
+    if (this->player == left) {
+      x = max(this->scoreLeft / LED_SIZE, bars);
+      y = this->scoreLeft % LED_SIZE;
+    } else {
+      x = min(LED_SIZE - 1 - this->scoreRight / LED_SIZE, LED_SIZE - bars);
+      y = this->scoreRight % LED_SIZE;
+    }
+    buffer[y] |= 1 << x;
+
+    this->ticksLeft--;
+
+    if (this->ticksLeft < 0) {
+      if (this->player == left) {
+        this->scoreLeft++;
+      } else {
+        this->scoreRight++;
+      }
+      ball.reset();
+    }
+
+    return true;
+  }
+};
+
+Scores scores;
 
 void setup() {
   cleanBuffer();
@@ -234,7 +296,7 @@ void loop() {
   leftPaddle.loop();
   rightPaddle.loop();
 
-  if (!winning.loopAndIsEnabled()) {
+  if (!winning.loopAndIsEnabled() && !scores.loopAndIsEnabled()) {
     Player maybeWinner = ball.loopAndWinner();
     winning.setWinner(maybeWinner);
   }
