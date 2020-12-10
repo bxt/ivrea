@@ -2,11 +2,11 @@
 #define LED_SIZE 8
 
 #define PADDLE_SIZE 3
-#define INITIAL_BALL_TICKS 600
+#define INITIAL_BALL_TICKS 1200
 #define STEP_BALL_TICKS 300
 
-#define WINNING_TICKS 250
-#define SCORES_TICKS 500
+#define WINNING_TICKS 450
+#define SCORES_TICKS 1500
 
 // Connect the potis to that the top pin is ground,
 // bottom bin is 5V and middle pin goes to:
@@ -109,6 +109,7 @@ private:
   int8_t speedX;
   int8_t speedY;
   int ticksLeft;
+  int ticks;
 
   void mirrorXAt(int8_t x) {
     this->speedX = -this->speedX;
@@ -120,20 +121,26 @@ private:
   }
 
 public:
-  Ball() { this->reset(); }
+  Ball() {
+    this->ticks = STEP_BALL_TICKS;
+    this->reset();
+  }
 
   void reset() {
     this->positionX = (LED_SIZE - PADDLE_SIZE) / 2;
     this->positionY = (LED_SIZE - PADDLE_SIZE) / 2;
     this->speedX = 1;
     this->speedY = 1;
+    if (this->ticks > 30) {
+      this->ticks -= 3;
+    }
     this->ticksLeft = INITIAL_BALL_TICKS;
   }
 
   Player loopAndWinner() {
     this->ticksLeft--;
     if (this->ticksLeft < 0) {
-      this->ticksLeft = STEP_BALL_TICKS;
+      this->ticksLeft = this->ticks;
 
       this->positionX += this->speedX;
 
@@ -203,13 +210,13 @@ public:
       buffer[i % LED_SIZE] |= 1 << (LED_SIZE - 1 - i / LED_SIZE);
     }
 
-    int bars = 2 * this->ticksLeft * LED_SIZE / SCORES_TICKS / 3;
+    int bars = max(2 * (this->ticksLeft - SCORES_TICKS / 2) * LED_SIZE / SCORES_TICKS / 3, 0);
     int x, y;
     if (this->player == left) {
-      x = max(this->scoreLeft / LED_SIZE, bars);
+      x = min(this->scoreLeft / LED_SIZE + bars, LED_SIZE);
       y = this->scoreLeft % LED_SIZE;
     } else {
-      x = min(LED_SIZE - 1 - this->scoreRight / LED_SIZE, LED_SIZE - bars);
+      x = max(LED_SIZE - 1 - this->scoreRight / LED_SIZE - bars, 0);
       y = this->scoreRight % LED_SIZE;
     }
     buffer[y] |= 1 << x;
@@ -293,12 +300,14 @@ void setup() {
 void loop() {
   cleanBuffer();
 
-  leftPaddle.loop();
-  rightPaddle.loop();
+  if (!scores.loopAndIsEnabled()) {
+    leftPaddle.loop();
+    rightPaddle.loop();
 
-  if (!winning.loopAndIsEnabled() && !scores.loopAndIsEnabled()) {
-    Player maybeWinner = ball.loopAndWinner();
-    winning.setWinner(maybeWinner);
+    if (!winning.loopAndIsEnabled()) {
+      Player maybeWinner = ball.loopAndWinner();
+      winning.setWinner(maybeWinner);
+    }
   }
 
   displayBuffer();
