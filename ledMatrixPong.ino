@@ -55,13 +55,13 @@ enum Player { none, left, right };
 
 class Paddle {
 private:
-  unit8_t pin;
+  uint8_t pin;
   int reference;
-  unit8_t positionX;
-  unit8_t positionY;
+  uint8_t positionX;
+  uint8_t positionY;
 
 public:
-  Paddle(unit8_t pin, unit8_t positionX) {
+  Paddle(uint8_t pin, uint8_t positionX) {
     this->pin = pin;
     this->reference = 0;
     this->positionX = positionX;
@@ -92,7 +92,7 @@ public:
     }
   }
 
-  bool isCovering(unit8_t positionY) {
+  bool isCovering(uint8_t positionY) {
     return positionY >= this->positionY &&
            positionY < (this->positionY + PADDLE_SIZE);
   }
@@ -103,17 +103,17 @@ Paddle rightPaddle(RIGHT_POTENTIOMETER_PIN, (LED_SIZE - 1));
 
 class Ball {
 private:
-  unit8_t positionX;
-  unit8_t positionY;
-  unit8_t speedX;
-  unit8_t speedY;
+  uint8_t positionX;
+  uint8_t positionY;
+  uint8_t speedX;
+  uint8_t speedY;
   int ticksLeft;
 
-  void mirrorXAt(unit8_t x) {
+  void mirrorXAt(uint8_t x) {
     this->speedX = -this->speedX;
     this->positionX = x - (this->positionX - x);
   }
-  void mirrorYAt(unit8_t x) {
+  void mirrorYAt(uint8_t x) {
     this->speedY = -this->speedY;
     this->positionY = x - (this->positionY - x);
   }
