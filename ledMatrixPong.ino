@@ -123,14 +123,15 @@ private:
 public:
   Ball() {
     this->ticks = STEP_BALL_TICKS;
-    this->reset();
+    this->reset(1);
   }
 
-  void reset() {
-    this->positionX = (LED_SIZE - PADDLE_SIZE) / 2;
-    this->positionY = (LED_SIZE - PADDLE_SIZE) / 2;
-    this->speedX = 1;
-    this->speedY = 1;
+  void reset(int directionX) {
+    int r = random(0, 100);
+    this->positionX = (LED_SIZE * 2 - directionX) / 4;
+    this->positionY = (LED_SIZE * 2 + (r > 50 ? 1 : -1)) / 4;
+    this->speedX = directionX;
+    this->speedY = (r > 75 || r < 25 ? 1 : -1);
     if (this->ticks > 30) {
       this->ticks -= 3;
     }
@@ -226,10 +227,11 @@ public:
     if (this->ticksLeft < 0) {
       if (this->player == left) {
         this->scoreLeft++;
+        ball.reset(1);
       } else {
         this->scoreRight++;
+        ball.reset(-1);
       }
-      ball.reset();
     }
 
     return true;
