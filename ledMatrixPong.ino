@@ -51,35 +51,162 @@ void displayBuffer() {
   }
 }
 
-void drawBitmap(const uint8_t *data, int xOffset, int yOffset) {
-  for (int i = 0; i < LED_SIZE; i++) {
-    uint8_t datum = pgm_read_byte(data + i);
-    uint8_t shiftedDatum = yOffset < 0 ? (datum << -yOffset) : (datum >> yOffset);
-    buffer[(i + xOffset) % LED_SIZE] |= shiftedDatum;
+enum Player { none, left, right };
+
+class Paddle {
+private:
+  unit8_t pin;
+  int reference;
+  unit8_t positionX;
+  unit8_t positionY;
+
+public:
+  Paddle(unit8_t pin, unit8_t positionX) {
+    this->pin = pin;
+    this->reference = 0;
+    this->positionX = positionX;
+    this->positionY = (LED_SIZE - PADDLE_SIZE) / 2 + 1;
   }
-}
 
-int leftPaddleReference = 0;
-int rightPaddleReference = 0;
-int leftPaddlePosition = (LED_SIZE - PADDLE_SIZE) / 2 + 1;
-int rightPaddlePosition = (LED_SIZE - PADDLE_SIZE) / 2 + 1;
+  void setup() { this->reference = analogRead(this->pin); }
 
-int ballPositionX = (LED_SIZE - PADDLE_SIZE) / 2;
-int ballPositionY = (LED_SIZE - PADDLE_SIZE) / 2;
-int ballSpeedX = 1;
-int ballSpeedY = 1;
-int ballTicksLeft = INITIAL_BALL_TICKS;
+  void loop() {
+    int reading = analogRead(this->pin);
 
-int scoreLeftTicksLeft = -1;
-int scoreRightTicksLeft = -1;
+    if (reading < this->reference - POTI_THRESHOLD) {
+      this->reference = reading;
+      if (this->positionY > 0) {
+        this->positionY--;
+      }
+    }
 
-void startGame() {
-  ballPositionX = (LED_SIZE - PADDLE_SIZE) / 2;
-  ballPositionY = (LED_SIZE - PADDLE_SIZE) / 2;
-  ballSpeedX = 1;
-  ballSpeedY = 1;
-  ballTicksLeft = INITIAL_BALL_TICKS;
-}
+    if (reading > this->reference + POTI_THRESHOLD) {
+      this->reference = reading;
+      if (this->positionY < LED_SIZE - PADDLE_SIZE) {
+        this->positionY++;
+      }
+    }
+
+    for (int i = 0; i < PADDLE_SIZE; i++) {
+      buffer[this->positionY + i] |= 1 << this->positionX;
+    }
+  }
+
+  bool isCovering(unit8_t positionY) {
+    return positionY >= this->positionY &&
+           positionY < (this->positionY + PADDLE_SIZE);
+  }
+};
+
+Paddle leftPaddle(LEFT_POTENTIOMETER_PIN, 0);
+Paddle rightPaddle(RIGHT_POTENTIOMETER_PIN, (LED_SIZE - 1));
+
+class Ball {
+private:
+  unit8_t positionX;
+  unit8_t positionY;
+  unit8_t speedX;
+  unit8_t speedY;
+  int ticksLeft;
+
+  void mirrorXAt(unit8_t x) {
+    this->speedX = -this->speedX;
+    this->positionX = x - (this->positionX - x);
+  }
+  void mirrorYAt(unit8_t x) {
+    this->speedY = -this->speedY;
+    this->positionY = x - (this->positionY - x);
+  }
+
+public:
+  Ball() { this->reset(); }
+
+  void reset() {
+    this->positionX = (LED_SIZE - PADDLE_SIZE) / 2;
+    this->positionY = (LED_SIZE - PADDLE_SIZE) / 2;
+    this->speedX = 1;
+    this->speedY = 1;
+    this->ticksLeft = INITIAL_BALL_TICKS;
+  }
+
+  Player loopAndWinner() {
+    this->ticksLeft--;
+    if (this->ticksLeft < 0) {
+      this->ticksLeft = STEP_BALL_TICKS;
+
+      this->positionX += this->speedX;
+
+      if (this->positionX < 1) {
+        if (leftPaddle.isCovering(this->positionY)) {
+          this->mirrorXAt(1);
+        } else {
+          return right;
+        }
+      }
+      if (this->positionX > LED_SIZE - 2) {
+        if (rightPaddle.isCovering(this->positionY)) {
+          this->mirrorXAt(LED_SIZE - 2);
+        } else {
+          return left;
+        }
+      }
+
+      this->positionY += this->speedY;
+
+      if (this->positionY < 0) {
+        this->mirrorYAt(0);
+      }
+      if (this->positionY > LED_SIZE - 1) {
+        this->mirrorYAt(LED_SIZE - 1);
+      }
+    }
+
+    buffer[this->positionY] |= 1 << (this->positionX);
+
+    return none;
+  }
+};
+
+Ball ball;
+
+class Winning {
+private:
+  Player player;
+  int ticksLeft;
+
+public:
+  Winning() {
+    this->player = none;
+    this->ticksLeft = -1;
+  }
+
+  void setWinner(Player player) {
+    if (player == none)
+      return;
+
+    this->player = player;
+    this->ticksLeft = SCORE_TICKS;
+  }
+
+  bool loopAndIsEnabled() {
+    if (this->ticksLeft < 0)
+      return false;
+
+    for (int i = 0; i < LED_SIZE; i++) {
+      int bars = this->ticksLeft * LED_SIZE / SCORE_TICKS;
+      for (int k = 0; k < bars; k++) {
+        int xPosition = this->player == left ? k : (LED_SIZE - 1 - k);
+        buffer[i] |= 1 << xPosition;
+      }
+    }
+
+    this->ticksLeft--;
+
+    return true;
+  }
+};
+
+Winning winning;
 
 void setup() {
   cleanBuffer();
@@ -93,106 +220,19 @@ void setup() {
     pinMode(ledAnodes[i], OUTPUT);
   }
 
-  int leftPaddleReference = analogRead(LEFT_POTENTIOMETER_PIN);
-  int rightPaddleReference = analogRead(RIGHT_POTENTIOMETER_PIN);
+  leftPaddle.setup();
+  rightPaddle.setup();
 }
 
 void loop() {
   cleanBuffer();
 
-  int leftPaddleReading = analogRead(LEFT_POTENTIOMETER_PIN);
-  int rightPaddleReading = analogRead(RIGHT_POTENTIOMETER_PIN);
+  leftPaddle.loop();
+  rightPaddle.loop();
 
-  if (leftPaddleReading < leftPaddleReference - POTI_THRESHOLD) {
-    leftPaddleReference = leftPaddleReading;
-    if (leftPaddlePosition > 0) {
-      leftPaddlePosition--;
-    }
-  }
-
-  if (leftPaddleReading > leftPaddleReference + POTI_THRESHOLD) {
-    leftPaddleReference = leftPaddleReading;
-    if (leftPaddlePosition < LED_SIZE - PADDLE_SIZE) {
-      leftPaddlePosition++;
-    }
-  }
-
-  if (rightPaddleReading < rightPaddleReference - POTI_THRESHOLD) {
-    rightPaddleReference = rightPaddleReading;
-    if (rightPaddlePosition > 0) {
-      rightPaddlePosition--;
-    }
-  }
-
-  if (rightPaddleReading > rightPaddleReference + POTI_THRESHOLD) {
-    rightPaddleReference = rightPaddleReading;
-    if (rightPaddlePosition < LED_SIZE - PADDLE_SIZE) {
-      rightPaddlePosition++;
-    }
-  }
-
-  for (int i = 0; i < PADDLE_SIZE; i++) {
-    buffer[leftPaddlePosition + i] |= 1;
-    buffer[rightPaddlePosition + i] |= 1 << (LED_SIZE - 1);
-  }
-
-  if (scoreLeftTicksLeft > 0) {
-    for (int i = 0; i < LED_SIZE; i++) {
-      int bars = scoreLeftTicksLeft * LED_SIZE / SCORE_TICKS;
-      for (int k = 0; k < bars; k++) {
-        buffer[i] |= 1 << k;
-      }
-    }
-    scoreLeftTicksLeft--;
-  } else if (scoreRightTicksLeft > 0) {
-    for (int i = 0; i < LED_SIZE; i++) {
-      int bars = scoreRightTicksLeft * LED_SIZE / SCORE_TICKS;
-      for (int k = 0; k < bars; k++) {
-        buffer[i] |= 1 << (LED_SIZE - k - 1);
-      }
-    }
-    scoreRightTicksLeft--;
-  } else {
-    ballTicksLeft--;
-    if (ballTicksLeft < 0) {
-      ballTicksLeft = STEP_BALL_TICKS;
-
-      ballPositionX += ballSpeedX;
-
-      if (ballPositionX < 1) {
-        if (ballPositionY >= leftPaddlePosition &&
-            ballPositionY < (leftPaddlePosition + PADDLE_SIZE)) {
-          ballSpeedX = -ballSpeedX;
-          ballPositionX = 1 - (ballPositionX - 1);
-        } else {
-          scoreRightTicksLeft = SCORE_TICKS;
-          startGame();
-        }
-      }
-      if (ballPositionX > LED_SIZE - 2) {
-        if (ballPositionY >= rightPaddlePosition &&
-            ballPositionY < (rightPaddlePosition + PADDLE_SIZE)) {
-          ballSpeedX = -ballSpeedX;
-          ballPositionX = LED_SIZE - 2 - (ballPositionX - (LED_SIZE - 2));
-        } else {
-          scoreLeftTicksLeft = SCORE_TICKS;
-          startGame();
-        }
-      }
-
-      ballPositionY += ballSpeedY;
-
-      if (ballPositionY < 0) {
-        ballSpeedY = -ballSpeedY;
-        ballPositionY = -ballPositionY;
-      }
-      if (ballPositionY > LED_SIZE - 1) {
-        ballSpeedY = -ballSpeedY;
-        ballPositionY = LED_SIZE - 1 - (ballPositionY - (LED_SIZE - 1));
-      }
-    }
-
-    buffer[ballPositionY] |= 1 << (ballPositionX);
+  if (!winning.loopAndIsEnabled()) {
+    Player maybeWinner = ball.loopAndWinner();
+    winning.setWinner(maybeWinner);
   }
 
   displayBuffer();
