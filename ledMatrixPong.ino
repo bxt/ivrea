@@ -170,49 +170,6 @@ public:
 
 Ball ball;
 
-class Winning {
-private:
-  Player player;
-  int ticksLeft;
-
-public:
-  Winning() {
-    this->player = none;
-    this->ticksLeft = -1;
-  }
-
-  void setWinner(Player player) {
-    if (player == none)
-      return;
-
-    this->player = player;
-    this->ticksLeft = WINNING_TICKS;
-  }
-
-  bool loopAndIsEnabled() {
-    if (this->ticksLeft < 0)
-      return false;
-
-    for (int i = 0; i < LED_SIZE; i++) {
-      int bars = this->ticksLeft * LED_SIZE / WINNING_TICKS;
-      for (int k = 0; k < bars; k++) {
-        int xPosition = this->player == left ? k : (LED_SIZE - 1 - k);
-        buffer[i] |= 1 << xPosition;
-      }
-    }
-
-    this->ticksLeft--;
-
-    if (this->ticksLeft < 0) {
-      scores.setScorer(this->player);
-    }
-
-    return true;
-  }
-};
-
-Winning winning;
-
 class Scores {
 private:
   Player player;
@@ -273,6 +230,49 @@ public:
 };
 
 Scores scores;
+
+class Winning {
+private:
+  Player player;
+  int ticksLeft;
+
+public:
+  Winning() {
+    this->player = none;
+    this->ticksLeft = -1;
+  }
+
+  void setWinner(Player player) {
+    if (player == none)
+      return;
+
+    this->player = player;
+    this->ticksLeft = WINNING_TICKS;
+  }
+
+  bool loopAndIsEnabled() {
+    if (this->ticksLeft < 0)
+      return false;
+
+    for (int i = 0; i < LED_SIZE; i++) {
+      int bars = this->ticksLeft * LED_SIZE / WINNING_TICKS;
+      for (int k = 0; k < bars; k++) {
+        int xPosition = this->player == left ? k : (LED_SIZE - 1 - k);
+        buffer[i] |= 1 << xPosition;
+      }
+    }
+
+    this->ticksLeft--;
+
+    if (this->ticksLeft < 0) {
+      scores.setScorer(this->player);
+    }
+
+    return true;
+  }
+};
+
+Winning winning;
 
 void setup() {
   cleanBuffer();
