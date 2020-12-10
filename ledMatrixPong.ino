@@ -202,6 +202,10 @@ public:
 
     this->ticksLeft--;
 
+    if (this->ticksLeft < 0) {
+      ball.reset();
+    }
+
     return true;
   }
 };
