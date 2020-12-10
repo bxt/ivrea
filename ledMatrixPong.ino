@@ -61,11 +61,11 @@ void drawBitmap(const uint8_t *data, int xOffset, int yOffset) {
 
 int leftPaddleReference = 0;
 int rightPaddleReference = 0;
-int leftPaddlePosition = (LED_SIZE - PADDLE_SIZE)/2 + 1;
-int rightPaddlePosition = (LED_SIZE - PADDLE_SIZE)/2 + 1;
+int leftPaddlePosition = (LED_SIZE - PADDLE_SIZE) / 2 + 1;
+int rightPaddlePosition = (LED_SIZE - PADDLE_SIZE) / 2 + 1;
 
-int ballPositionX = (LED_SIZE - PADDLE_SIZE)/2;
-int ballPositionY = (LED_SIZE - PADDLE_SIZE)/2;
+int ballPositionX = (LED_SIZE - PADDLE_SIZE) / 2;
+int ballPositionY = (LED_SIZE - PADDLE_SIZE) / 2;
 int ballSpeedX = 1;
 int ballSpeedY = 1;
 int ballTicksLeft = INITIAL_BALL_TICKS;
@@ -74,8 +74,8 @@ int scoreLeftTicksLeft = -1;
 int scoreRightTicksLeft = -1;
 
 void startGame() {
-  ballPositionX = (LED_SIZE - PADDLE_SIZE)/2;
-  ballPositionY = (LED_SIZE - PADDLE_SIZE)/2;
+  ballPositionX = (LED_SIZE - PADDLE_SIZE) / 2;
+  ballPositionY = (LED_SIZE - PADDLE_SIZE) / 2;
   ballSpeedX = 1;
   ballSpeedY = 1;
   ballTicksLeft = INITIAL_BALL_TICKS;
@@ -105,28 +105,28 @@ void loop() {
 
   if (leftPaddleReading < leftPaddleReference - POTI_THRESHOLD) {
     leftPaddleReference = leftPaddleReading;
-    if(leftPaddlePosition > 0) {
+    if (leftPaddlePosition > 0) {
       leftPaddlePosition--;
     }
   }
 
   if (leftPaddleReading > leftPaddleReference + POTI_THRESHOLD) {
     leftPaddleReference = leftPaddleReading;
-    if(leftPaddlePosition < LED_SIZE - PADDLE_SIZE) {
+    if (leftPaddlePosition < LED_SIZE - PADDLE_SIZE) {
       leftPaddlePosition++;
     }
   }
 
   if (rightPaddleReading < rightPaddleReference - POTI_THRESHOLD) {
     rightPaddleReference = rightPaddleReading;
-    if(rightPaddlePosition > 0) {
+    if (rightPaddlePosition > 0) {
       rightPaddlePosition--;
     }
   }
 
   if (rightPaddleReading > rightPaddleReference + POTI_THRESHOLD) {
     rightPaddleReference = rightPaddleReading;
-    if(rightPaddlePosition < LED_SIZE - PADDLE_SIZE) {
+    if (rightPaddlePosition < LED_SIZE - PADDLE_SIZE) {
       rightPaddlePosition++;
     }
   }
@@ -136,17 +136,17 @@ void loop() {
     buffer[rightPaddlePosition + i] |= 1 << (LED_SIZE - 1);
   }
 
-  if(scoreLeftTicksLeft > 0) {
+  if (scoreLeftTicksLeft > 0) {
     for (int i = 0; i < LED_SIZE; i++) {
-      int bars = scoreLeftTicksLeft*LED_SIZE/SCORE_TICKS;
+      int bars = scoreLeftTicksLeft * LED_SIZE / SCORE_TICKS;
       for (int k = 0; k < bars; k++) {
         buffer[i] |= 1 << k;
       }
     }
     scoreLeftTicksLeft--;
-  } else if(scoreRightTicksLeft > 0) {
+  } else if (scoreRightTicksLeft > 0) {
     for (int i = 0; i < LED_SIZE; i++) {
-      int bars = scoreRightTicksLeft*LED_SIZE/SCORE_TICKS;
+      int bars = scoreRightTicksLeft * LED_SIZE / SCORE_TICKS;
       for (int k = 0; k < bars; k++) {
         buffer[i] |= 1 << (LED_SIZE - k - 1);
       }
@@ -154,13 +154,14 @@ void loop() {
     scoreRightTicksLeft--;
   } else {
     ballTicksLeft--;
-    if(ballTicksLeft < 0) {
+    if (ballTicksLeft < 0) {
       ballTicksLeft = STEP_BALL_TICKS;
 
       ballPositionX += ballSpeedX;
 
-      if(ballPositionX < 1) {
-        if (ballPositionY >= leftPaddlePosition && ballPositionY < (leftPaddlePosition + PADDLE_SIZE)) {
+      if (ballPositionX < 1) {
+        if (ballPositionY >= leftPaddlePosition &&
+            ballPositionY < (leftPaddlePosition + PADDLE_SIZE)) {
           ballSpeedX = -ballSpeedX;
           ballPositionX = 1 - (ballPositionX - 1);
         } else {
@@ -168,26 +169,27 @@ void loop() {
           startGame();
         }
       }
-      if(ballPositionX > LED_SIZE - 2) {
-        if (ballPositionY >= rightPaddlePosition && ballPositionY < (rightPaddlePosition + PADDLE_SIZE)) {
+      if (ballPositionX > LED_SIZE - 2) {
+        if (ballPositionY >= rightPaddlePosition &&
+            ballPositionY < (rightPaddlePosition + PADDLE_SIZE)) {
           ballSpeedX = -ballSpeedX;
           ballPositionX = LED_SIZE - 2 - (ballPositionX - (LED_SIZE - 2));
         } else {
           scoreLeftTicksLeft = SCORE_TICKS;
           startGame();
         }
-     }
+      }
 
-     ballPositionY += ballSpeedY;
+      ballPositionY += ballSpeedY;
 
-      if(ballPositionY < 0) {
+      if (ballPositionY < 0) {
         ballSpeedY = -ballSpeedY;
         ballPositionY = -ballPositionY;
       }
-      if(ballPositionY > LED_SIZE - 1) {
+      if (ballPositionY > LED_SIZE - 1) {
         ballSpeedY = -ballSpeedY;
         ballPositionY = LED_SIZE - 1 - (ballPositionY - (LED_SIZE - 1));
-     }
+      }
     }
 
     buffer[ballPositionY] |= 1 << (ballPositionX);
