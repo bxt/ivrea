@@ -144,11 +144,15 @@ void loop() {
           score += 1 << (value + 1);
           prevValue = 0;
           prevPosition++;
-        } else {
+        } else if (prevValue == 0) {
           grid[y][x] = 0;
-          prevPosition++;
           grid[y][prevPosition] = value;
           prevValue = value;
+        } else {
+          grid[y][x] = 0;
+          grid[y][prevPosition + 1] = value;
+          prevValue = value;
+          prevPosition++;
         }
       }
     }
@@ -169,11 +173,15 @@ void loop() {
           score += 1 << (value + 1);
           prevValue = 0;
           prevPosition--;
-        } else {
+        } else if (prevValue == 0) {
           grid[y][x] = 0;
-          prevPosition--;
           grid[prevPosition][x] = value;
           prevValue = value;
+        } else {
+          grid[y][x] = 0;
+          grid[prevPosition - 1][x] = value;
+          prevValue = value;
+          prevPosition--;
         }
       }
     }
@@ -194,11 +202,15 @@ void loop() {
           score += 1 << (value + 1);
           prevValue = 0;
           prevPosition++;
-        } else {
+        } else if (prevValue == 0) {
           grid[y][x] = 0;
-          prevPosition++;
           grid[prevPosition][x] = value;
           prevValue = value;
+        } else {
+          grid[y][x] = 0;
+          grid[prevPosition + 1][x] = value;
+          prevValue = value;
+          prevPosition++;
         }
       }
     }
@@ -219,17 +231,28 @@ void loop() {
           score += 1 << (value + 1);
           prevValue = 0;
           prevPosition--;
-        } else {
+        } else if (prevValue == 0) {
           grid[y][x] = 0;
-          prevPosition--;
           grid[y][prevPosition] = value;
           prevValue = value;
+        } else {
+          grid[y][x] = 0;
+          grid[y][prevPosition - 1] = value;
+          prevValue = value;
+          prevPosition--;
         }
       }
     }
 
     fillRandomEmptySpot();
   }
+
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(70, 6);
+  display.println(F("Score:"));
+  display.setCursor(70, 15);
+  display.println(score);
 
   display.display();
 
