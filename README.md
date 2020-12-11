@@ -10,19 +10,19 @@ Here are the projects I did and plan to do.
 
 ### Morse
 
-The [morse Arduino code](morse) was my very first project, I wrote the code even before my Arduino arrived, it requires no wiring as it works with the built-in LED when the Arduino is connected to a computer via USB. It reads ASCII from the serial, converts to morse code, and then makes an LED blink accordingly. Of cource you could hook this up to a relay to drive an even bigger light.
+The [morse Arduino code](morse) was my very first project, I wrote the code even before my Arduino arrived, it requires no wiring as it works with the built-in LED when the Arduino is connected to a computer via USB. It reads ASCII from the serial, converts to morse code, and then makes an LED blink accordingly. Of course you could hook this up to a relay to drive an even bigger light.
 
 After some time I decided to write a [test suite for this sketch in `test.cpp`](morse/test.cpp) inspired by [`rfielding/octaveRounder`'s tests](https://github.com/rfielding/octaveRounder/blob/master/test/harness.cpp) which allows me to write new features without having to connect an Arduino.
 
 ### Fade LED array
 
-My second project creates a smooth marquee of LEDs using PWM, and also uses an input from a poti for speed control. This showcases the analog capabilities of the arduino unit. The code in [`fadeLedArray.ino`](fadeLedArray.ino) might require some finetuning depending on the exact LED you use. The wiring is also very easy, just connect the LEDs to the PWP pins and ground with a resistor in series, and the middle pin from the poti to an analog pin. To smooth out the analog readings I used the code from [`readAnalogVoltageSmooth.ino`](readAnalogVoltageSmooth.ino).
+My second project creates a smooth marquee of LEDs using PWM, and also uses an input from a poti for speed control. This showcases the analog capabilities of the Arduino unit. The code in [`fadeLedArray.ino`](fadeLedArray.ino) might require some fine-tuning depending on the exact LED you use. The wiring is also very easy, just connect the LEDs to the PWP pins and ground with a resistor in series, and the middle pin from the poti to an analog pin. To smooth out the analog readings I used the code from [`readAnalogVoltageSmooth.ino`](readAnalogVoltageSmooth.ino).
 
 ![Animation of the fading LEDs](fadeLedArray.gif?raw=true)
 
 ### LED piano
 
-The [LED piano](./ledPiano) is a fun and debugging project. The [arduino code](ledPiano/ledPiano.ino) is reading messages from the serial port like `H4`, `L1` etc. to toggle pins high and low. You could just send those from the serial monitor in Adruino IDE, but it's way faster and fun to do it from a browser. This way you can also do it on a phone, or some other computer in the same network. For that, there is [a server written](ledPiano/index.js) with [node.js](https://nodejs.org/), [express](https://expressjs.com/), [ws](https://github.com/websockets/ws) and [serialport](https://serialport.io/) libraries that will accept messages from a websocket connection and forward them to a serial port. It also serves a [basic client file in plain JS](ledPiano/public/index.html) that displays some buttons for control, and also accepts touch and keyboard input. Aside from driving LEDs, this can also be used to fiddle with ICs without having to wire many things and debouncing buttons and so on.
+The [LED piano](./ledPiano) is a fun and debugging project. The [Arduino code](ledPiano/ledPiano.ino) is reading messages from the serial port like `H4`, `L1` etc. to toggle pins high and low. You could just send those from the serial monitor in Arduino IDE, but it's way faster and fun to do it from a browser. This way you can also do it on a phone, or some other computer in the same network. For that, there is [a server written](ledPiano/index.js) with [node.js](https://nodejs.org/), [express](https://expressjs.com/), [ws](https://github.com/websockets/ws) and [serialport](https://serialport.io/) libraries that will accept messages from a websocket connection and forward them to a serial port. It also serves a [basic client file in plain JS](ledPiano/public/index.html) that displays some buttons for control, and also accepts touch and keyboard input. Aside from driving LEDs, this can also be used to fiddle with ICs without having to wire many things and debouncing buttons and so on.
 
 ![Video of the leds being controlled by keyboard](ledPiano/ledPiano.gif?raw=true)
 
@@ -30,7 +30,7 @@ The [LED piano](./ledPiano) is a fun and debugging project. The [arduino code](l
 
 After using basic LEDs only I wanted to try out the bargraphs and some ICs and started with the 74HC595 8-bit shift register, creating [`shiftRegisters.ino`](shiftRegisters.ino). It can control two shift registers which in turn control bargrahps and show some nice visuals. The project is a bit like [this shift out example](https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut)) except that it generates some patterns and also accepts some commands form serial port to control:
 
-* `I`: toggle wether to show interemediate register states or only latch once all bits are in place
+* `I`: toggle wether to show intermediate register states or only latch once all bits are in place
 * `D0`, `D1`, `D2`: control delay when shifting out the bits, so you can watch either the sendout or the results
 * `R000`–`R999`: control how long each "image" is shown after the serial transmission is complete
 
@@ -40,29 +40,29 @@ The wiring is a bit more elaborate for this one, so I have a [higher-res image s
 
 ### LED Matrix
 
-When I got my hands on a `1588BS` 8x8 pixel LED matrix, I wanted to use the Arduino as a driver. Luckily it has more then 16 I/O pins available, so you can directly connect the 8 anodes and 8 cathodes (with a resistor). I my wiring is quite a mess, I had to test the matrix with the diode setting in the multimeter to even find out how the ports are laid out. I then wrote [`ledMatrix.ino`](ledMatrix.ino) first to test if everything is hooked up correctly and working, but then proceeded to add a dozen effects. I used a struct and funciton pointers to make it easy to configure the effects, otherwsie the code is rather unspectacular.
+When I got my hands on a `1588BS` 8x8 pixel LED matrix, I wanted to use the Arduino as a driver. Luckily it has more then 16 I/O pins available, so you can directly connect the 8 anodes and 8 cathodes (with a resistor). I my wiring is quite a mess, I had to test the matrix with the diode setting in the multimeter to even find out how the ports are laid out. I then wrote [`ledMatrix.ino`](ledMatrix.ino) first to test if everything is hooked up correctly and working, but then proceeded to add a dozen effects. I used a struct and function pointers to make it easy to configure the effects, otherwise the code is rather unspectacular.
 
 ![Video showing the LED matrix show "hi! sup?" and a heart](ledMatrix.gif?raw=true)
 
 #### Pong
 
-Since the nano has two anaolog pins that can not be used as digital pins anyway, I hooked up two potentiometers to those which can control two "paddles" on the LED matrix and created a small Pong-like game for it. In [`ledMatrixPong.ino`](ledMatrixPong.ino) I found myself having so many global variables for the state of the ball, the paddles and more, that I refreshed my C++ knowledge and used classes and an enum to make things a little bit more elegant. I spend most of the time on displaying the score nicely in the end, it's quite playable, even tough 8x8 pixel resoltion is somewhat limiting. As the game progresses, the ball gets a bit faster over time to keep in challenging.
+Since the nano has two analog pins that can not be used as digital pins anyway, I hooked up two potentiometers to those which can control two "paddles" on the LED matrix and created a small Pong-like game for it in [`ledMatrixPong.ino`](ledMatrixPong.ino). I found myself having so many global variables for the state of the ball, the paddles and more, that I refreshed my C++ knowledge and used classes and an enum to make things a little bit more elegant. I spend most of the time on displaying the score nicely in the end. It's quite playable, even tough 8x8 pixel resolution is somewhat limiting. As the game progresses, the ball gets a bit faster over time to keep it challenging.
 
 ![Photo showing the LED matrix with a pong like game](ledMatrixPong.jpg?raw=true)
 
 ### Temperature display
 
-Another two components from the starter kit that go nicely together are the DHT 11 temperature and humidity sensor and the LCD screen. At this place I actually found the wiring and programming not so rewarding, it was mostly an execise in wiring up all the pins correctly and embedding some libraries, as documented in [`temperatureDisplay.ino`](temperatureDisplay.ino). I took a cheap powerbank that I won on the Southside festival and brought the breaboard with the whole installation into the blistering cold outside to see if it works. Instead of just displaying the values on the LCD I also designed a set of icons for temperature (sun, cloud, snowflake) and humidity (droplet in 3 sizes) which change depending on the sensor values to give this project a least a small creative edge.
+Another two components from the starter kit that go nicely together are the DHT 11 temperature and humidity sensor and the LCD screen. At this place I actually found the wiring and programming not so rewarding, it was mostly an exercise in wiring up all the pins correctly and embedding some libraries, as documented in [`temperatureDisplay.ino`](temperatureDisplay.ino). I took a cheap powerbank that I won on the Southside festival and brought the breadboard with the whole installation into the blistering cold outside to see if it works. Instead of just displaying the values on the LCD I also designed a set of icons for temperature (sun, cloud, snowflake) and humidity (droplet in 3 sizes) which change depending on the sensor values to give this project a least a small creative edge.
 
-![Photo showing an LCD screen on a breadboard with temparature and humidity readings](temperatureDisplay.jpg?raw=true)
+![Photo showing an LCD screen on a breadboard with temperature and humidity readings](temperatureDisplay.jpg?raw=true)
 
-![Photo showing an LCD screen on a breadboard with temparature and humidity readings, in the dark outside](temperatureDisplayOutside.jpg?raw=true)
+![Photo showing an LCD screen on a breadboard with temperature and humidity readings, in the dark outside](temperatureDisplayOutside.jpg?raw=true)
 
 ### Ultrasonic sensor and buzzer
 
 Next I tested the HC-SR04 ultrasonic sensor and the passive buzzer. Again, it felt straightforward to set it up, the buzzer can be connected to any digital pin (and ground) and the HC-SR04 gets voltage supplies, a trigger pin to start a measurement and an echo pin which can be read with the `pulseIn` Arduino function. I build a contraption that works like parking sensor and modifies the buzzer frequency based on the distance in [`parkHelper.ino`](parkHelper.ino), however, I found the readings were all over the place, and I don't even own a car, so I gave up on this. At some place I might build a radar with the servo and Processing...
 
-With the same circuit I also coded [`elfenlied.ino`](elfenlied.ino) which will play the Lilium melody on the buzzer. I put in a small resistor so that the buzzer is not so loud during debugging... I think the buzzer might be a good addition to some of the games to provide a multimedial experience. The Arduino can with the `Tone` library only play one frequence on a square wave, so it's really limited in its current form.
+With the same circuit I also coded [`elfenlied.ino`](elfenlied.ino) which will play the Lilium melody on the buzzer. I put in a small resistor so that the buzzer is not so loud during debugging. I think the buzzer might be a good addition to some of the games to provide a multimedial experience. The Arduino with the `Tone` library can only play one frequency on a square wave, so it's really limited in its current form.
 
 ![Photo showing a buzzer and an ultrasonic sensor connected to an Arduino nano on a breaboard](parkHelper.jpg?raw=true)
 
@@ -80,7 +80,7 @@ With the same circuit I also coded [`elfenlied.ino`](elfenlied.ino) which will p
 
 ## Resources
 
-Over time, I collected some useful resources like [instructional videos](#instructional-videos), [references](#references), a [glosary and german translations](#glosary-and-german-translations), info about [sourcing](#sourcing) components.
+Over time, I collected some useful resources like [instructional videos](#instructional-videos), [references](#references), a [glossary and german translations](#glossary-and-german-translations), info about [sourcing](#sourcing) components.
 
 ### Instructional videos
 
@@ -108,7 +108,7 @@ Over time, I collected some useful resources like [instructional videos](#instru
 * [Arduino Built-In Examples](https://www.arduino.cc/en/Tutorial/BuiltInExamples), the codes form the examples menu but with circuits and explanations
 * [Arduino "language" reference](https://www.arduino.cc/reference/en/): with the API and yeah also C++ if you want
 * [Arduino nano](https://store.arduino.cc/arduino-nano), page about the board type I'm using, check the tech specs, docs and FAQ tabs as well
-* [JOY-IT nano V3](https://joy-it.net/de/products/ARD_NanoV3), the actual "Adruino-compatible" board I'm using, check the driver download and "ATmega328P (Old Bootloader)" instructions
+* [JOY-IT nano V3](https://joy-it.net/de/products/ARD_NanoV3), the actual "Arduino-compatible" board I'm using, check the driver download and "ATmega328P (Old Bootloader)" instructions
 * [PROGMEM](https://www.arduino.cc/reference/en/language/variables/utilities/progmem/) and [AVR PGM Program Space Utilities](https://www.nongnu.org/avr-libc/user-manual/group__avr__pgmspace.html)
 * There's the [Arduino memory](https://www.arduino.cc/en/Tutorial/Foundations/Memory) page, but really think: Flash ~ CD with program, SRAM ~ RAM – duh, EEPROM ~ hard disk.
 
@@ -116,10 +116,10 @@ Over time, I collected some useful resources like [instructional videos](#instru
 
 * [ASCII table](https://de.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#ASCII-Tabelle) for converting bits / numbers to letters and back manually
 * Wikipedia articles about [ICs](https://en.wikipedia.org/wiki/Integrated_circuit)
-* [How to Use a Breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all) compehensive tutorial about the very basics
+* [How to Use a Breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all) comprehensive tutorial about the very basics
 * Also in the shopping list below you can usually find the data sheets about the particular components
 
-### Glosary and German translations
+### Glossary and German translations
 
 * `V` / Voltage in volt, de: Spannung in Volt
 * `I` / Current in amps / amperes, de: Strom / Stromstärke in Ampere
@@ -140,7 +140,7 @@ Over time, I collected some useful resources like [instructional videos](#instru
 
 #### Shopping list
 
-You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which I would recommend. But I was not sure about shipping to Germany (expecially with taxes) and I wanted some extra / custom parts, so I procured everything indidually. I'm not sure whether I have everything, and also some things are not 100% compatible and will require some tinkering, but for me it's useful to have a list of the exact parts in my inventory and maybe someone else can buy similar things.
+You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which I would recommend. But I was not sure about shipping to Germany (especially with taxes) and I wanted some extra / custom parts, so I procured everything individually. I'm not sure whether I have everything, and also some things are not 100% compatible and will require some tinkering, but for me it's useful to have a list of the exact parts in my inventory and maybe someone else can buy similar things.
 
 ##### Tools and supplies
 
