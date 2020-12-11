@@ -27,7 +27,7 @@ private:
   uint8_t pin;
   uint8_t lockedReading;
   uint8_t lastReading;
-  unsinged long lastChangeTime;
+  unsigned long lastChangeTime;
 public:
   DirectionButton(uint8_t pin) {
     this->pin = pin;
@@ -46,12 +46,12 @@ public:
     bool returnValue = false;
 
     if (this->lastReading != reading) {
-      if ((milis() - this->lastChangeTime) > DEBOUNCE_DELAY &&
+      if ((millis() - this->lastChangeTime) > DEBOUNCE_DELAY &&
           reading == DIRECTION_BUTTON_ACTIVE) {
         returnValue = true;
       }
 
-      this->lastChangeTime = milis();
+      this->lastChangeTime = millis();
     }
 
     this->lastReading = reading;
@@ -72,7 +72,7 @@ uint8_t grid[4][4] = {
   {0, 0, 0, 0},
   {0, 0, 0, 0},
   {0, 0, 0, 0},
-}
+};
 
 void fillRandomEmptySpot() {
   uint8_t emptySpotCount = 0;
@@ -159,7 +159,7 @@ void loop() {
   if (downDirectionButton.loopAndIsJustPressed()) {
     for(int x = 0; x < 4; x++) {
       uint8_t prevValue = 0xFF;
-      int8_t prevPosition = -1;
+      int8_t prevPosition = 4;
       for(int y = 4 - 1; y >= 0; y--) {
         uint8_t value = grid[y][x];
         if (value == 0) continue;
