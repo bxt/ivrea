@@ -392,6 +392,4 @@ void loop() {
   }
 
   display.display();
-
-  delay(8);
 }
