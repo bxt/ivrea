@@ -70,7 +70,7 @@ With the same circuit I also coded [`elfenlied.ino`](elfenlied.ino) which will p
 
 The number 2048 is not only 2^11 but also the name of a well-known arcade game. It only needs 4x4 tiles, 4 buttons for the 4 directions and maybe a bit of score and highscore display. And it's a lot of fun. So I picked this as a candidate to develop a more complex game on the 128x64 Pixel OLED screen. The screen is connected with I2C and the buttons with pull-ups, so the hardware can be constructed in no time. However, for the software in [`play2048.ino`](2048/play2048.ino) and other files I ventured into some new areas. The highscore is saved in the EEPROM. There a individual desings for the tiles (they look artsy, but are hard to read, maybe I'll change tham) which were exported from a sprite with a small Go script [`transformSprite.go`](2048/transformSprite.go). And then there's even a 3D animation when reaching the 2048 tile, rendered from the [Blender3D](blender.org) file [`animation.blend`](2048/animation.blend) and exported into bitmap frames using [`transformFrames.go`](2048/transformFrames.go). It fills almost the whole flash memory. Welp! But I think it was worth it.
 
-<img alt="Photo showing my highscore of 36056 and the final game state on my own breadboard-based Arduino-driven version of 2048" src="2048/play2048.jpg?raw=true" width="432" />
+![Photo showing my highscore of 36056 and the final game state on my own breadboard-based Arduino-driven version of 2048](2048/play2048.jpg?raw=true)
 
 ### Planned projects / ideas
 
