@@ -28,6 +28,7 @@ private:
   uint8_t lockedReading;
   uint8_t lastReading;
   unsigned long lastChangeTime;
+
 public:
   DirectionButton(uint8_t pin) {
     this->pin = pin;
@@ -69,25 +70,23 @@ class Coord {
 public:
   int8_t x;
   int8_t y;
-  Coord(int8_t x, int8_t y): x(x), y(y) { }
+  Coord(int8_t x, int8_t y) : x(x), y(y) {}
 
-  Coord& operator+=(const Coord& r) {
+  Coord &operator+=(const Coord &r) {
     x += r.x;
     y += r.y;
     return *this;
   }
 };
 
-Coord operator*(Coord l, const int8_t r) {
-    return Coord(l.x * r, l.y * r);
-}
+Coord operator*(Coord l, const int8_t r) { return Coord(l.x * r, l.y * r); }
+Coord operator+(Coord l, const Coord r) { return Coord(l.x + r.x, l.y + r.y); }
+Coord operator-(Coord l, const Coord r) { return Coord(l.x - r.x, l.y - r.y); }
 
-Coord operator+(Coord l, const Coord r) {
-    return Coord(l.x + r.x, l.y + r.y);
+bool operator==(Coord const &l, Coord const &r) {
+  return l.x == r.x && l.y == r.y;
 }
-
-bool operator==(Coord const & l, Coord const & r) {return l.x == r.x && l.y == r.y;}
-bool operator!=(Coord const & l, Coord const & r) {return !(l == r);}
+bool operator!=(Coord const &l, Coord const &r) { return !(l == r); }
 
 unsigned long score = 0;
 
@@ -98,21 +97,29 @@ uint8_t grid[4][4] = {
   {0, 0, 0, 0},
 };
 
+uint8_t nextGrid[4][4] = {
+  {0, 0, 0, 0},
+  {0, 0, 0, 0},
+  {0, 0, 0, 0},
+  {0, 0, 0, 0},
+};
+
 void fillRandomEmptySpot() {
   uint8_t emptySpotCount = 0;
 
-  for(int y = 0; y < 4; y++) {
-    for(int x = 0; x < 4; x++) {
+  for (int y = 0; y < 4; y++) {
+    for (int x = 0; x < 4; x++) {
       uint8_t value = grid[y][x];
-      if (value == 0) emptySpotCount++;
+      if (value == 0)
+        emptySpotCount++;
     }
   }
 
   uint8_t fillIndex = random(0, emptySpotCount);
   uint8_t fillValue = random(0, 100) < 10 ? 2 : 1;
 
-  for(int y = 0; y < 4; y++) {
-    for(int x = 0; x < 4; x++) {
+  for (int y = 0; y < 4; y++) {
+    for (int x = 0; x < 4; x++) {
       uint8_t value = grid[y][x];
       if (value == 0) {
         emptySpotCount--;
@@ -126,28 +133,62 @@ void fillRandomEmptySpot() {
   }
 }
 
+int movementTicksLeft = -1;
+
+size_t movementGhostTileCount = 0;
+Coord movementGhostTilePositions[12] = {Coord(0, 0), Coord(0, 0), Coord(0, 0),
+                                        Coord(0, 0), Coord(0, 0), Coord(0, 0),
+                                        Coord(0, 0), Coord(0, 0), Coord(0, 0),
+                                        Coord(0, 0), Coord(0, 0), Coord(0, 0)};
+Coord movementGhostTileSpeeds[12] = {Coord(0, 0), Coord(0, 0), Coord(0, 0),
+                                     Coord(0, 0), Coord(0, 0), Coord(0, 0),
+                                     Coord(0, 0), Coord(0, 0), Coord(0, 0),
+                                     Coord(0, 0), Coord(0, 0), Coord(0, 0)};
+uint8_t movementGhostTileValues[12] = {0};
+
 void moveTile(Coord from, Coord to) {
   uint8_t value = grid[from.y][from.x];
   grid[from.y][from.x] = 0;
-  grid[to.y][to.x] = value;
+  nextGrid[from.y][from.x] = 0;
+  nextGrid[to.y][to.x] = value;
+
+  movementTicksLeft = TILE_BMP_WIDTH;
+  movementGhostTilePositions[movementGhostTileCount] = from * TILE_BMP_WIDTH;
+  movementGhostTileSpeeds[movementGhostTileCount] = to - from;
+  movementGhostTileValues[movementGhostTileCount] = value;
+  movementGhostTileCount++;
 }
 
-void calculateGridMovement(Coord originPosition, Coord secondaryDirection, Coord primaryDirection) {
+void flushTileMovements() {
+  movementTicksLeft = -1;
+  movementGhostTileCount = 0;
+  for (int y = 0; y < 4; y++) {
+    for (int x = 0; x < 4; x++) {
+      grid[y][x] = nextGrid[y][x];
+    }
+  }
+}
+
+void calculateGridMovement(Coord originPosition, Coord secondaryDirection,
+                           Coord primaryDirection) {
+  flushTileMovements();
+
   bool didAnyMove = false;
 
-  for(int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++) {
     uint8_t prevValue = 0xFF;
     Coord startPosition = originPosition + secondaryDirection * i;
-    Coord prevPosition = startPosition + primaryDirection * -1;
-    for(int k = 0; k < 4; k++) {
+    Coord prevPosition = startPosition - primaryDirection;
+    for (int k = 0; k < 4; k++) {
       Coord position = startPosition + primaryDirection * k;
       uint8_t value = grid[position.y][position.x];
-      if (value == 0) continue; // skip empty
+      if (value == 0)
+        continue;               // skip empty
       if (value == prevValue) { // merging
         moveTile(position, prevPosition);
         didAnyMove = true;
         // increase numbers:
-        grid[prevPosition.y][prevPosition.x]++;
+        nextGrid[prevPosition.y][prevPosition.x]++;
         score += 1 << (value + 1);
         // can not merge twice, so move on:
         prevValue = 0;
@@ -156,9 +197,9 @@ void calculateGridMovement(Coord originPosition, Coord secondaryDirection, Coord
         moveTile(position, prevPosition);
         didAnyMove = true;
         prevValue = value; // for next merge check
-      } else { // can not merge, closing the gap if any
+      } else {             // can not merge, closing the gap if any
         prevPosition += primaryDirection;
-        if(prevPosition != position) {
+        if (prevPosition != position) {
           moveTile(position, prevPosition);
           didAnyMove = true;
         }
@@ -191,14 +232,27 @@ void setup() {
 void loop() {
   display.clearDisplay();
 
-  for(int y = 0; y < 4; y++) {
-    for(int x = 0; x < 4; x++) {
+  for (int y = 0; y < 4; y++) {
+    for (int x = 0; x < 4; x++) {
       uint8_t value = grid[y][x];
-      if (value == 0) continue;
+      if (value == 0)
+        continue;
       uint8_t posX = x * TILE_BMP_WIDTH;
       uint8_t posY = y * TILE_BMP_HEIGHT;
-      display.drawBitmap(posX, posY, tile_bmps[value - 1], TILE_BMP_WIDTH, TILE_BMP_HEIGHT, 1);
+      display.drawBitmap(posX, posY, tile_bmps[value - 1], TILE_BMP_WIDTH,
+                         TILE_BMP_HEIGHT, 1);
     }
+  }
+
+  if (movementTicksLeft > 0) {
+    for (int i = 0; i < movementGhostTileCount; i++) {
+      Coord position = movementGhostTilePositions[i];
+      uint8_t value = movementGhostTileValues[i];
+      display.drawBitmap(position.x, position.y, tile_bmps[value - 1],
+                         TILE_BMP_WIDTH, TILE_BMP_HEIGHT, 1);
+      movementGhostTilePositions[i] += movementGhostTileSpeeds[i];
+    }
+    movementTicksLeft--;
   }
 
   if (leftDirectionButton.loopAndIsJustPressed()) {
