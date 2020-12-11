@@ -65,6 +65,30 @@ DirectionButton downDirectionButton(PIN_DOWN);
 DirectionButton upDirectionButton(PIN_UP);
 DirectionButton rightDirectionButton(PIN_RIGHT);
 
+class Coord {
+public:
+  int8_t x;
+  int8_t y;
+  Coord(int8_t x, int8_t y): x(x), y(y) { }
+
+  Coord& operator+=(const Coord& r) {
+    x += r.x;
+    y += r.y;
+    return *this;
+  }
+};
+
+Coord operator*(Coord l, const int8_t r) {
+    return Coord(l.x * r, l.y * r);
+}
+
+Coord operator+(Coord l, const Coord r) {
+    return Coord(l.x + r.x, l.y + r.y);
+}
+
+bool operator==(Coord const & l, Coord const & r) {return l.x == r.x && l.y == r.y;}
+bool operator!=(Coord const & l, Coord const & r) {return !(l == r);}
+
 unsigned long score = 0;
 
 uint8_t grid[4][4] = {
@@ -102,6 +126,52 @@ void fillRandomEmptySpot() {
   }
 }
 
+void moveTile(Coord from, Coord to) {
+  uint8_t value = grid[from.y][from.x];
+  grid[from.y][from.x] = 0;
+  grid[to.y][to.x] = value;
+}
+
+void calculateGridMovement(Coord originPosition, Coord secondaryDirection, Coord primaryDirection) {
+  bool didAnyMove = false;
+
+  for(int i = 0; i < 4; i++) {
+    uint8_t prevValue = 0xFF;
+    Coord startPosition = originPosition + secondaryDirection * i;
+    Coord prevPosition = startPosition + primaryDirection * -1;
+    for(int k = 0; k < 4; k++) {
+      Coord position = startPosition + primaryDirection * k;
+      uint8_t value = grid[position.y][position.x];
+      if (value == 0) continue; // skip empty
+      if (value == prevValue) { // merging
+        moveTile(position, prevPosition);
+        didAnyMove = true;
+        // increase numbers:
+        grid[prevPosition.y][prevPosition.x]++;
+        score += 1 << (value + 1);
+        // can not merge twice, so move on:
+        prevValue = 0;
+        prevPosition += primaryDirection;
+      } else if (prevValue == 0) { // moving to an empty spot
+        moveTile(position, prevPosition);
+        didAnyMove = true;
+        prevValue = value; // for next merge check
+      } else { // can not merge, closing the gap if any
+        prevPosition += primaryDirection;
+        if(prevPosition != position) {
+          moveTile(position, prevPosition);
+          didAnyMove = true;
+        }
+        prevValue = value;
+      }
+    }
+  }
+
+  if (didAnyMove) {
+    fillRandomEmptySpot();
+  }
+}
+
 void setup() {
   Serial.begin(9600);
 
@@ -132,119 +202,19 @@ void loop() {
   }
 
   if (leftDirectionButton.loopAndIsJustPressed()) {
-    for(int y = 0; y < 4; y++) {
-      uint8_t prevValue = 0xFF;
-      int8_t prevPosition = -1;
-      for(int x = 0; x < 4; x++) {
-        uint8_t value = grid[y][x];
-        if (value == 0) continue;
-        if (value == prevValue) {
-          grid[y][x] = 0;
-          grid[y][prevPosition]++;
-          score += 1 << (value + 1);
-          prevValue = 0;
-          prevPosition++;
-        } else if (prevValue == 0) {
-          grid[y][x] = 0;
-          grid[y][prevPosition] = value;
-          prevValue = value;
-        } else {
-          grid[y][x] = 0;
-          grid[y][prevPosition + 1] = value;
-          prevValue = value;
-          prevPosition++;
-        }
-      }
-    }
-
-    fillRandomEmptySpot();
+    calculateGridMovement(Coord(0, 0), Coord(0, 1), Coord(1, 0));
   }
 
   if (downDirectionButton.loopAndIsJustPressed()) {
-    for(int x = 0; x < 4; x++) {
-      uint8_t prevValue = 0xFF;
-      int8_t prevPosition = 4;
-      for(int y = 4 - 1; y >= 0; y--) {
-        uint8_t value = grid[y][x];
-        if (value == 0) continue;
-        if (value == prevValue) {
-          grid[y][x] = 0;
-          grid[prevPosition][x]++;
-          score += 1 << (value + 1);
-          prevValue = 0;
-          prevPosition--;
-        } else if (prevValue == 0) {
-          grid[y][x] = 0;
-          grid[prevPosition][x] = value;
-          prevValue = value;
-        } else {
-          grid[y][x] = 0;
-          grid[prevPosition - 1][x] = value;
-          prevValue = value;
-          prevPosition--;
-        }
-      }
-    }
-
-    fillRandomEmptySpot();
+    calculateGridMovement(Coord(0, 3), Coord(1, 0), Coord(0, -1));
   }
 
   if (upDirectionButton.loopAndIsJustPressed()) {
-    for(int x = 0; x < 4; x++) {
-      uint8_t prevValue = 0xFF;
-      int8_t prevPosition = -1;
-      for(int y = 0; y < 4; y++) {
-        uint8_t value = grid[y][x];
-        if (value == 0) continue;
-        if (value == prevValue) {
-          grid[y][x] = 0;
-          grid[prevPosition][x]++;
-          score += 1 << (value + 1);
-          prevValue = 0;
-          prevPosition++;
-        } else if (prevValue == 0) {
-          grid[y][x] = 0;
-          grid[prevPosition][x] = value;
-          prevValue = value;
-        } else {
-          grid[y][x] = 0;
-          grid[prevPosition + 1][x] = value;
-          prevValue = value;
-          prevPosition++;
-        }
-      }
-    }
-
-    fillRandomEmptySpot();
+    calculateGridMovement(Coord(0, 0), Coord(1, 0), Coord(0, 1));
   }
 
   if (rightDirectionButton.loopAndIsJustPressed()) {
-    for(int y = 0; y < 4; y++) {
-      uint8_t prevValue = 0xFF;
-      int8_t prevPosition = 4;
-      for(int x = 4 - 1; x >= 0; x--) {
-        uint8_t value = grid[y][x];
-        if (value == 0) continue;
-        if (value == prevValue) {
-          grid[y][x] = 0;
-          grid[y][prevPosition]++;
-          score += 1 << (value + 1);
-          prevValue = 0;
-          prevPosition--;
-        } else if (prevValue == 0) {
-          grid[y][x] = 0;
-          grid[y][prevPosition] = value;
-          prevValue = value;
-        } else {
-          grid[y][x] = 0;
-          grid[y][prevPosition - 1] = value;
-          prevValue = value;
-          prevPosition--;
-        }
-      }
-    }
-
-    fillRandomEmptySpot();
+    calculateGridMovement(Coord(3, 0), Coord(0, 1), Coord(-1, 0));
   }
 
   display.setTextSize(1);
