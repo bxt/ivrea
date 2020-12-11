@@ -48,15 +48,15 @@ When I got my hands on a `1588BS` 8x8 pixel LED matrix, I wanted to use the Ardu
 
 Since the nano has two analog pins that can not be used as digital pins anyway, I hooked up two potentiometers to those which can control two "paddles" on the LED matrix and created a small Pong-like game for it in [`ledMatrixPong.ino`](ledMatrixPong.ino). I found myself having so many global variables for the state of the ball, the paddles and more, that I refreshed my C++ knowledge and used classes and an enum to make things a little bit more elegant. I spend most of the time on displaying the score nicely in the end. It's quite playable, even tough 8x8 pixel resolution is somewhat limiting. As the game progresses, the ball gets a bit faster over time to keep it challenging.
 
-![Photo showing the LED matrix with a pong like game](ledMatrixPong.jpg?raw=true)
+<img alt="Photo showing the LED matrix with a pong like game" src="ledMatrixPong.jpg?raw=true" width="216" />
 
 ### Temperature display
 
 Another two components from the starter kit that go nicely together are the DHT 11 temperature and humidity sensor and the LCD screen. At this place I actually found the wiring and programming not so rewarding, it was mostly an exercise in wiring up all the pins correctly and embedding some libraries, as documented in [`temperatureDisplay.ino`](temperatureDisplay.ino). I took a cheap powerbank that I won on the Southside festival and brought the breadboard with the whole installation into the blistering cold outside to see if it works. Instead of just displaying the values on the LCD I also designed a set of icons for temperature (sun, cloud, snowflake) and humidity (droplet in 3 sizes) which change depending on the sensor values to give this project a least a small creative edge.
 
-![Photo showing an LCD screen on a breadboard with temperature and humidity readings](temperatureDisplay.jpg?raw=true)
+<img alt="Photo showing an LCD screen on a breadboard with temperature and humidity readings" src="temperatureDisplay.jpg?raw=true" width="432" />
 
-![Photo showing an LCD screen on a breadboard with temperature and humidity readings, in the dark outside](temperatureDisplayOutside.jpg?raw=true)
+<img alt="Photo showing an LCD screen on a breadboard with temperature and humidity readings, in the dark outside" src="temperatureDisplayOutside.jpg?raw=true" width="432" />
 
 ### Ultrasonic sensor and buzzer
 
@@ -64,7 +64,7 @@ Next I tested the HC-SR04 ultrasonic sensor and the passive buzzer. Again, it fe
 
 With the same circuit I also coded [`elfenlied.ino`](elfenlied.ino) which will play the Lilium melody on the buzzer. I put in a small resistor so that the buzzer is not so loud during debugging. I think the buzzer might be a good addition to some of the games to provide a multimedial experience. The Arduino with the `Tone` library can only play one frequency on a square wave, so it's really limited in its current form.
 
-![Photo showing a buzzer and an ultrasonic sensor connected to an Arduino nano on a breaboard](parkHelper.jpg?raw=true)
+<img alt="Photo showing a buzzer and an ultrasonic sensor connected to an Arduino nano on a breaboard" src="parkHelper.jpg?raw=true" width="432" />
 
 ### Planned projects / ideas
 
