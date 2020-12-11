@@ -13,17 +13,18 @@
 // SSD1306 display connected to I2C, on nano SDA = A4, SCL = A5 pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-#define TILE_MOVEMENT_FACTOR 4
-
-#define DEBOUNCE_DELAY 50ul
-#define DIRECTION_BUTTON_ACTIVE LOW
-
+// Connect momentary tact pushbutton to those pins:
 #define PIN_LEFT 7
 #define PIN_DOWN 8
 #define PIN_UP 9
 #define PIN_RIGHT 10
+// ... and they should have a pull-up and be active low:
+#define DIRECTION_BUTTON_ACTIVE LOW
+#define DEBOUNCE_DELAY 50ul
 
-enum Direction { left, down, up, right };
+#define EEPROM_MAGIC_NUMBER 0x42 // Should be unique for this program
+
+#define TILE_MOVEMENT_FACTOR 4 // Animation speeed
 
 class DirectionButton {
 private:
@@ -75,21 +76,23 @@ public:
   int8_t y;
   Coord(int8_t x, int8_t y) : x(x), y(y) {}
 
-  Coord &operator+=(const Coord &r) {
+  Coord &operator+=(Coord const &r) {
     x += r.x;
     y += r.y;
     return *this;
   }
 };
 
-Coord operator*(Coord l, const int8_t r) { return Coord(l.x * r, l.y * r); }
-Coord operator+(Coord l, const Coord r) { return Coord(l.x + r.x, l.y + r.y); }
-Coord operator-(Coord l, const Coord r) { return Coord(l.x - r.x, l.y - r.y); }
+Coord operator*(Coord const &l, int8_t const &r) { return Coord(l.x * r, l.y * r); }
+Coord operator+(Coord const &l, Coord const &r) { return Coord(l.x + r.x, l.y + r.y); }
+Coord operator-(Coord const &l, Coord const &r) { return Coord(l.x - r.x, l.y - r.y); }
 
 bool operator==(Coord const &l, Coord const &r) {
   return l.x == r.x && l.y == r.y;
 }
 bool operator!=(Coord const &l, Coord const &r) { return !(l == r); }
+
+// Game state:
 
 bool gameOver = false;
 bool victoryOccured = false;
@@ -97,6 +100,7 @@ int victoryCelebrated = false;
 unsigned long score = 0;
 unsigned long highScore = 0;
 
+// Here 0: empty, 1: "2", 2: "4", 3: "8", 4: "16" etc.
 uint8_t grid[4][4] = {
   {0, 0, 0, 0},
   {0, 0, 0, 0},
@@ -104,6 +108,7 @@ uint8_t grid[4][4] = {
   {0, 0, 0, 0},
 };
 
+// Save next tiles in this grid while they are beeing animated
 uint8_t nextGrid[4][4] = {
   {0, 0, 0, 0},
   {0, 0, 0, 0},
@@ -115,7 +120,7 @@ void loadHighscore() {
   int eepromAddress = 0;
   uint8_t magicNumber;
   EEPROM.get(eepromAddress, magicNumber);
-  if (magicNumber == 0x42) {
+  if (magicNumber == EEPROM_MAGIC_NUMBER) {
     eepromAddress += sizeof(uint8_t);
     EEPROM.get(eepromAddress, highScore);
   } else {
@@ -125,7 +130,7 @@ void loadHighscore() {
 
 void saveHighscore() {
   int eepromAddress = 0;
-  uint8_t magicNumber = 0x42;
+  uint8_t magicNumber = EEPROM_MAGIC_NUMBER;
   EEPROM.put(eepromAddress, magicNumber);
   eepromAddress += sizeof(uint8_t);
   EEPROM.put(eepromAddress, highScore);
@@ -242,31 +247,39 @@ void calculateGridMovement(Coord originPosition, Coord secondaryDirection,
 
   bool didAnyMove = false;
 
-  for (int i = 0; i < 4; i++) {
-    uint8_t prevValue = 0xFF;
+  for (int i = 0; i < 4; i++) { // for each row/col
     Coord startPosition = originPosition + secondaryDirection * i;
-    Coord prevPosition = startPosition - primaryDirection;
+
+    // process items in direction of movement:
+    uint8_t prevValue = 0xFF; // sentinel
+    Coord prevPosition = startPosition - primaryDirection; // just outside the grid
     for (int k = 0; k < 4; k++) {
       Coord position = startPosition + primaryDirection * k;
       uint8_t value = grid[position.y][position.x];
-      if (value == 0)
-        continue;               // skip empty
-      if (value == prevValue) { // merging
+
+      if (value == 0) { // empty
+        continue; // just skip
+
+      } else if (value == prevValue) { // merging
         moveTile(position, prevPosition);
         didAnyMove = true;
+
         // increase numbers:
         nextGrid[prevPosition.y][prevPosition.x]++;
         score += 1 << (value + 1);
         if (value == 10)
           victoryOccured = true;
-        // can not merge twice, so move on:
+
+        // can not merge same position twice, so move on:
         prevValue = 0;
         prevPosition += primaryDirection;
+
       } else if (prevValue == 0) { // moving to an empty spot
         moveTile(position, prevPosition);
         didAnyMove = true;
         prevValue = value; // for next merge check
-      } else {             // can not merge, closing the gap if any
+
+      } else { // can not merge, closing the gap if any
         prevPosition += primaryDirection;
         if (prevPosition != position) {
           moveTile(position, prevPosition);
@@ -302,6 +315,7 @@ void setup() {
 }
 
 void loop() {
+  // Victory celebration:
   if (victoryOccured && !victoryCelebrated) {
     for (int i = 0; i < ANIMATION_BMP_COUNT; i++) {
       display.clearDisplay();
@@ -316,6 +330,7 @@ void loop() {
            !(downDirectionButton.loopAndIsJustPressed()) &&
            !(upDirectionButton.loopAndIsJustPressed()) &&
            !(rightDirectionButton.loopAndIsJustPressed())) {
+      // Wait for user to press any key
     }
 
     victoryCelebrated = true;
@@ -323,6 +338,7 @@ void loop() {
 
   display.clearDisplay();
 
+  // Display grid:
   for (int y = 0; y < 4; y++) {
     for (int x = 0; x < 4; x++) {
       uint8_t value = grid[y][x];
@@ -335,6 +351,7 @@ void loop() {
     }
   }
 
+  // Display moving tiles:
   if (movementTicksLeft > 0) {
     for (int i = 0; i < movementGhostTileCount; i++) {
       Coord position = movementGhostTilePositions[i];
@@ -349,6 +366,8 @@ void loop() {
     flushTileMovements();
     movementTicksLeft--;
   }
+
+  // Handle input:
 
   if (leftDirectionButton.loopAndIsJustPressed()) {
     calculateGridMovement(Coord(0, 0), Coord(0, 1), Coord(1, 0));
@@ -365,6 +384,8 @@ void loop() {
   if (rightDirectionButton.loopAndIsJustPressed()) {
     calculateGridMovement(Coord(3, 0), Coord(0, 1), Coord(-1, 0));
   }
+
+  // Display text:
 
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
