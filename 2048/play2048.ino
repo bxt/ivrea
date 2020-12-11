@@ -4,6 +4,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "sprite.h"
+#include "animation.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -12,7 +13,7 @@
 // SSD1306 display connected to I2C, on nano SDA = A4, SCL = A5 pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-#define TILE_MOVEMENT_FACTOR 8
+#define TILE_MOVEMENT_FACTOR 4
 
 #define DEBOUNCE_DELAY 50ul
 #define DIRECTION_BUTTON_ACTIVE LOW
@@ -91,6 +92,8 @@ bool operator==(Coord const &l, Coord const &r) {
 bool operator!=(Coord const &l, Coord const &r) { return !(l == r); }
 
 bool gameOver = false;
+bool victoryOccured = false;
+int victoryCelebrated = false;
 unsigned long score = 0;
 unsigned long highScore = 0;
 
@@ -141,6 +144,8 @@ void resetGame() {
   }
 
   gameOver = false;
+  victoryOccured = false;
+  victoryCelebrated = false;
   score = 0;
 
   fillRandomEmptySpot();
@@ -217,7 +222,7 @@ void flushTileMovements() {
       if (x < 3 && nextGrid[y][x] == nextGrid[y][x + 1]) {
         canMerge = true;
       }
-      if(nextGrid[y][x] == 0) {
+      if (nextGrid[y][x] == 0) {
         hasEmtpy = true;
       }
     }
@@ -252,6 +257,8 @@ void calculateGridMovement(Coord originPosition, Coord secondaryDirection,
         // increase numbers:
         nextGrid[prevPosition.y][prevPosition.x]++;
         score += 1 << (value + 1);
+        if (value == 10)
+          victoryOccured = true;
         // can not merge twice, so move on:
         prevValue = 0;
         prevPosition += primaryDirection;
@@ -295,6 +302,25 @@ void setup() {
 }
 
 void loop() {
+  if (victoryOccured && !victoryCelebrated) {
+    for (int i = 0; i < ANIMATION_BMP_COUNT; i++) {
+      display.clearDisplay();
+      display.drawBitmap(0, 0, animation_bmps[i], ANIMATION_BMP_WIDTH,
+                         ANIMATION_BMP_HEIGHT, 1);
+      display.display();
+
+      delay(32);
+    }
+
+    while (!(leftDirectionButton.loopAndIsJustPressed()) &&
+           !(downDirectionButton.loopAndIsJustPressed()) &&
+           !(upDirectionButton.loopAndIsJustPressed()) &&
+           !(rightDirectionButton.loopAndIsJustPressed())) {
+    }
+
+    victoryCelebrated = true;
+  }
+
   display.clearDisplay();
 
   for (int y = 0; y < 4; y++) {
@@ -343,13 +369,13 @@ void loop() {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
-  if(gameOver) {
+  if (gameOver) {
     display.setCursor(70, 6);
     display.println(F("GAME OVER"));
   }
 
   display.setCursor(70, 15);
-  display.println(F("Score:"));
+  display.println(victoryOccured ? F("Winscore:") : F("Score:"));
 
   display.setCursor(70, 24);
   display.println(score);
@@ -360,12 +386,12 @@ void loop() {
   display.setCursor(70, 42);
   display.println(highScore);
 
-  if(gameOver && score > highScore) {
+  if (gameOver && score > highScore) {
     display.setCursor(70, 51);
     display.println(F("NEW!!!"));
   }
 
   display.display();
 
-  delay(20);
+  delay(8);
 }
