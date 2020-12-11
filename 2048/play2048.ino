@@ -11,6 +11,7 @@
 // SSD1306 display connected to I2C, on nano SDA = A4, SCL = A5 pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+#define TILE_MOVEMENT_FACTOR 8
 
 #define DEBOUNCE_DELAY 50ul
 #define DIRECTION_BUTTON_ACTIVE LOW
@@ -109,7 +110,7 @@ void fillRandomEmptySpot() {
 
   for (int y = 0; y < 4; y++) {
     for (int x = 0; x < 4; x++) {
-      uint8_t value = grid[y][x];
+      uint8_t value = nextGrid[y][x];
       if (value == 0)
         emptySpotCount++;
     }
@@ -120,12 +121,12 @@ void fillRandomEmptySpot() {
 
   for (int y = 0; y < 4; y++) {
     for (int x = 0; x < 4; x++) {
-      uint8_t value = grid[y][x];
+      uint8_t value = nextGrid[y][x];
       if (value == 0) {
         emptySpotCount--;
 
         if (fillIndex == emptySpotCount) {
-          grid[y][x] = fillValue;
+          nextGrid[y][x] = fillValue;
           return;
         }
       }
@@ -152,9 +153,9 @@ void moveTile(Coord from, Coord to) {
   nextGrid[from.y][from.x] = 0;
   nextGrid[to.y][to.x] = value;
 
-  movementTicksLeft = TILE_BMP_WIDTH;
+  movementTicksLeft = TILE_BMP_WIDTH / TILE_MOVEMENT_FACTOR;
   movementGhostTilePositions[movementGhostTileCount] = from * TILE_BMP_WIDTH;
-  movementGhostTileSpeeds[movementGhostTileCount] = to - from;
+  movementGhostTileSpeeds[movementGhostTileCount] = (to - from) * TILE_MOVEMENT_FACTOR;
   movementGhostTileValues[movementGhostTileCount] = value;
   movementGhostTileCount++;
 }
@@ -222,6 +223,7 @@ void setup() {
   }
 
   fillRandomEmptySpot();
+  flushTileMovements();
 
   leftDirectionButton.setup();
   downDirectionButton.setup();
@@ -252,6 +254,10 @@ void loop() {
                          TILE_BMP_WIDTH, TILE_BMP_HEIGHT, 1);
       movementGhostTilePositions[i] += movementGhostTileSpeeds[i];
     }
+    movementTicksLeft--;
+  }
+  if (movementTicksLeft == 0) {
+    flushTileMovements();
     movementTicksLeft--;
   }
 
