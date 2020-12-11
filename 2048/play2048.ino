@@ -1,5 +1,6 @@
 #include <SPI.h>
 #include <Wire.h>
+#include <EEPROM.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "sprite.h"
@@ -89,7 +90,9 @@ bool operator==(Coord const &l, Coord const &r) {
 }
 bool operator!=(Coord const &l, Coord const &r) { return !(l == r); }
 
+bool gameOver = false;
 unsigned long score = 0;
+unsigned long highScore = 0;
 
 uint8_t grid[4][4] = {
   {0, 0, 0, 0},
@@ -104,6 +107,45 @@ uint8_t nextGrid[4][4] = {
   {0, 0, 0, 0},
   {0, 0, 0, 0},
 };
+
+void loadHighscore() {
+  int eepromAddress = 0;
+  uint8_t magicNumber;
+  EEPROM.get(eepromAddress, magicNumber);
+  if (magicNumber == 0x42) {
+    eepromAddress += sizeof(uint8_t);
+    EEPROM.get(eepromAddress, highScore);
+  } else {
+    highScore = 0;
+  }
+}
+
+void saveHighscore() {
+  int eepromAddress = 0;
+  uint8_t magicNumber = 0x42;
+  EEPROM.put(eepromAddress, magicNumber);
+  eepromAddress += sizeof(uint8_t);
+  EEPROM.put(eepromAddress, highScore);
+}
+
+void resetGame() {
+  if (score > highScore) {
+    highScore = score;
+    saveHighscore();
+  }
+
+  for (int y = 0; y < 4; y++) {
+    for (int x = 0; x < 4; x++) {
+      nextGrid[y][x] = 0;
+    }
+  }
+
+  gameOver = false;
+  score = 0;
+
+  fillRandomEmptySpot();
+  flushTileMovements();
+}
 
 void fillRandomEmptySpot() {
   uint8_t emptySpotCount = 0;
@@ -163,16 +205,35 @@ void moveTile(Coord from, Coord to) {
 void flushTileMovements() {
   movementTicksLeft = -1;
   movementGhostTileCount = 0;
+
+  bool canMerge = false;
+  bool hasEmtpy = false;
   for (int y = 0; y < 4; y++) {
     for (int x = 0; x < 4; x++) {
       grid[y][x] = nextGrid[y][x];
+      if (y < 3 && nextGrid[y][x] == nextGrid[y + 1][x]) {
+        canMerge = true;
+      }
+      if (x < 3 && nextGrid[y][x] == nextGrid[y][x + 1]) {
+        canMerge = true;
+      }
+      if(nextGrid[y][x] == 0) {
+        hasEmtpy = true;
+      }
     }
   }
+
+  gameOver = !canMerge && !hasEmtpy;
 }
 
 void calculateGridMovement(Coord originPosition, Coord secondaryDirection,
                            Coord primaryDirection) {
   flushTileMovements();
+
+  if (gameOver) {
+    resetGame();
+    return;
+  }
 
   bool didAnyMove = false;
 
@@ -221,6 +282,8 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     while(1) {} // Infinite loop so we don't go to the loop() function
   }
+
+  loadHighscore();
 
   fillRandomEmptySpot();
   flushTileMovements();
@@ -279,10 +342,28 @@ void loop() {
 
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
-  display.setCursor(70, 6);
-  display.println(F("Score:"));
+
+  if(gameOver) {
+    display.setCursor(70, 6);
+    display.println(F("GAME OVER"));
+  }
+
   display.setCursor(70, 15);
+  display.println(F("Score:"));
+
+  display.setCursor(70, 24);
   display.println(score);
+
+  display.setCursor(70, 33);
+  display.println(F("High:"));
+
+  display.setCursor(70, 42);
+  display.println(highScore);
+
+  if(gameOver && score > highScore) {
+    display.setCursor(70, 51);
+    display.println(F("NEW!!!"));
+  }
 
   display.display();
 
