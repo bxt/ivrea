@@ -86,6 +86,8 @@ Maybe I'll turn this into a hardware project at some place again, The buttons ar
 * Well, the 8 bit CPU...
 * As well as the "reliable data transmissions" series
 * Maybe: Using Ardiuno as a general purpose debugger / controller via [firmata](https://github.com/firmata/arduino) and some node / React app, basically the "LED piano" in fancy
+* Maybe: Some kind of keyboard matrix like this [Mini Macro Keyboard](https://www.thingiverse.com/thing:2822140) or this [SparkFun Cherry MX Chorded Keyer](https://www.youtube.com/watch?v=GGNV3bmZrdg) or this [sawed off keyboard](https://hackaday.com/2017/09/18/sawed-off-keyboard/) using the [Cherry MX switch](https://www.cherrymx.de/dev.html). Parts maybe form [this switch tester](https://www.amazon.de/AKWOX-Cherry-Switch-Keyboard-Sampler/dp/B01GZHU1EG/) or switches individually ([with click](https://www.reichelt.de/cherry-mx-blue-keyswitch-cherry-mx1a-e1nn-p202569.html), [without click](https://www.reichelt.de/cherry-mx-brown-rgb-tastenmodul-cherry-mx1a-g1na-p258097.html), [smooth](https://www.reichelt.de/cherry-mx-red-rgb-tastenmodul-cherry-mx1a-l1na-p258098.html) or from digikey) and caps ([getdigital](https://www.getdigital.de/Tasten-fuer-Mechanische-Tastaturen-WASD-Sets.html) or [digikey](https://www.digikey.de/product-detail/de/sparkfun-electronics/PRT-15306/1568-PRT-15306-ND/10130909) or from old keyboard?) and [breakout board](https://www.digikey.de/catalog/de/partgroup/cherry-mx-switch-breakout-board/61112) or custom PCB? See also: [very good instructions](https://learn.sparkfun.com/tutorials/cherry-mx-switch-breakout-hookup-guide), [full keyboard project](https://www.thingiverse.com/thing:2704567))
+* Maybe: hack a gamepad, e.g. the mini NES ones with something like [`WiiAccessoryToUSB`](https://github.com/DougBarry/WiiAccessoryToUSB) or a [USB one](https://www.conrad.de/de/p/joy-it-gamepad-snes-design-gamepad-raspberry-pi-universal-grau-1954771.html) or just buy a [fitting one](https://www.conrad.de/de/p/joy-it-sbc-wl-controller-arduino-erweiterungs-platine-schwarz-passend-fuer-einplatinen-computer-arduino-1613300.html)
 
 ## Resources
 
@@ -94,7 +96,7 @@ Over time, I collected some useful resources like [instructional videos](#instru
 ### Instructional videos
 
 * [A simple guide to electronic components.](https://www.youtube.com/watch?v=6Maq5IyHSuc): pretty cool recap of the vary basics, like what are resistors, capacitors, LEDs, diodes, transistors, explaining Ohm's law, ...
-* [Datasheets: 16x2 LCD By Hand (No microcontroller)](https://www.youtube.com/watch?v=cXpeTxC3_A4&feature=emb_title): good example with basic information on breadboard & IC basics, how to read datasheets, pull down/up resistors, button debounce.
+* [Datasheets: 16x2 LCD By Hand (No microcontroller)](https://www.youtube.com/watch?v=cXpeTxC3_A4): good example with basic information on breadboard & IC basics, how to read datasheets, pull down/up resistors, button debounce.
 * [Ben Eater (channel)](https://www.youtube.com/c/BenEater): This has a lot of great info, as you can tell from the playlist titles «Building an 8-bit breadboard computer!», «Networking tutorial», «Build a 65c02-based computer from scratch
 ».
 * [Don't Take Capacitors for Granted](https://www.youtube.com/watch?v=rr7bPmGTQUk): how to get polarity right.
@@ -145,7 +147,7 @@ Over time, I collected some useful resources like [instructional videos](#instru
 
 #### Shops
 
-[Reichelt](https://www.reichelt.de/), [Mouser](https://www.mouser.de/), [Conrad](https://www.conrad.de/), [Pollin](https://www.pollin.de/), [Amazon](https://www.amazon.de/), ...
+[Reichelt](https://www.reichelt.de/), [Mouser](https://www.mouser.de/), [Conrad](https://www.conrad.de/), [Pollin](https://www.pollin.de/), [Amazon](https://www.amazon.de/), [Digi-Key](https://www.digikey.de/)...
 
 #### Shopping list
 
@@ -172,6 +174,7 @@ You can just buy the [kit from Ben directly](https://eater.net/8bit/kits) which 
 * [Slide switch](https://www.reichelt.de/schiebeschalter-gerade-rm5-08-1x-ein-ein-ss-25436-nh-p105713.html)
 * DIP switch [4-position](https://www.reichelt.de/dip-schalter-printmontage-liegend-4-polig-rnd-210-00164-p226385.html), [8-position](https://www.reichelt.de/dip-schalter-printmontage-liegend-8-polig-rnd-210-00166-p226387.html)
 * Momentary tact pushbutton/switch: ordered various, will pick one to list later
+* [Mosfet](https://www.reichelt.de/mosfet-n-ch-60v-0-5a-0-35w-to-92-bs-170-p5856.html): is on my whishlist
 
 ##### LEDs
 
