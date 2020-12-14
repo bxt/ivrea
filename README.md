@@ -79,9 +79,10 @@ Maybe I'll turn this into a hardware project at some place again, The buttons ar
 ### Planned projects / ideas
 
 * Game similar to froggy on the LED Matrix
-* Kitchen timer set with poti, counting on 4 segments, and flashing RGB-LED and Buzzer when done.
+* More games on the LED Matrix? Jump & Run, Breakout, maze, snake, ...
+* Kitchen timer set with poti, counting on 4 segments, and flashing RGB-LED and Buzzer when done. (Maybe Wifi tmp & and a clock as well?)
+* LED memory game
 * Game controlled with remote control, maybe tic tac toe?
-* Maze game
 * Programming an EEPROM to drive the shift registers, so no Arduino is needed
 * Well, the 8 bit CPU...
 * As well as the "reliable data transmissions" series
