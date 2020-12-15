@@ -138,8 +138,10 @@ void displayGameInProgressScreen(int score) {
 void displayGameOverScreen(int score) {
   display.clearDisplay();
   display.drawBitmap(0, 0, gameOver_bmp, GAMEOVER_BMP_WIDTH, GAMEOVER_BMP_HEIGHT, 1);
-  display.setCursor(73, 58);
+  display.setCursor(73, 47);
+  display.setTextSize(2);
   display.println(score);
+  display.setTextSize(1);
   display.display();
 }
 
