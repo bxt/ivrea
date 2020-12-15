@@ -5,6 +5,7 @@
 #include <Adafruit_SSD1306.h>
 #include "splash.h"
 #include "ongoing.h"
+#include "gameOver.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -136,21 +137,9 @@ void displayGameInProgressScreen(int score) {
 
 void displayGameOverScreen(int score) {
   display.clearDisplay();
-  display.setCursor(10, 12);
-  display.setTextSize(2);
-  display.println(F("GAME OVER"));
-  display.setTextSize(1);
-  display.setCursor(36, 32);
-  display.println(F("Final score: "));
-  display.setTextSize(2);
-  if (score > 9) {
-    display.setCursor(58, 43);
-  } else {
-    display.setCursor(61, 43);
-  }
+  display.drawBitmap(0, 0, gameOver_bmp, GAMEOVER_BMP_WIDTH, GAMEOVER_BMP_HEIGHT, 1);
+  display.setCursor(73, 58);
   display.println(score);
-  display.setTextSize(1);
-  display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
   display.display();
 }
 
