@@ -152,17 +152,20 @@ void loop() {
 
     bool everythingCorrect = true;
     unsigned long lastButtonTime = 0;
+    uint8_t lastButtonLed = leds[0];
 
     for (int i = 0; i < score + 1; i++) {
       uint8_t sequenceEntry = (sequence[i / 4] >> ((i % 4) * 2)) & 3;
 
       bool anyButtonPressed = false;
       while (!anyButtonPressed) {
+        if (millis() > lastButtonTime + 500) {
+          digitalWrite(lastButtonLed, LOW);
+        }
         for (int k = 0; k < 4; k++) {
-          if (millis() > lastButtonTime + 500) {
-            digitalWrite(leds[k], LOW);
-          }
           if (buttons[k].loopAndIsJustPressed()) {
+            digitalWrite(lastButtonLed, LOW);
+            lastButtonLed = leds[k];
             anyButtonPressed = true;
             if (k != sequenceEntry) {
               everythingCorrect = false;
@@ -185,6 +188,7 @@ void loop() {
       for (int k = 0; k < 4; k++) {
         digitalWrite(leds[k], LOW);
       }
+      delay(500);
     } else {
       break;
     }
