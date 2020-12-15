@@ -179,6 +179,8 @@ void loop() {
 
   waitForAnyButtonPressed();
 
+  randomSeed(micros());
+
   int score = 0;
   uint8_t lastNewSequenceEntry = 5; // sentinel, but means we never start with last one...
   for (; score < 100; score++) {
