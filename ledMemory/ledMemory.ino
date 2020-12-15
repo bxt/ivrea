@@ -4,8 +4,6 @@
 #include <EEPROM.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include "sprite.h"
-#include "animation.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -98,7 +96,7 @@ void waitForAnyButtonPressed() {
   bool anyButtonPressed = false;
   while (!anyButtonPressed) {
     for (int i = 0; i < 4; i++) {
-      anyButtonPressed ||= buttons[i].loopAndIsJustPressed();
+      anyButtonPressed = anyButtonPressed || buttons[i].loopAndIsJustPressed();
     }
   }
 }
@@ -114,7 +112,7 @@ void loop() {
   waitForAnyButtonPressed();
 
   int score = 0;
-  currentGame: for (; score < 100; score++) {
+  for (; score < 100; score++) {
     display.clearDisplay();
     display.setCursor(11, 18);
     display.println(F("- listen and repeat -"));
@@ -124,12 +122,12 @@ void loop() {
     display.println(score);
     display.display();
 
-    unit8_t newSequenceEntry = random(4);
+    uint8_t newSequenceEntry = random(4);
     sequence[score / 4] &= ~(3 << (score % 4));
     sequence[score / 4] |= newSequenceEntry << (score % 4);
 
     for (int i = 0; i < score + 1; i++) {
-      unit8_t sequenceEntry = (sequence[i/4] >> (i % 4)) & 3;
+      uint8_t sequenceEntry = (sequence[i/4] >> (i % 4)) & 3;
 
       digitalWrite(leds[sequenceEntry], HIGH);
       delay(500);
@@ -137,19 +135,24 @@ void loop() {
       delay(100);
     }
 
-    sequenceReading: for (int i = 0; i < score + 1; i++) {
-      unit8_t sequenceEntry = (sequence[i/4] >> (i % 4)) & 3;
+    bool everythingCorrect = true;
+
+    for (int i = 0; i < score + 1; i++) {
+      uint8_t sequenceEntry = (sequence[i/4] >> (i % 4)) & 3;
 
       for (int k = 0; k < 4; k++) {
         if(buttons[k].loopAndIsJustPressed()) {
-          if (k == sequenceEntry) {
-            continue sequenceReading;
-          } else {
-            break currentGame;
+          if (k != sequenceEntry) {
+            everythingCorrect = false;
+            break;
           }
         }
       }
+
+      if(!everythingCorrect) break;
     }
+
+    if(!everythingCorrect) break;
   }
 
   display.clearDisplay();
