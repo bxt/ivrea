@@ -8,7 +8,7 @@
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
-#define OLED_RESET 6 // Reset pin, no idea what for...
+#define OLED_RESET 4 // Reset pin, no idea what for...
 // SSD1306 display connected to I2C, on nano SDA = A4, SCL = A5 pins)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -24,7 +24,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // Connect the corresponding LEDs to those pins:
 #define PIN_LED_LEFT 2
 #define PIN_LED_DOWN 3
-#define PIN_LED_UP 4
+#define PIN_LED_UP 6
 #define PIN_LED_RIGHT 5
 
 class DirectionButton {
@@ -110,7 +110,7 @@ void loop() {
   display.clearDisplay();
   display.setCursor(34, 27);
   display.println(F("LED MEMORY"));
-  display.setCursor(55, 36);
+  display.setCursor(13, 36);
   display.println(F("- press any key -"));
   display.display();
 
@@ -139,12 +139,17 @@ void loop() {
     Serial.print(F("Adding:"));
     Serial.println(newSequenceEntry);
     lastNewSequenceEntry = newSequenceEntry;
-    sequence[score / 4] &= ~(3 << (score % 4));
-    sequence[score / 4] |= newSequenceEntry << (score % 4);
+    sequence[score / 4] &= ~(3 << ((score % 4) * 2));
+    sequence[score / 4] |= newSequenceEntry << ((score % 4) * 2);
 
     Serial.print(F("Play: "));
     for (int i = 0; i < score + 1; i++) {
-      uint8_t sequenceEntry = (sequence[i/4] >> (i % 4)) & 3;
+      if(i % 4 == 0) {
+        Serial.print(F("("));
+        Serial.print(sequence[i/4], BIN);
+        Serial.print(F(") "));
+      }
+      uint8_t sequenceEntry = (sequence[i/4] >> ((i % 4) * 2)) & 3;
 
       Serial.print(sequenceEntry);
       Serial.print(F(", "));
@@ -159,7 +164,7 @@ void loop() {
 
     Serial.print(F("Check: "));
     for (int i = 0; i < score + 1; i++) {
-      uint8_t sequenceEntry = (sequence[i/4] >> (i % 4)) & 3;
+      uint8_t sequenceEntry = (sequence[i/4] >> ((i % 4) * 2)) & 3;
       Serial.print(sequenceEntry);
       Serial.print(F(", "));
 
