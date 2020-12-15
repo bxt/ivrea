@@ -5,6 +5,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "splash.h"
+#include "ongoing.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -126,6 +127,7 @@ void displaySplashScreen() {
 void displayGameInProgressScreen(int score) {
   display.clearDisplay();
   display.setCursor(19, 18);
+  display.drawBitmap(32, 12, ongoing_bmp, ONGOING_BMP_WIDTH, ONGOING_BMP_HEIGHT, 1);
   display.println(F("listen & repeat"));
   display.setCursor(48, 32);
   display.println(F("Score: "));
