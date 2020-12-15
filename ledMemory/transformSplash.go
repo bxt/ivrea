@@ -45,9 +45,9 @@ func main() {
 				x := byteNumber*8 + byteIndex
 				y := rowIndex
 				r, _, _, _ := img.At(x, y).RGBA()
-				bit := 0
+				bit := 1
 				if r > 0 {
-					bit = 1
+					bit = 0
 				}
 				_, err = fmt.Fprintf(writer, "%d", bit)
 				check(err)
