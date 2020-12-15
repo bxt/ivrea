@@ -203,7 +203,11 @@ void loop() {
   display.println(F("GAME OVER"));
   display.setCursor(36, 32);
   display.println(F("Final score: "));
-  display.setCursor(59, 41);
+  if (score > 9) {
+    display.setCursor(58, 41);
+  } else {
+    display.setCursor(61, 41);
+  }
   display.println(score);
   display.display();
 
