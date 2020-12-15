@@ -78,7 +78,6 @@ uint8_t sequence[100] = {0};
 
 void setup() {
   Serial.begin(9600);
-  Serial.println(F("Hello?"));
 
   for (int i = 0; i < 4; i++) {
     pinMode(leds[i], OUTPUT);
@@ -118,11 +117,7 @@ void loop() {
 
   int score = 0;
   uint8_t lastNewSequenceEntry = 5;
-  Serial.println(F("--- GAME START ---"));
   for (; score < 100; score++) {
-    Serial.print(F("--- ROUND "));
-    Serial.print(score);
-    Serial.println(F(" ---"));
     display.clearDisplay();
     display.setCursor(11, 18);
     display.println(F("- listen and repeat -"));
@@ -136,23 +131,12 @@ void loop() {
     if (newSequenceEntry >= lastNewSequenceEntry) {
       newSequenceEntry++;
     }
-    Serial.print(F("Adding:"));
-    Serial.println(newSequenceEntry);
     lastNewSequenceEntry = newSequenceEntry;
     sequence[score / 4] &= ~(3 << ((score % 4) * 2));
     sequence[score / 4] |= newSequenceEntry << ((score % 4) * 2);
 
-    Serial.print(F("Play: "));
     for (int i = 0; i < score + 1; i++) {
-      if(i % 4 == 0) {
-        Serial.print(F("("));
-        Serial.print(sequence[i/4], BIN);
-        Serial.print(F(") "));
-      }
       uint8_t sequenceEntry = (sequence[i/4] >> ((i % 4) * 2)) & 3;
-
-      Serial.print(sequenceEntry);
-      Serial.print(F(", "));
 
       digitalWrite(leds[sequenceEntry], HIGH);
       delay(500);
@@ -162,11 +146,8 @@ void loop() {
 
     bool everythingCorrect = true;
 
-    Serial.print(F("Check: "));
     for (int i = 0; i < score + 1; i++) {
       uint8_t sequenceEntry = (sequence[i/4] >> ((i % 4) * 2)) & 3;
-      Serial.print(sequenceEntry);
-      Serial.print(F(", "));
 
       bool anyButtonPressed = false;
       while (!anyButtonPressed) {
