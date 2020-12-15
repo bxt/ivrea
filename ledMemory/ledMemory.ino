@@ -4,6 +4,7 @@
 #include <EEPROM.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "splash.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -26,6 +27,10 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define PIN_LED_DOWN 3
 #define PIN_LED_UP 6
 #define PIN_LED_RIGHT 5
+
+// Connect the buzzer
+#define BUZZER_PIN A0
+#define GAME_OVER_FREQUENCY 220
 
 class DirectionButton {
 private:
@@ -73,6 +78,7 @@ DirectionButton buttons[4] = {
   DirectionButton(PIN_UP),
   DirectionButton(PIN_RIGHT),
 };
+int frequencies[4] = {330, 370, 415, 440};
 
 uint8_t sequence[100] = {0};
 
@@ -107,9 +113,8 @@ void waitForAnyButtonPressed() {
 
 void loop() {
   display.clearDisplay();
-  display.setCursor(34, 27);
-  display.println(F("LED MEMORY"));
-  display.setCursor(13, 36);
+  display.drawBitmap(16, 8, splash_bmp, SPLASH_BMP_WIDTH, SPLASH_BMP_HEIGHT, 1);
+  display.setCursor(13, 55);
   display.println(F("- press any key -"));
   display.display();
 
@@ -119,11 +124,11 @@ void loop() {
   uint8_t lastNewSequenceEntry = 5;
   for (; score < 100; score++) {
     display.clearDisplay();
-    display.setCursor(11, 18);
-    display.println(F("- listen and repeat -"));
-    display.setCursor(48, 27);
+    display.setCursor(19, 18);
+    display.println(F("listen & repeat"));
+    display.setCursor(48, 32);
     display.println(F("Score: "));
-    display.setCursor(59, 36);
+    display.setCursor(59, 41);
     display.println(score);
     display.display();
 
@@ -136,46 +141,74 @@ void loop() {
     sequence[score / 4] |= newSequenceEntry << ((score % 4) * 2);
 
     for (int i = 0; i < score + 1; i++) {
-      uint8_t sequenceEntry = (sequence[i/4] >> ((i % 4) * 2)) & 3;
+      uint8_t sequenceEntry = (sequence[i / 4] >> ((i % 4) * 2)) & 3;
 
       digitalWrite(leds[sequenceEntry], HIGH);
+      tone(BUZZER_PIN, frequencies[sequenceEntry], 500);
       delay(500);
       digitalWrite(leds[sequenceEntry], LOW);
       delay(100);
     }
 
     bool everythingCorrect = true;
+    unsigned long lastButtonTime = 0;
 
     for (int i = 0; i < score + 1; i++) {
-      uint8_t sequenceEntry = (sequence[i/4] >> ((i % 4) * 2)) & 3;
+      uint8_t sequenceEntry = (sequence[i / 4] >> ((i % 4) * 2)) & 3;
 
       bool anyButtonPressed = false;
       while (!anyButtonPressed) {
         for (int k = 0; k < 4; k++) {
-          if(buttons[k].loopAndIsJustPressed()) {
+          if (millis() > lastButtonTime + 500) {
+            digitalWrite(leds[k], LOW);
+          }
+          if (buttons[k].loopAndIsJustPressed()) {
             anyButtonPressed = true;
             if (k != sequenceEntry) {
               everythingCorrect = false;
               break;
             }
+            digitalWrite(leds[k], HIGH);
+            tone(BUZZER_PIN, frequencies[k], 500);
+            lastButtonTime = millis();
           }
         }
       }
 
-      if(!everythingCorrect) break;
+      if (!everythingCorrect) {
+        break;
+      }
     }
 
-    if(!everythingCorrect) break;
+    if (everythingCorrect) {
+      delay(500);
+      for (int k = 0; k < 4; k++) {
+        digitalWrite(leds[k], LOW);
+      }
+    } else {
+      break;
+    }
+  }
+
+  for (int k = 0; k < 4; k++) {
+    digitalWrite(leds[k], HIGH);
   }
 
   display.clearDisplay();
   display.setCursor(42, 18);
   display.println(F("GAME OVER"));
-  display.setCursor(36, 27);
+  display.setCursor(36, 32);
   display.println(F("Final score: "));
-  display.setCursor(59, 36);
+  display.setCursor(59, 41);
   display.println(score);
   display.display();
 
+  tone(BUZZER_PIN, GAME_OVER_FREQUENCY, 500);
+  delay(500);
+
   waitForAnyButtonPressed();
+
+  for (int k = 0; k < 4; k++) {
+    digitalWrite(leds[k], LOW);
+  }
 }
