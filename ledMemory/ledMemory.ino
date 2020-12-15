@@ -127,27 +127,31 @@ void displaySplashScreen() {
 void displayGameInProgressScreen(int score) {
   display.clearDisplay();
   display.setCursor(19, 18);
-  display.drawBitmap(32, 12, ongoing_bmp, ONGOING_BMP_WIDTH, ONGOING_BMP_HEIGHT, 1);
-  display.println(F("listen & repeat"));
-  display.setCursor(48, 32);
+  display.drawBitmap(32, 8, ongoing_bmp, ONGOING_BMP_WIDTH, ONGOING_BMP_HEIGHT, 1);
+  display.setCursor(48, 46);
   display.println(F("Score: "));
-  display.setCursor(59, 41);
+  display.setCursor(59, 55);
   display.println(score);
   display.display();
 }
 
 void displayGameOverScreen(int score) {
   display.clearDisplay();
-  display.setCursor(42, 18);
+  display.setCursor(10, 12);
+  display.setTextSize(2);
   display.println(F("GAME OVER"));
+  display.setTextSize(1);
   display.setCursor(36, 32);
   display.println(F("Final score: "));
+  display.setTextSize(2);
   if (score > 9) {
-    display.setCursor(58, 41);
+    display.setCursor(58, 43);
   } else {
-    display.setCursor(61, 41);
+    display.setCursor(61, 43);
   }
   display.println(score);
+  display.setTextSize(1);
+  display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
   display.display();
 }
 
