@@ -80,9 +80,7 @@ Maybe I'll turn this into a hardware project at some place again, The buttons ar
 
 I saw the video [Arduino LED Memory Game](https://www.youtube.com/watch?v=Tcp_6L80kY0) featured on YouTube, where someone built this [Simon Says game form sparkfun](https://learn.sparkfun.com/tutorials/simon-says-assembly-guide/all) (without their custom PCB) and I thougt this is easy to build based on my breadboard form the 2048 game. In addition to the 4 buttons, I added 4 LEDs and a buzzer. And since the OLED screen was also attached, I used it to display some instructions and the score, the code is in [`ledBrainz.ino`](ledBrainz/ledBrainz.ino). I acutally really enjoy doing these pixel graphics, and I also added [`transformBitmap.go`](transformBitmap.go) which is a generic command line tool to transform PNGs into C arrays.
 
-<img alt="Photo showing a splash screen for LED Brainz on an OLED screen" src="ledBrainz/ledBrainzSplash.jpg?raw=true" width="216" />
-<img alt="Photo showing a screem with instruction to listen and repeat on an OLED screen" src="ledBrainz/ledBrainzOngoing.jpg?raw=true" width="216" />
-<img alt="Photo showing 4 LEDs and buttons composed to play a Simon Says like game on a bradboard with an Arduino nano clone" src="ledBrainz/ledBrainzGameOver.jpg?raw=true" width="432" />
+<img alt="Photo showing a splash screen for LED Brainz on an OLED screen" src="ledBrainz/ledBrainzSplash.jpg?raw=true" width="216" /><img alt="Photo showing a screem with instruction to listen and repeat on an OLED screen" src="ledBrainz/ledBrainzOngoing.jpg?raw=true" width="216" /> <img alt="Photo showing 4 LEDs and buttons composed to play a Simon Says like game on a bradboard with an Arduino nano clone" src="ledBrainz/ledBrainzGameOver.jpg?raw=true" width="432" />
 
 ### Planned projects / ideas
 
