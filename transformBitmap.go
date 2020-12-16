@@ -45,6 +45,8 @@ func main() {
 	writer := bufio.NewWriter(headerFile)
 	defer writer.Flush()
 
+	_, err = fmt.Fprintf(writer, "// Generated using `go run transformBitmap.go %s`\n\n", inputFilepath)
+	check(err)
 	_, err = fmt.Fprintf(writer, "#define %s_BMP_HEIGHT % 4d\n", strings.ToUpper(outputName), outputRowCount)
 	check(err)
 	_, err = fmt.Fprintf(writer, "#define %s_BMP_WIDTH  % 4d\n", strings.ToUpper(outputName), img.Bounds().Max.X)

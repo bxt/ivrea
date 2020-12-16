@@ -1,3 +1,5 @@
+// Generated using `go run transformBitmap.go ledBrainz/splash.png`
+
 #define SPLASH_BMP_HEIGHT   48
 #define SPLASH_BMP_WIDTH    96
 static const unsigned char PROGMEM splash_bmp[576] = {

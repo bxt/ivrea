@@ -1,3 +1,5 @@
+// Generated using `go run transformBitmap.go ledBrainz/gameOver.png`
+
 #define GAMEOVER_BMP_HEIGHT   64
 #define GAMEOVER_BMP_WIDTH   128
 static const unsigned char PROGMEM gameOver_bmp[1024] = {

@@ -1,3 +1,5 @@
+// Generated using `go run transformBitmap.go ledBrainz/ongoing.png`
+
 #define ONGOING_BMP_HEIGHT   32
 #define ONGOING_BMP_WIDTH    64
 static const unsigned char PROGMEM ongoing_bmp[256] = {
