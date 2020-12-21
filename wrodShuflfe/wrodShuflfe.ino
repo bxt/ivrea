@@ -164,8 +164,8 @@ void makeLedsMirrorButtons() {
   }
 }
 
-void exchange(char * start, size_t position1, size_t position2) {
-  if(position1 != position2) {
+void exchange(char *start, size_t position1, size_t position2) {
+  if (position1 != position2) {
     // Switch in-place:
     start[position1] ^= start[position2];
     start[position2] ^= start[position1];
@@ -177,16 +177,16 @@ void loop() {
   char currentWord[MAX_WORD_LENGTH];
   char shuffledWord[MAX_WORD_LENGTH];
   int currentWordLength = strlen_P(words[wordIndex]);
-  for(int i = 0; i < currentWordLength; i++) {
+  for (int i = 0; i < currentWordLength; i++) {
     currentWord[i] = pgm_read_byte_near(words[wordIndex] + i);
     shuffledWord[i] = pgm_read_byte_near(words[wordIndex] + i);
   }
   currentWord[currentWordLength] = '\0';
   shuffledWord[currentWordLength] = '\0';
 
-  while(strcmp(currentWord, shuffledWord) == 0) {
+  while (strcmp(currentWord, shuffledWord) == 0) {
     // See https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
-    for(int i = 0; i < currentWordLength - 2; i++) {
+    for (int i = 0; i < currentWordLength - 2; i++) {
       int j = random(i, currentWordLength);
       exchange(shuffledWord, i, j);
     }
@@ -197,23 +197,24 @@ void loop() {
   while (!everythingCorrect) {
     makeLedsMirrorButtons();
 
-    if(buttons[0].loopAndIsJustPressed()) { // LEFT
+    if (buttons[0].loopAndIsJustPressed()) { // LEFT
       uint8_t previousCursorPosition = cursorPosition;
-      cursorPosition = (currentWordLength + cursorPosition - 1) % currentWordLength;
-      if(pickedUp) {
+      cursorPosition =
+          (currentWordLength + cursorPosition - 1) % currentWordLength;
+      if (pickedUp) {
         exchange(shuffledWord, cursorPosition, previousCursorPosition);
       }
     }
-    if(buttons[1].loopAndIsJustPressed()) { // DOWN
+    if (buttons[1].loopAndIsJustPressed()) { // DOWN
       pickedUp = false;
     }
-    if(buttons[2].loopAndIsJustPressed()) { // UP
+    if (buttons[2].loopAndIsJustPressed()) { // UP
       pickedUp = true;
     }
-    if(buttons[3].loopAndIsJustPressed()) { // RIGHT
+    if (buttons[3].loopAndIsJustPressed()) { // RIGHT
       uint8_t previousCursorPosition = cursorPosition;
       cursorPosition = (cursorPosition + 1) % currentWordLength;
-      if(pickedUp) {
+      if (pickedUp) {
         exchange(shuffledWord, cursorPosition, previousCursorPosition);
       }
     }
@@ -285,7 +286,7 @@ void loop() {
 
   turnAllLeds(LOW);
 
-  wordIndex = (wordIndex+1) % WORD_COUNT;
+  wordIndex = (wordIndex + 1) % WORD_COUNT;
   cursorPosition = 0;
   pickedUp = false;
 }
