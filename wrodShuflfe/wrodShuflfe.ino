@@ -189,11 +189,6 @@ void loop() {
     for(int i = 0; i < currentWordLength - 2; i++) {
       int j = random(i, currentWordLength);
       exchange(shuffledWord, i, j);
-      if(i != j) {
-        shuffledWord[i] ^= shuffledWord[j];
-        shuffledWord[j] ^= shuffledWord[i];
-        shuffledWord[i] ^= shuffledWord[j];
-      }
     }
   }
 
