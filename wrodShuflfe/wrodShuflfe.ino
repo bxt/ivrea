@@ -92,7 +92,9 @@ DirectionButton buttons[4] = {
   DirectionButton(PIN_UP),
   DirectionButton(PIN_RIGHT),
 };
-int frequencies[4] = {330, 370, 415, 440};
+
+// See https://de.wikipedia.org/wiki/Frequenzen_der_gleichstufigen_Stimmung
+int winFrequencies[4] = {262, 330, 392, 523};
 
 int wordIndex = 0;
 uint8_t cursorPosition = 0;
@@ -160,6 +162,15 @@ void makeLedsMirrorButtons() {
   }
 }
 
+void exchange(char * start, size_t position1, size_t position2) {
+  if(position1 != position2) {
+    // Switch in-place:
+    start[position1] ^= start[position2];
+    start[position2] ^= start[position1];
+    start[position1] ^= start[position2];
+  }
+}
+
 void loop() {
   char currentWord[MAX_WORD_LENGTH];
   char shuffledWord[MAX_WORD_LENGTH];
@@ -175,8 +186,8 @@ void loop() {
     // See https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
     for(int i = 0; i < currentWordLength - 2; i++) {
       int j = random(i, currentWordLength);
+      exchange(shuffledWord, i, j);
       if(i != j) {
-        // Switch in-place:
         shuffledWord[i] ^= shuffledWord[j];
         shuffledWord[j] ^= shuffledWord[i];
         shuffledWord[i] ^= shuffledWord[j];
@@ -193,9 +204,7 @@ void loop() {
       uint8_t previousCursorPosition = cursorPosition;
       cursorPosition = (currentWordLength + cursorPosition - 1) % currentWordLength;
       if(pickedUp) {
-        shuffledWord[previousCursorPosition] ^= shuffledWord[cursorPosition];
-        shuffledWord[cursorPosition] ^= shuffledWord[previousCursorPosition];
-        shuffledWord[previousCursorPosition] ^= shuffledWord[cursorPosition];
+        exchange(shuffledWord, cursorPosition, previousCursorPosition);
       }
     }
     if(buttons[1].loopAndIsJustPressed()) { // DOWN
@@ -208,9 +217,7 @@ void loop() {
       uint8_t previousCursorPosition = cursorPosition;
       cursorPosition = (cursorPosition + 1) % currentWordLength;
       if(pickedUp) {
-        shuffledWord[previousCursorPosition] ^= shuffledWord[cursorPosition];
-        shuffledWord[cursorPosition] ^= shuffledWord[previousCursorPosition];
-        shuffledWord[previousCursorPosition] ^= shuffledWord[cursorPosition];
+        exchange(shuffledWord, cursorPosition, previousCursorPosition);
       }
     }
 
@@ -258,22 +265,13 @@ void loop() {
 
   displaySuccessScreen();
 
-  // See https://de.wikipedia.org/wiki/Frequenzen_der_gleichstufigen_Stimmung
-  tone(BUZZER_PIN, 262, 100);
-  digitalWrite(leds[0], HIGH);
-  delay(100);
+  for (int i = 0; i < 4; i++) {
+    tone(BUZZER_PIN, winFrequencies[i], 100);
+    digitalWrite(leds[0], HIGH);
+    delay(100);
+  }
 
-  tone(BUZZER_PIN, 330, 100);
-  digitalWrite(leds[1], HIGH);
-  delay(100);
-
-  tone(BUZZER_PIN, 392, 100);
-  digitalWrite(leds[2], HIGH);
-  delay(100);
-
-  tone(BUZZER_PIN, 523, 300);
-  digitalWrite(leds[3], HIGH);
-  delay(1000);
+  delay(900);
 
   turnAllLeds(LOW);
 
