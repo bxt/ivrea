@@ -216,8 +216,10 @@ void loop() {
     }
 
     display.clearDisplay();
-    display.setCursor((128 - currentWordLength * 6) / 2, 18);
     display.drawBitmap(32, 8, ongoing_bmp, ONGOING_BMP_WIDTH, ONGOING_BMP_HEIGHT, 1);
+    display.setCursor((128 - currentWordLength * 6) / 2, 18);
+    display.println(currentWord);
+
     display.setCursor(48, 46);
     display.println(F("Score: "));
     display.setCursor(59, 55);
