@@ -240,9 +240,9 @@ void loop() {
 
     if (textSize == 1)
       display.drawBitmap((SCREEN_WIDTH - ONGOING1_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING1_BMP_HEIGHT) / 2, ongoing1_bmp, ONGOING1_BMP_WIDTH, ONGOING1_BMP_HEIGHT, 1);
-    if (textSize == 1)
+    if (textSize == 2)
       display.drawBitmap((SCREEN_WIDTH - ONGOING2_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING2_BMP_HEIGHT) / 2, ongoing2_bmp, ONGOING2_BMP_WIDTH, ONGOING2_BMP_HEIGHT, 1);
-    if (textSize == 1)
+    if (textSize == 3)
       display.drawBitmap((SCREEN_WIDTH - ONGOING3_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING3_BMP_HEIGHT) / 2, ongoing3_bmp, ONGOING3_BMP_WIDTH, ONGOING3_BMP_HEIGHT, 1);
 
     int charWidth = CHAR_WIDTH * textSize;
