@@ -7,9 +7,8 @@
 // Run:
 // for i in wrodShuflfe/*.png; do go run transformBitmap.go $i; done
 #include "splash.h"
-#include "ongoing1.h"
-#include "ongoing2.h"
-#include "ongoing3.h"
+#include "ongoing_top.h"
+#include "ongoing_bottom.h"
 #include "success.h"
 
 #include "debugWords.h"
@@ -238,12 +237,6 @@ void loop() {
     }
     display.setTextSize(textSize);
 
-    if (textSize == 1)
-      display.drawBitmap((SCREEN_WIDTH - ONGOING1_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING1_BMP_HEIGHT) / 2, ongoing1_bmp, ONGOING1_BMP_WIDTH, ONGOING1_BMP_HEIGHT, 1);
-    if (textSize == 2)
-      display.drawBitmap((SCREEN_WIDTH - ONGOING2_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING2_BMP_HEIGHT) / 2, ongoing2_bmp, ONGOING2_BMP_WIDTH, ONGOING2_BMP_HEIGHT, 1);
-    if (textSize == 3)
-      display.drawBitmap((SCREEN_WIDTH - ONGOING3_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING3_BMP_HEIGHT) / 2, ongoing3_bmp, ONGOING3_BMP_WIDTH, ONGOING3_BMP_HEIGHT, 1);
 
     int charWidth = CHAR_WIDTH * textSize;
     int charHeight = CHAR_HEIGHT * textSize;
@@ -256,6 +249,7 @@ void loop() {
 
     uint8_t cursorX = startX + cursorPosition * (charWidth + charGap);
     uint8_t cursorY = startY + charHeight + charGap;
+    uint8_t cursorHeight = 1 + textSize;
     int cursorOffset = charGap * 3;
     if (pickedUp) {
       // erase and replace original char:
@@ -263,11 +257,14 @@ void loop() {
       display.setCursor(cursorX, startY - cursorOffset);
       display.print(shuffledWord[cursorPosition]);
 
-      display.fillRect(cursorX, cursorY - cursorOffset, charWidth, 1 + textSize, 1);
+      display.fillRect(cursorX, cursorY - cursorOffset, charWidth, cursorHeight, 1);
     } else {
-      display.fillRect(cursorX, cursorY, charWidth, 1 + textSize, 1);
+      display.fillRect(cursorX, cursorY, charWidth, cursorHeight, 1);
     }
     display.setTextSize(1);
+
+    display.drawBitmap((SCREEN_WIDTH - ONGOING_TOP_BMP_WIDTH) / 2, startY - ONGOING_TOP_BMP_HEIGHT - cursorOffset - textSize, ongoing_top_bmp, ONGOING_TOP_BMP_WIDTH, ONGOING_TOP_BMP_HEIGHT, 1);
+    display.drawBitmap((SCREEN_WIDTH - ONGOING_BOTTOM_BMP_WIDTH) / 2, cursorY + cursorHeight + textSize, ongoing_bottom_bmp, ONGOING_BOTTOM_BMP_WIDTH, ONGOING_BOTTOM_BMP_HEIGHT, 1);
 
     display.display();
   }
