@@ -7,7 +7,9 @@
 // Run:
 // for i in wrodShuflfe/*.png; do go run transformBitmap.go $i; done
 #include "splash.h"
-#include "ongoing.h"
+#include "ongoing1.h"
+#include "ongoing2.h"
+#include "ongoing3.h"
 #include "success.h"
 
 #include "debugWords.h"
@@ -38,9 +40,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // Connect the buzzer
 #define BUZZER_PIN A0
 
-#define CHARACTER_WIDTH 5
-#define CHARACTER_HEIGHT 7
-#define CHARACTER_GAP 1
+#define CHAR_WIDTH 5
+#define CHAR_HEIGHT 7
+#define CHAR_GAP 1
 
 class DirectionButton {
 private:
@@ -240,21 +242,34 @@ void loop() {
     }
     display.setTextSize(textSize);
 
-    display.drawBitmap((SCREEN_WIDTH - ONGOING_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING_BMP_HEIGHT) / 2, ongoing_bmp, ONGOING_BMP_WIDTH, ONGOING_BMP_HEIGHT, 1);
-    int startX = (SCREEN_WIDTH - currentWordLength * (CHARACTER_WIDTH + CHARACTER_GAP) * textSize) / 2 + 1;
-    uint8_t startY = (SCREEN_HEIGHT - CHARACTER_HEIGHT * textSize) / 2;
+    if (textSize == 1)
+      display.drawBitmap((SCREEN_WIDTH - ONGOING1_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING1_BMP_HEIGHT) / 2, ongoing1_bmp, ONGOING1_BMP_WIDTH, ONGOING1_BMP_HEIGHT, 1);
+    if (textSize == 1)
+      display.drawBitmap((SCREEN_WIDTH - ONGOING2_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING2_BMP_HEIGHT) / 2, ongoing2_bmp, ONGOING2_BMP_WIDTH, ONGOING2_BMP_HEIGHT, 1);
+    if (textSize == 1)
+      display.drawBitmap((SCREEN_WIDTH - ONGOING3_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING3_BMP_HEIGHT) / 2, ongoing3_bmp, ONGOING3_BMP_WIDTH, ONGOING3_BMP_HEIGHT, 1);
+
+    int charWidth = CHAR_WIDTH * textSize;
+    int charHeight = CHAR_HEIGHT * textSize;
+    int charGap = CHAR_GAP * textSize;
+
+    int startX = (SCREEN_WIDTH - currentWordLength * (charWidth + charGap)) / 2 + 1;
+    uint8_t startY = (SCREEN_HEIGHT - charHeight) / 2;
     display.setCursor(startX, startY);
     display.println(shuffledWord);
 
-    uint8_t cursorX = startX + cursorPosition * (CHARACTER_WIDTH + CHARACTER_GAP) * textSize;
+    uint8_t cursorX = startX + cursorPosition * (charWidth + charGap);
+    uint8_t cursorY = startY + charHeight + charGap;
+    int cursorOffset = charGap * 3;
     if (pickedUp) {
-      // erase original char:
-      display.fillRect(cursorX, startY, CHARACTER_WIDTH * textSize, CHARACTER_HEIGHT * textSize, 0);
-      display.setCursor(cursorX, startY - 3 * textSize);
+      // erase and replace original char:
+      display.fillRect(cursorX, startY, charWidth, charHeight, 0);
+      display.setCursor(cursorX, startY - cursorOffset);
       display.print(shuffledWord[cursorPosition]);
-      display.fillRect(cursorX, startY + (CHARACTER_HEIGHT - 2) * textSize, CHARACTER_WIDTH * textSize, 1 + textSize, 1);
+
+      display.fillRect(cursorX, cursorY - cursorOffset, charWidth, 1 + textSize, 1);
     } else {
-      display.fillRect(cursorX, startY + (CHARACTER_HEIGHT + 1) * textSize, CHARACTER_WIDTH * textSize, 1 + textSize, 1);
+      display.fillRect(cursorX, cursorY, charWidth, 1 + textSize, 1);
     }
     display.setTextSize(1);
 
