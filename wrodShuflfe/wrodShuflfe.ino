@@ -11,7 +11,7 @@
 #include "ongoing_bottom.h"
 #include "success.h"
 
-#include "debugWords.h"
+#include "wordsDe.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
