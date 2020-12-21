@@ -10,7 +10,7 @@
 #include "ongoing.h"
 #include "success.h"
 
-#include "wordsDe.h"
+#include "debugWords.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -37,6 +37,10 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // Connect the buzzer
 #define BUZZER_PIN A0
+
+#define CHARACTER_WIDTH 5
+#define CHARACTER_HEIGHT 7
+#define CHARACTER_GAP 1
 
 class DirectionButton {
 private:
@@ -90,13 +94,13 @@ DirectionButton buttons[4] = {
 };
 int frequencies[4] = {330, 370, 415, 440};
 
-uint8_t cursorPosition = 0;
 int wordIndex = 0;
+uint8_t cursorPosition = 0;
 bool pickedUp = false;
 
 void displaySplashScreen() {
   display.clearDisplay();
-  display.drawBitmap(16, 8, splash_bmp, SPLASH_BMP_WIDTH, SPLASH_BMP_HEIGHT, 1);
+  display.drawBitmap(16, 2, splash_bmp, SPLASH_BMP_WIDTH, SPLASH_BMP_HEIGHT, 1);
   display.setCursor(13, 55);
   display.println(F("- press any key -"));
   display.display();
@@ -127,7 +131,6 @@ void setup() {
     while(1) {} // Infinite loop so we don't go to the loop() function
   }
 
-  display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
 
   displaySplashScreen();
@@ -153,7 +156,7 @@ void turnAllLeds(uint8_t toLevel) {
 
 void makeLedsMirrorButtons() {
   for (int i = 0; i < 4; i++) {
-    digitalWrite(leds[i], buttons[i].getLastReading());
+    digitalWrite(leds[i], buttons[i].getLastReading() == LOW ? HIGH : LOW);
   }
 }
 
@@ -168,13 +171,17 @@ void loop() {
   currentWord[currentWordLength] = '\0';
   shuffledWord[currentWordLength] = '\0';
 
-  // See https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
-  for(int i = 0; i < currentWordLength - 1; i++) {
-    int j = random(i, currentWordLength);
-    // Switch in-place:
-    shuffledWord[i] ^= shuffledWord[j];
-    shuffledWord[j] ^= shuffledWord[i];
-    shuffledWord[i] ^= shuffledWord[j];
+  while(strcmp(currentWord, shuffledWord) == 0) {
+    // See https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+    for(int i = 0; i < currentWordLength - 2; i++) {
+      int j = random(i, currentWordLength);
+      if(i != j) {
+        // Switch in-place:
+        shuffledWord[i] ^= shuffledWord[j];
+        shuffledWord[j] ^= shuffledWord[i];
+        shuffledWord[i] ^= shuffledWord[j];
+      }
+    }
   }
 
   bool everythingCorrect = false;
@@ -184,7 +191,7 @@ void loop() {
 
     if(buttons[0].loopAndIsJustPressed()) { // LEFT
       uint8_t previousCursorPosition = cursorPosition;
-      cursorPosition = (cursorPosition + 1) % currentWordLength;
+      cursorPosition = (currentWordLength + cursorPosition - 1) % currentWordLength;
       if(pickedUp) {
         shuffledWord[previousCursorPosition] ^= shuffledWord[cursorPosition];
         shuffledWord[cursorPosition] ^= shuffledWord[previousCursorPosition];
@@ -199,7 +206,7 @@ void loop() {
     }
     if(buttons[3].loopAndIsJustPressed()) { // RIGHT
       uint8_t previousCursorPosition = cursorPosition;
-      cursorPosition = (currentWordLength + cursorPosition - 1) % currentWordLength;
+      cursorPosition = (cursorPosition + 1) % currentWordLength;
       if(pickedUp) {
         shuffledWord[previousCursorPosition] ^= shuffledWord[cursorPosition];
         shuffledWord[cursorPosition] ^= shuffledWord[previousCursorPosition];
@@ -207,25 +214,47 @@ void loop() {
       }
     }
 
-    everythingCorrect = true;
-    for(int i = 0; i < currentWordLength; i++) {
-      if(currentWord[i] != shuffledWord[i]) {
-        everythingCorrect = false;
-        break;
-      }
+    if (!pickedUp) {
+      everythingCorrect = strcmp(currentWord, shuffledWord) == 0;
     }
 
     display.clearDisplay();
-    display.drawBitmap(32, 8, ongoing_bmp, ONGOING_BMP_WIDTH, ONGOING_BMP_HEIGHT, 1);
-    display.setCursor((128 - currentWordLength * 6) / 2, 18);
-    display.println(currentWord);
 
-    display.setCursor(48, 46);
-    display.println(F("Score: "));
-    display.setCursor(59, 55);
-    display.println(wordIndex);
+    // debug:
+    // display.drawLine(0, SCREEN_HEIGHT/2, SCREEN_WIDTH, SCREEN_HEIGHT/2, 1);
+    // display.drawLine(SCREEN_WIDTH/2, 0, SCREEN_WIDTH/2, SCREEN_HEIGHT, 1);
+
+    uint8_t textSize = 1;
+    if (currentWordLength < 7) {
+      textSize++;
+    }
+    if (currentWordLength < 10) {
+      textSize++;
+    }
+    display.setTextSize(textSize);
+
+    display.drawBitmap((SCREEN_WIDTH - ONGOING_BMP_WIDTH) / 2, (SCREEN_HEIGHT - ONGOING_BMP_HEIGHT) / 2, ongoing_bmp, ONGOING_BMP_WIDTH, ONGOING_BMP_HEIGHT, 1);
+    int startX = (SCREEN_WIDTH - currentWordLength * (CHARACTER_WIDTH + CHARACTER_GAP) * textSize) / 2 + 1;
+    uint8_t startY = (SCREEN_HEIGHT - CHARACTER_HEIGHT * textSize) / 2;
+    display.setCursor(startX, startY);
+    display.println(shuffledWord);
+
+    uint8_t cursorX = startX + cursorPosition * (CHARACTER_WIDTH + CHARACTER_GAP) * textSize;
+    if (pickedUp) {
+      // erase original char:
+      display.fillRect(cursorX, startY, CHARACTER_WIDTH * textSize, CHARACTER_HEIGHT * textSize, 0);
+      display.setCursor(cursorX, startY - 3 * textSize);
+      display.print(shuffledWord[cursorPosition]);
+      display.fillRect(cursorX, startY + (CHARACTER_HEIGHT - 2) * textSize, CHARACTER_WIDTH * textSize, 1 + textSize, 1);
+    } else {
+      display.fillRect(cursorX, startY + (CHARACTER_HEIGHT + 1) * textSize, CHARACTER_WIDTH * textSize, 1 + textSize, 1);
+    }
+    display.setTextSize(1);
+
     display.display();
   }
+
+  delay(200);
 
   displaySuccessScreen();
 
@@ -244,9 +273,11 @@ void loop() {
 
   tone(BUZZER_PIN, 523, 300);
   digitalWrite(leds[3], HIGH);
-  delay(500);
+  delay(1000);
 
   turnAllLeds(LOW);
 
   wordIndex = (wordIndex+1) % WORD_COUNT;
+  cursorPosition = 0;
+  pickedUp = false;
 }
