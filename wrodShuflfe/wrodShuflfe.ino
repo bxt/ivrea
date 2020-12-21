@@ -275,7 +275,7 @@ void loop() {
 
   for (int i = 0; i < 4; i++) {
     tone(BUZZER_PIN, winFrequencies[i], 100);
-    digitalWrite(leds[0], HIGH);
+    digitalWrite(leds[i], HIGH);
     delay(100);
   }
 
