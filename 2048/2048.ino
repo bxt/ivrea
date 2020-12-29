@@ -3,6 +3,9 @@
 #include <EEPROM.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <OSFS.h>
+#include <EEPROM.h>
+#include "osfsEeprom.h"
 #include "sprite.h"
 #include "animation.h"
 
@@ -116,23 +119,27 @@ uint8_t nextGrid[4][4] = {
 };
 
 void loadHighscore() {
-  int eepromAddress = 0;
-  uint8_t magicNumber;
-  EEPROM.get(eepromAddress, magicNumber);
-  if (magicNumber == EEPROM_MAGIC_NUMBER) {
-    eepromAddress += sizeof(uint8_t);
-    EEPROM.get(eepromAddress, highScore);
-  } else {
-    highScore = 0;
+  if(OSFS::getFile("2048hiscore", highScore) != OSFS::result::NO_ERROR) {
+    int eepromAddress = 0;
+    uint8_t magicNumber;
+    EEPROM.get(eepromAddress, magicNumber);
+    if (magicNumber == EEPROM_MAGIC_NUMBER) {
+      eepromAddress += sizeof(uint8_t);
+      EEPROM.get(eepromAddress, highScore);
+    } else {
+      highScore = 0;
+    }
   }
 }
 
 void saveHighscore() {
-  int eepromAddress = 0;
-  uint8_t magicNumber = EEPROM_MAGIC_NUMBER;
-  EEPROM.put(eepromAddress, magicNumber);
-  eepromAddress += sizeof(uint8_t);
-  EEPROM.put(eepromAddress, highScore);
+  if(OSFS::newFile("2048hiscore", highScore, true) != OSFS::result::NO_ERROR) {
+    int eepromAddress = 0;
+    uint8_t magicNumber = EEPROM_MAGIC_NUMBER;
+    EEPROM.put(eepromAddress, magicNumber);
+    eepromAddress += sizeof(uint8_t);
+    EEPROM.put(eepromAddress, highScore);
+  }
 }
 
 void resetGame() {
@@ -303,6 +310,7 @@ void setup() {
   }
 
   loadHighscore();
+  saveHighscore();
 
   fillRandomEmptySpot();
   flushTileMovements();
