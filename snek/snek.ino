@@ -110,7 +110,7 @@ void setMousePosition() {
 
 void initializeGame() {
   snekLength = 3;
-  for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount > snekCounts; snekCount--) {
+  for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount >= snekCounts; snekCount--) {
     *snekCount = 0;
   }
   uint8_t *snekCount = &snekCounts[(FIELD_HEIGHT + 1) * FIELD_WIDTH / 2];
@@ -186,7 +186,7 @@ void loop() {
     if (eaten) {
       snekLength++;
     } else {
-      for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount > snekCounts; snekCount--) {
+      for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount >= snekCounts; snekCount--) {
         if(*snekCount > 0) {
           (*snekCount)--;
         }
