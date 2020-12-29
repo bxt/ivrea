@@ -20,7 +20,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define DIRECTION_BUTTON_ACTIVE LOW
 #define DEBOUNCE_DELAY 50ul
 
-#define FIELD_WIDTH 24 // field width, in snake piece sizes
+#define FIELD_WIDTH 21 // field width, in snake piece sizes
 #define FIELD_HEIGHT 12 // field height, in snake piece sizes
 #define FIELD_UNIT 4 // snake piece size
 
@@ -91,7 +91,7 @@ void waitForAnyButtonPressed() {
   }
 }
 
-uint16_t snekLength = 3;
+uint8_t snekLength = 3;
 uint8_t snekCounts[FIELD_WIDTH * FIELD_HEIGHT] = {0};
 uint8_t directionX = 1;
 uint8_t directionY = 0;
@@ -205,8 +205,8 @@ void loop() {
   int screenXOffset = (SCREEN_WIDTH - FIELD_WIDTH * FIELD_UNIT) / 2;
   int screenYOffset = (SCREEN_HEIGHT - FIELD_HEIGHT * FIELD_UNIT) / 2 + 3;
 
-  for (int y = 0; y < FIELD_HEIGHT; y++) {
-    for (int x = 0; x < FIELD_WIDTH; x++) {
+  for (uint8_t y = 0; y < FIELD_HEIGHT; y++) {
+    for (uint8_t x = 0; x < FIELD_WIDTH; x++) {
       if(snekCounts[y * FIELD_WIDTH + x] > 0) {
         display.fillRect(x * FIELD_UNIT + screenXOffset, y * FIELD_UNIT + screenYOffset, FIELD_UNIT - 1, FIELD_UNIT - 1, 1);
       }
