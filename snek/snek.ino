@@ -204,7 +204,7 @@ void loop() {
   display.clearDisplay();
 
   int screenXOffset = (SCREEN_WIDTH - FIELD_WIDTH * FIELD_UNIT) / 2;
-  int screenYOffset = (SCREEN_HEIGHT - FIELD_HEIGHT * FIELD_UNIT) / 2;
+  int screenYOffset = (SCREEN_HEIGHT - FIELD_HEIGHT * FIELD_UNIT) / 2 + 3;
 
   for (int y = 0; y < FIELD_HEIGHT; y++) {
     for (int x = 0; x < FIELD_WIDTH; x++) {
