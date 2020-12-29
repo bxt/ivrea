@@ -57,7 +57,7 @@ public:
   }
 
   void setup() {
-    pinMode(this->pin, INPUT);
+    pinMode(this->pin, INPUT_PULLUP);
     this->lastReading = digitalRead(this->pin);
   }
 
