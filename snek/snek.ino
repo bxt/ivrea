@@ -101,6 +101,7 @@ uint8_t positionY = 0;
 uint8_t mouseX = 0;
 uint8_t mouseY = 0;
 
+unsigned long time;
 
 void setMousePosition() {
   do {
@@ -148,6 +149,8 @@ void setup() {
 }
 
 void loop() {
+  time = micros();
+
   if (buttons[0].loopAndIsJustPressed()) { // LEFT
     if(directionX == 0) {
       directionX = -1;
@@ -176,6 +179,11 @@ void loop() {
   positionX += directionX;
   positionY += directionY;
 
+  time = micros() - time;
+  Serial.print("Movement: ");
+  Serial.println(time);
+  time = micros();
+
   if (positionX >= FIELD_WIDTH || positionY >= FIELD_HEIGHT) { // out of bounds
     // Game over
     initializeGame();
@@ -201,6 +209,11 @@ void loop() {
     }
   }
 
+  time = micros() - time;
+  Serial.print("Field updates: ");
+  Serial.println(time);
+  time = micros();
+
   display.clearDisplay();
 
   int screenXOffset = (SCREEN_WIDTH - FIELD_WIDTH * FIELD_UNIT) / 2;
@@ -214,6 +227,11 @@ void loop() {
     }
   }
 
+  time = micros() - time;
+  Serial.print("Field display: ");
+  Serial.println(time);
+  time = micros();
+
   display.fillRect(positionX * FIELD_UNIT + screenXOffset, positionY * FIELD_UNIT + screenYOffset, FIELD_UNIT - 1, FIELD_UNIT - 1, 1);
 
   display.fillCircle(mouseX * FIELD_UNIT + screenXOffset + 1, mouseY * FIELD_UNIT + screenYOffset + 1, FIELD_UNIT/2 - 1, 1);
@@ -223,7 +241,16 @@ void loop() {
   display.setCursor(screenXOffset - 2, 0);
   display.println(snekLength - 3);
 
+  time = micros() - time;
+  Serial.print("HUD display: ");
+  Serial.println(time);
+  time = micros();
+
   display.display();
+
+  time = micros() - time;
+  Serial.print("Transmit: ");
+  Serial.println(time);
 
   delay(200);
 }
