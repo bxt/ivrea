@@ -40,7 +40,6 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 class DirectionButton {
 private:
   uint8_t pin;
-  uint8_t lockedReading;
   uint8_t lastReading;
   unsigned long lastChangeTime;
 
