@@ -91,7 +91,7 @@ void waitForAnyButtonPressed() {
   }
 }
 
-int snekLength = 3;
+uint16_t snekLength = 3;
 uint8_t snekCounts[FIELD_WIDTH * FIELD_HEIGHT] = {0};
 uint8_t directionX = 1;
 uint8_t directionY = 0;
@@ -111,14 +111,17 @@ void setMousePosition() {
 
 void initializeGame() {
   snekLength = 3;
+  for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount > snekCounts; snekCount--) {
+    *snekCount = 0;
+  }
   uint8_t *snekCount = &snekCounts[(FIELD_HEIGHT + 1) * FIELD_WIDTH / 2];
-  *(snekCount++) = 1;
-  *(snekCount++) = 2;
-  *(snekCount++) = 3;
-  uint8_t directionX = 1;
-  uint8_t directiony = 0;
-  uint8_t positionX = FIELD_WIDTH / 2 + 2;
-  uint8_t positionY = FIELD_HEIGHT / 2;
+  *snekCount++ = 1;
+  *snekCount++ = 2;
+  *snekCount++ = 3;
+  directionX = 1;
+  directionY = 0;
+  positionX = FIELD_WIDTH / 2 + 2;
+  positionY = FIELD_HEIGHT / 2;
 
   mouseX = FIELD_WIDTH / 2 + 6;
   mouseY = FIELD_HEIGHT / 2;
@@ -173,11 +176,11 @@ void loop() {
   positionX += directionX;
   positionY += directionY;
 
-  if (snekCounts[positionY * FIELD_WIDTH + positionX] > 0) { // tail bite
+  if (positionX >= FIELD_WIDTH || positionY >= FIELD_HEIGHT) { // out of bounds
     // Game over
-    for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount > snekCounts; snekCount--) {
-      *snekCount = 0;
-    }
+    initializeGame();
+  } else if (snekCounts[positionY * FIELD_WIDTH + positionX] > 0) { // tail bite
+    // Game over
     initializeGame();
   } else {
     bool eaten = positionX == mouseX && positionY == mouseY;
@@ -186,7 +189,7 @@ void loop() {
     } else {
       for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount > snekCounts; snekCount--) {
         if(*snekCount > 0) {
-          *snekCount--;
+          (*snekCount)--;
         }
       }
     }
@@ -205,13 +208,20 @@ void loop() {
 
   for (int y = 0; y < FIELD_HEIGHT; y++) {
     for (int x = 0; x < FIELD_WIDTH; x++) {
-      if(snekCounts[y * FIELD_WIDTH * + x] > 0) {
+      if(snekCounts[y * FIELD_WIDTH + x] > 0) {
         display.fillRect(x * FIELD_UNIT + screenXOffset, y * FIELD_UNIT + screenYOffset, FIELD_UNIT - 1, FIELD_UNIT - 1, 1);
       }
     }
   }
 
-  display.fillCircle(mouseX * FIELD_UNIT + screenXOffset, mouseY * FIELD_UNIT + screenYOffset, FIELD_UNIT - 1, 1);
+  display.fillRect(positionX * FIELD_UNIT + screenXOffset, positionY * FIELD_UNIT + screenYOffset, FIELD_UNIT - 1, FIELD_UNIT - 1, 1);
+
+  display.fillCircle(mouseX * FIELD_UNIT + screenXOffset + 1, mouseY * FIELD_UNIT + screenYOffset + 1, FIELD_UNIT/2 - 1, 1);
+
+  display.drawRect(screenXOffset - 2, screenYOffset - 2, FIELD_UNIT * FIELD_WIDTH + 4, FIELD_UNIT * FIELD_HEIGHT + 4, 1);
+
+  display.setCursor(screenXOffset - 2, 0);
+  display.println(snekLength - 3);
 
   display.display();
 
