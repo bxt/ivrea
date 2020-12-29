@@ -2,8 +2,11 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <OSFS.h>
+#include <EEPROM.h>
 #include "splash.h"
 #include "game_over.h"
+#include "osfsEeprom.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -100,6 +103,14 @@ uint8_t positionY = 0;
 uint8_t mouseX = 0;
 uint8_t mouseY = 0;
 
+void loadHighscore() {
+  OSFS::getFile("snekhiscore", highScore);
+}
+
+void saveHighscore() {
+  OSFS::newFile("snekhiscore", highScore, true);
+}
+
 void setMousePosition() {
   do {
     mouseX = random(0, FIELD_WIDTH);
@@ -138,6 +149,8 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     while(1) {} // Infinite loop so we don't go to the loop() function
   }
+
+  loadHighscore();
 
   display.setTextColor(SSD1306_WHITE);
 
@@ -264,12 +277,13 @@ void handleGameOver() {
     if(score > highScore) {
       display.print(F("NEW"));
     } else {
-      display.print(score);
+      display.print(highScore);
     }
     display.display();
 
     if(score > highScore) {
       highScore = score;
+      saveHighscore();
     }
 
     delay(250);
