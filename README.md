@@ -86,15 +86,19 @@ I saw the video [Arduino LED Memory Game](https://www.youtube.com/watch?v=Tcp_6L
 
 Another game idea I found was a word sorting game. The MCU gives you a random permutation of a word and you have to rearrange the letters to build the original word. The code is in [`wrodShuflfe.ino`](wrodShuflfe/wrodShuflfe.ino) (the name of the game is the 0st level already) and I also added a list of 78 basic German words, that you can guess. Even though I knew the words, it was still challenging, e.g. `PFLAE` is formed from a perfectly normal German word, but it took me some time to figure it out. As a bit of nostalgia I used C strings with `strlen` and `strcmp` as well as the in-place-XOR-swap trick. And now I know why people avoid those. And ofc I built some "pixel art" as decorations.
 
+![Animation showing the letters "KAFEFE" beeing rearranged to "KAFFEE" to complete one level of the word shuffle game](wrodShuflfe/wrofShuflfe.gif)
+
 ### Snake game
 
-I almost forgot how fun snake as a game was. Back in the Nokia 3310 days it was my favorite pastime for some time, so I had to re-implement it as well. And what can I say – it's still addictive. The code is in [snek/snek.ino](snek.ino). I had to limit the field size to 21x12 to make the the maximum snake length fit into a `uint8_t` and thus not fill the 2 KB memory of the Nano so quickly, while still allowing to fill the whole field with snake.
+I almost forgot how fun snake as a game was. Back in the Nokia 3310 days it was my favorite pastime for some time, so I had to re-implement it as well. And what can I say – it's still addictive. The code is in [`snek.ino`](snek/snek.ino). I had to limit the field size to 21x12 to make the the maximum snake length fit into a `uint8_t` and thus not fill the 2 KB memory of the Nano so quickly, while still allowing to fill the whole field with snake.
 
 For some time I thought about a way to store not only my 2048 high score, but also my snake high score in the EEPROM at the same time, and I came up with some basic file system. But then I realized that my idea is the same that the "Overly Simplified File System" from [`charlesbaynham/OSFS`](https://github.com/charlesbaynham/OSFS) already implements so I migrated my storage to this system using [`initOsfsEeprom.ino`](initOsfsEeprom/initOsfsEeprom.ino) and some [migration code for 2048](https://github.com/bxt/ivrea/commit/efa2e601ce7d70f9a5459edaf29609c3408d3b79).
 
-I was also curious how fast the various code bits actually run so I wrote some [timing code](https://github.com/bxt/ivrea/commit/6e1f95201eb98190553b70c67da136cdc932f61c) and while my game code is taking less than 2ms, sending the buffer to the OLED via I2C/TWI take a whopping 37ms, so I guess one way of optimization would be only sending the changes addresses, which would be possible from the screen's protocol, but the graphics library I'm using does not support that. Maybe some time in the future, I'll roll my own.
+I was also curious how fast the various code bits actually run so I wrote some [timing code](https://github.com/bxt/ivrea/commit/6e1f95201eb98190553b70c67da136cdc932f61c) and while my game code is taking less than 2ms, sending the buffer to the OLED via I2C/TWI takes a whopping 37ms, so I guess one way of optimization would be only sending the changed regions, which would be possible from the screen's protocol, but the graphics library I'm using does not support that. Maybe some time in the future, I'll roll my own.
 
 I also finally took the time to replace the jumper wires with some 22 AWG solid wire, because the jumpers kept hanging over the OLED. I also found when you enter ["snake" into Goolge](https://www.google.com/search?q=snake) you can actually play the game, a graphically polished version of it with animations and more game modes, like multiple mice, swiss-cheese-snake and so on.
+
+<img alt="Photo showing an Arduino nano on a breaboard with other peripherals and the Anna Konda snake game splash screen on an OLED" src="snek/snek.jpg?raw=true" width="432" />
 
 ### Planned projects / ideas
 
