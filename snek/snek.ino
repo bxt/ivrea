@@ -27,9 +27,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // How fast the game runs:
 #define FRAME_DELAY 100ul
 
-#define FIELD_WIDTH 21 // field width, in snake piece sizes
+#define FIELD_WIDTH 21  // field width, in snake piece sizes
 #define FIELD_HEIGHT 12 // field height, in snake piece sizes
-#define FIELD_UNIT 4 // snake piece size
+#define FIELD_UNIT 4    // snake piece size
 
 class DirectionButton {
 private:
@@ -84,9 +84,9 @@ void displaySplashScreen() {
 
 void waitForAnyButtonPressed() {
   while (!(leftDirectionButton.loopAndIsJustPressed()) &&
-          !(downDirectionButton.loopAndIsJustPressed()) &&
-          !(upDirectionButton.loopAndIsJustPressed()) &&
-          !(rightDirectionButton.loopAndIsJustPressed())) {
+         !(downDirectionButton.loopAndIsJustPressed()) &&
+         !(upDirectionButton.loopAndIsJustPressed()) &&
+         !(rightDirectionButton.loopAndIsJustPressed())) {
     // Wait for user to press any key
   }
 }
@@ -121,7 +121,8 @@ void setMousePosition() {
 void initializeGame() {
   gameOver = false;
   snekLength = 3;
-  for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount >= snekCounts; snekCount--) {
+  for (uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1];
+       snekCount >= snekCounts; snekCount--) {
     *snekCount = 0;
   }
   uint8_t *snekCount = &snekCounts[(FIELD_HEIGHT + 1) * FIELD_WIDTH / 2];
@@ -171,7 +172,7 @@ bool processInput() {
       directionX = 1;
       directionY = 0;
       return true;
-   }
+    }
   } else if (directionY == 0) {
     if (downDirectionButton.loopAndIsJustPressed()) {
       directionX = 0;
@@ -200,8 +201,9 @@ void advanceGameState() {
     if (eaten) {
       snekLength++;
     } else {
-      for(uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1]; snekCount >= snekCounts; snekCount--) {
-        if(*snekCount > 0) {
+      for (uint8_t *snekCount = &snekCounts[FIELD_WIDTH * FIELD_HEIGHT - 1];
+           snekCount >= snekCounts; snekCount--) {
+        if (*snekCount > 0) {
           (*snekCount)--;
         }
       }
@@ -209,7 +211,7 @@ void advanceGameState() {
 
     snekCounts[positionY * FIELD_WIDTH + positionX] = snekLength;
 
-    if(eaten) {
+    if (eaten) {
       setMousePosition();
     }
   }
@@ -225,7 +227,7 @@ void renderGame() {
   for (uint8_t y = 0; y < FIELD_HEIGHT; y++) {
     for (uint8_t x = 0; x < FIELD_WIDTH; x++) {
       uint8_t snekCount = snekCounts[y * FIELD_WIDTH + x];
-      if(snekCount > 0) {
+      if (snekCount > 0) {
         int8_t additionalWidth = -1;
         if (x < FIELD_WIDTH - 1) {
           int8_t leftSnekCount = snekCounts[y * FIELD_WIDTH + x + 1];
@@ -274,14 +276,14 @@ void handleGameOver() {
     display.print(score);
     display.setCursor(61, 55);
     display.print(F("High "));
-    if(score > highScore) {
+    if (score > highScore) {
       display.print(F("NEW"));
     } else {
       display.print(highScore);
     }
     display.display();
 
-    if(score > highScore) {
+    if (score > highScore) {
       highScore = score;
       saveHighscore();
     }
@@ -297,13 +299,13 @@ void loop() {
   unsigned long pollingEnd = millis() + FRAME_DELAY;
   uint8_t didProcessInputTimes = 0;
   while (!gameOver && didProcessInputTimes < 3 && millis() < pollingEnd) {
-    if(processInput()) {
+    if (processInput()) {
       advanceGameState();
       didProcessInputTimes++;
     }
   }
 
-  if(!gameOver && didProcessInputTimes == 0) {
+  if (!gameOver && didProcessInputTimes == 0) {
     advanceGameState();
   }
 
