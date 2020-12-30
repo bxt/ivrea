@@ -165,6 +165,10 @@ Over time, I collected some useful resources like [instructional videos](#instru
 * SMD / Surface-mounted device / PCP / "the very small chips", de: Platine, Leiterplatte
 * VCC / VDD / "5V", de: Pluspol, Spannungsquelle
 * GND / Ground / VSS / 0V, de: Minuspol, Masse
+* Serial:
+  * I2C / I²C / Inter-Integrated Circuit / I-Squared-C / TWI / Two-Wire-Interface: Bus with 2 wires (SDA, SCL), 1 controller and N peripherals with 7-bit addresses (often hardcoded)
+  * SPI / Serial Peripheral Interface, Bus with 4 wires (SCK/SCLK, SS/Slave-/chip-select, and 2 duplexed data wires. They are called MOSI/MISO or SDO/SDI (then cross connected). 1 Controller and N peripherals with SS.
+  * UART / Universal Asynchronous Receiver Transmitter: Bus with 2 wires for sending and retrieving, synced via start/stop bits.
 
 ### Sourcing
 
