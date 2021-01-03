@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <FastLED.h>
 
 // Hook up the LED strip
@@ -19,16 +20,28 @@
 // And connect a button, active low:
 #define BUZZER_PIN A0
 
+// How many rounds are in a game
+#define ENDS_COUNT 4
+
 // How many shots a player has
 #define SHOT_COUNT 3
+
+// How big the target size is
+#define HOUSE_SIZE 10
 
 // State of the LEDs, basically our "VRAM":
 CRGB leds[NUM_LEDS];
 
-void waitForButtonPress() {
+void waitForButtonDown() {
   while(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE);
-  delay(DEBOUNCE_DELAY);
+}
+void waitForButtonUp() {
   while(digitalRead(BUTTON_PIN) == BUTTON_ACTIVE);
+}
+void waitForButtonPress() {
+  waitForButtonDown();
+  delay(DEBOUNCE_DELAY);
+  waitForButtonUp();
   delay(DEBOUNCE_DELAY);
 }
 
@@ -61,21 +74,28 @@ void setup() {
 int target = 0;
 
 CRGB playerColors[2] = {
-  0xFF8800,
+  0xFF5500,
   0x00FF00,
 };
+
+uint8_t playerScores[2] = {0};
 
 const int playerCount = sizeof(playerColors) / sizeof(CRGB);
 
 int shotsFired[playerCount][SHOT_COUNT] = {0};
 
 void displayTarget() {
-  leds[target] = CRGB::White;
-  if(target + 10 < NUM_LEDS) {
-    leds[target + 10] = CRGB::DarkSlateGrey;
+  if(target + 1 < NUM_LEDS) {
+    leds[target + 1] = CRGB::Red;
   }
-  if(target - 10 >= 0) {
-    leds[target - 10] = CRGB::DarkSlateGrey;
+  if(target - 1 >= 0) {
+    leds[target - 1] = CRGB::Red;
+  }
+  if(target + HOUSE_SIZE < NUM_LEDS) {
+    leds[target + HOUSE_SIZE] = CRGB::Blue;
+  }
+  if(target - HOUSE_SIZE >= 0) {
+    leds[target - HOUSE_SIZE] = CRGB::Blue;
   }
 }
 
@@ -83,7 +103,7 @@ void displayShots() {
   for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
     for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
       int shotAt = shotsFired[playerIndex][shotIndex];
-      if(shotAt > 0) {
+      if(shotAt >= 0) {
         leds[shotAt] = playerColors[playerIndex];
       }
     }
@@ -93,8 +113,14 @@ void displayShots() {
 void resetShots() {
   for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
     for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
-      shotsFired[playerIndex][shotIndex] = 0;
+      shotsFired[playerIndex][shotIndex] = -1;
     }
+  }
+}
+
+void resetScores() {
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    playerScores[playerIndex] = 0;
   }
 }
 
@@ -105,46 +131,163 @@ void renderGame() {
   FastLED.show();
 }
 
-void loop() {
-  target = random(50, NUM_LEDS);
+int performShot() {
+  waitForButtonDown();
 
-  renderGame();
+  delay(DEBOUNCE_DELAY);
 
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-    CRGB playerColor = playerColors[playerIndex];
+  int shotAt = 0;
+  for(; shotAt < NUM_LEDS; shotAt++) {
+    if(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
+      break;
+    }
+    tone(BUZZER_PIN, 220 + shotAt);
+    delay(8);
+  }
 
-    delay(1000);
+  if(digitalRead(BUTTON_PIN) == BUTTON_ACTIVE) { // messed up, out of bounds:
+    shotAt = -1;
 
-    allLedsTo(playerColor);
-    FastLED.show();
-    delay(1000);
-    renderGame();
-
-    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
-      while(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE);
-
-      delay(DEBOUNCE_DELAY);
-      int shotAt = 0;
-      for(; shotAt < NUM_LEDS; shotAt++) {
-        if(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
-          break;
-        }
-        tone(BUZZER_PIN, 220 + shotAt);
-        delay(8);
-      }
-      for(int i = shotAt; i >= 0; i--) {
-        tone(BUZZER_PIN, 220 + i);
-        delay(1);
-      }
-      noTone(BUZZER_PIN);
-
-      shotsFired[playerIndex][shotIndex] = shotAt;
-
-      renderGame();
+    for(int i = 0; i < 100; i++) {
+      tone(BUZZER_PIN, 220 + NUM_LEDS + i * 4);
+      delay(1);
+    }
+    noTone(BUZZER_PIN);
+  } else {
+    for(int i = shotAt; i >= 0; i--) {
+      tone(BUZZER_PIN, 220 + i);
+      delay(1);
     }
   }
 
-  delay(500);
-  waitForButtonPress();
-  resetShots();
+  delay(DEBOUNCE_DELAY);
+  waitForButtonUp();
+  noTone(BUZZER_PIN);
+
+  return shotAt;
+}
+
+int getShotDistance(int playerIndex, int shotIndex) {
+  int shotAt = shotsFired[playerIndex][shotIndex];
+  if(shotAt < 0) return INT_MAX;
+  return abs(target - shotAt);
+}
+
+void calculateScores() {
+  int closestShotDistance = INT_MAX;
+  int closestPlayerIndex = -1;
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+      int shotDistance = getShotDistance(playerIndex, shotIndex);
+      if (shotDistance < closestShotDistance) {
+        closestShotDistance = shotDistance;
+        closestPlayerIndex = playerIndex;
+      }
+    }
+  }
+
+  int closestShotDistanceOtherPlayers = INT_MAX;
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    if(playerIndex == closestPlayerIndex) continue;
+    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+      int shotDistance = getShotDistance(playerIndex, shotIndex);
+      if (shotDistance < closestShotDistanceOtherPlayers) {
+        closestShotDistanceOtherPlayers = shotDistance;
+      }
+    }
+  }
+
+  int endScore = 0;
+  for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+    int shotDistance = getShotDistance(closestPlayerIndex, shotIndex);
+    if (shotDistance < closestShotDistanceOtherPlayers) {
+      endScore++;
+    }
+  }
+
+  playerScores[closestPlayerIndex] += endScore;
+}
+
+void renderScores() {
+  allLedsTo(CRGB::Black);
+
+  int dot = NUM_LEDS;
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for(int i = 0; i < playerScores[playerIndex]; i++) {
+      leds[--dot] = playerColors[playerIndex];
+    }
+  }
+
+  FastLED.show();
+}
+
+void winningCelebration() {
+  int maxScore = 0;
+  int winningPlayerIndex = 0;
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    int playerScore = playerScores[playerIndex];
+    if(playerScore > maxScore) {
+      winningPlayerIndex = playerIndex;
+      maxScore = playerScore;
+    }
+  }
+
+  CRGB playerColor = playerColors[winningPlayerIndex];
+
+  int i = 0;
+  while(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
+    for(int k = 0; k < NUM_LEDS; k++) {
+      CRGB ledColor = playerColor;
+      ledColor %= ((NUM_LEDS + i - k) * 10);
+      leds[k] = ledColor;
+    }
+
+    FastLED.show();
+    i++;
+  }
+  delay(DEBOUNCE_DELAY);
+  waitForButtonUp();
+  delay(DEBOUNCE_DELAY);
+}
+
+void loop() {
+  for(int endIndex = 0; endIndex < ENDS_COUNT; endIndex++) {
+    resetShots();
+    target = random(50, NUM_LEDS);
+
+    renderGame();
+
+    for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+      CRGB playerColor = playerColors[playerIndex];
+
+      delay(1000);
+
+      allLedsTo(playerColor);
+      FastLED.show();
+      delay(1000);
+      renderGame();
+
+      for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+        int shotAt = performShot();
+
+        shotsFired[playerIndex][shotIndex] = shotAt;
+
+        renderGame();
+      }
+    }
+
+    delay(500);
+    waitForButtonPress();
+
+    renderScores();
+    delay(500);
+    calculateScores();
+    renderScores();
+    delay(500);
+    waitForButtonPress();
+  }
+
+  winningCelebration();
+
+  resetScores();
 }
