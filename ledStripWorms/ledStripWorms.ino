@@ -3,8 +3,6 @@
 // Hook up the LED strip
 // How many LEDS do we have? 5m with 60 per meter:
 #define NUM_LEDS 300
-// Save some cycles...:
-#define NUM_LEDSTIMES2 600
 // Connect the (middle) data via some 150-400 Ohms resistor:
 #define DATA_PIN 6
 // ... plus connect red and black wires to 5V and GND of the Arduiono
