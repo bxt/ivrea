@@ -71,14 +71,16 @@ void setup() {
 
 int target = 0;
 
-CRGB playerColors[2] = {
+CRGB playerColors[] = {
   0xFF5500,
   0x00FF00,
+  // 0x5500FF,
+  // 0xFF0055,
 };
 
-uint8_t playerScores[2] = {0};
-
 const int playerCount = sizeof(playerColors) / sizeof(CRGB);
+
+uint8_t playerScores[playerCount] = {0};
 
 int shotsFired[playerCount][SHOT_COUNT] = {0};
 
