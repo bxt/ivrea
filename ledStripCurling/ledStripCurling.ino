@@ -236,9 +236,9 @@ void winningCelebration() {
 
   int i = 0;
   while(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
-    for(int k = 0; k < NUM_LEDS; k++) {
+    for(int k = 0; k < min(i, NUM_LEDS); k++) {
       CRGB ledColor = playerColor;
-      ledColor %= ((NUM_LEDS + i - k) * 10);
+      ledColor %= -((NUM_LEDS + i + k) * 10);
       leds[k] = ledColor;
     }
 
@@ -250,8 +250,49 @@ void winningCelebration() {
   delay(DEBOUNCE_DELAY);
 }
 
+bool isMultipleWinners() {
+  int maxScore = 0;
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    int playerScore = playerScores[playerIndex];
+    if(playerScore > maxScore) {
+      maxScore = playerScore;
+    }
+  }
+
+  int winnerCount = 0;
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    int playerScore = playerScores[playerIndex];
+    if(playerScore == maxScore) {
+      winnerCount++;
+    }
+  }
+
+  return winnerCount != 1;
+}
+
+void pushAway(int lastShotAt) {
+  if (lastShotAt < 0) return;
+
+  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+      int shotAt = shotsFired[playerIndex][shotIndex];
+      if (shotAt < 0) continue;
+      if (shotAt == lastShotAt) {
+        int newShotAt;
+        if(shotAt < target) {
+          newShotAt = shotAt - 1;
+        } else {
+          newShotAt = shotAt + 1;
+        }
+        pushAway(newShotAt);
+        shotsFired[playerIndex][shotIndex] = newShotAt;
+      }
+    }
+  }
+}
+
 void loop() {
-  for(int endIndex = 0; endIndex < ENDS_COUNT; endIndex++) {
+  for(int endIndex = 0; endIndex < ENDS_COUNT || isMultipleWinners(); endIndex++) {
     resetShots();
     target = random(50, NUM_LEDS);
 
@@ -270,6 +311,7 @@ void loop() {
       for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
         int shotAt = performShot();
 
+        pushAway(shotAt);
         shotsFired[playerIndex][shotIndex] = shotAt;
 
         renderGame();
