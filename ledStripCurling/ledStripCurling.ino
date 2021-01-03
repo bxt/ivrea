@@ -235,7 +235,7 @@ void winningCelebration() {
   CRGB playerColor = playerColors[winningPlayerIndex];
 
   int i = 0;
-  while(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
+  while(i < NUM_LEDS || digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
     for(int k = 0; k < min(i, NUM_LEDS); k++) {
       CRGB ledColor = playerColor;
       ledColor %= -((NUM_LEDS + i + k) * 10);
