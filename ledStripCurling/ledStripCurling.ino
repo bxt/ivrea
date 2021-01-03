@@ -19,7 +19,7 @@
 #define BUZZER_PIN A0
 
 // How many rounds are in a game
-#define ENDS_COUNT 4
+#define ENDS_COUNT 10
 
 // How many shots a player has
 #define SHOT_COUNT 3
@@ -85,18 +85,10 @@ uint8_t playerScores[playerCount] = {0};
 int shotsFired[playerCount][SHOT_COUNT] = {0};
 
 void displayTarget() {
-  if(target + 1 < NUM_LEDS) {
-    leds[target + 1] = CRGB::Red;
-  }
-  if(target - 1 >= 0) {
-    leds[target - 1] = CRGB::Red;
-  }
-  if(target + HOUSE_SIZE < NUM_LEDS) {
-    leds[target + HOUSE_SIZE] = CRGB::Blue;
-  }
-  if(target - HOUSE_SIZE >= 0) {
-    leds[target - HOUSE_SIZE] = CRGB::Blue;
-  }
+  leds[target + 1] = CRGB::Red;
+  leds[target - 1] = CRGB::Red;
+  leds[target + HOUSE_SIZE] = CRGB::Blue;
+  leds[target - HOUSE_SIZE] = CRGB::Blue;
 }
 
 void displayShots() {
@@ -294,7 +286,14 @@ void pushAway(int lastShotAt) {
 void loop() {
   for(int endIndex = 0; endIndex < ENDS_COUNT || isMultipleWinners(); endIndex++) {
     resetShots();
-    target = random(50, NUM_LEDS);
+
+    if(endIndex < ENDS_COUNT / 4) {
+      target = random(HOUSE_SIZE, NUM_LEDS / 4);
+    } else if (endIndex < ENDS_COUNT / 2) {
+      target = random(NUM_LEDS / 4, NUM_LEDS * 3 / 4);
+    } else {
+      target = random(NUM_LEDS * 3 / 4, NUM_LEDS - HOUSE_SIZE);
+    }
 
     renderGame();
 
