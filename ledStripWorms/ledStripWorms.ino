@@ -76,7 +76,7 @@ void setup() {
   // We work with 5V LEDs. And since the power comes from USB (500mA) and we
   // want to have a reserve of 200mA for powering the Arduino itself and some
   // excess just in case, let's limit to 300mA:
-  FastLED.setMaxPowerInVoltsAndMilliamps(5,300);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 }
 
 int rOffset = 0;
@@ -87,42 +87,42 @@ enum Channel { r, g, b };
 Channel currentChannel = r;
 
 void loop() {
-  for(int dot = 0; dot < totalSteps; dot++) {
-    for(uint8_t i = 0; i < 25; i++) {
+  for (int dot = 0; dot < totalSteps; dot++) {
+    for (uint8_t i = 0; i < 25; i++) {
       uint8_t v = i * 10;
       leds[zigzag(dot + rOffset + i)].r = v;
       leds[zigzag(dot + gOffset + i)].g = v;
       leds[zigzag(dot + bOffset + i)].b = v;
     }
 
-    if(fireButton.loopAndIsJustPressed()) {
+    if (fireButton.loopAndIsJustPressed()) {
       switch (currentChannel) {
-        case r:
-          for(uint8_t i = 0; i < 25; i++) {
-            leds[zigzag(dot + rOffset + i)].r = 0;
-          }
-          rOffset = totalSteps - dot;
-          currentChannel = g;
-          break;
-        case g:
-          for(uint8_t i = 0; i < 25; i++) {
-            leds[zigzag(dot + gOffset + i)].g = 0;
-          }
-          gOffset = totalSteps - dot;
-          currentChannel = b;
-          break;
-        case b:
-          for(uint8_t i = 0; i < 25; i++) {
-            leds[zigzag(dot + bOffset + i)].b = 0;
-          }
-          bOffset = totalSteps - dot;
-          currentChannel = r;
-          break;
+      case r:
+        for (uint8_t i = 0; i < 25; i++) {
+          leds[zigzag(dot + rOffset + i)].r = 0;
+        }
+        rOffset = totalSteps - dot;
+        currentChannel = g;
+        break;
+      case g:
+        for (uint8_t i = 0; i < 25; i++) {
+          leds[zigzag(dot + gOffset + i)].g = 0;
+        }
+        gOffset = totalSteps - dot;
+        currentChannel = b;
+        break;
+      case b:
+        for (uint8_t i = 0; i < 25; i++) {
+          leds[zigzag(dot + bOffset + i)].b = 0;
+        }
+        bOffset = totalSteps - dot;
+        currentChannel = r;
+        break;
       }
     }
 
     FastLED.show();
 
-    //delay(30);
+    // delay(30);
   }
 }

@@ -20,12 +20,12 @@ void setup() {
   // We work with 5V LEDs. And since the power comes from USB (500mA) and we
   // want to have a reserve of 200mA for powering the Arduino itself and some
   // excess just in case, let's limit to 300mA:
-  FastLED.setMaxPowerInVoltsAndMilliamps(5,300);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 }
 
 void loop() {
-  for(int i = 0; i < NUM_LEDS; i+=3) {
-    for(int k = 0; k < NUM_LEDS; k++) {
+  for (int i = 0; i < NUM_LEDS; i += 3) {
+    for (int k = 0; k < NUM_LEDS; k++) {
       // 300*17/20 = 255, and 3*17=51, so 3 rainbows:
       uint8_t hue = (k * 51 / 20) % 255;
       leds[(i + k) % NUM_LEDS] = CHSV(hue, 255, 255);
@@ -33,6 +33,6 @@ void loop() {
 
     FastLED.show();
 
-    //delay(30);
+    // delay(30);
   }
 }

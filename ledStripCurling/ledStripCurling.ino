@@ -31,10 +31,10 @@
 CRGB leds[NUM_LEDS];
 
 void waitForButtonDown() {
-  while(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE);
+  while (digitalRead(BUTTON_PIN) != BUTTON_ACTIVE);
 }
 void waitForButtonUp() {
-  while(digitalRead(BUTTON_PIN) == BUTTON_ACTIVE);
+  while (digitalRead(BUTTON_PIN) == BUTTON_ACTIVE);
 }
 void waitForButtonPress() {
   waitForButtonDown();
@@ -44,7 +44,7 @@ void waitForButtonPress() {
 }
 
 void allLedsTo(CRGB crgb) {
-  for(int i = 0; i < NUM_LEDS; i++) {
+  for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = crgb;
   }
 }
@@ -60,7 +60,7 @@ void setup() {
   // We work with 5V LEDs. And since the power comes from USB (500mA) and we
   // want to have a reserve of 200mA for powering the Arduino itself and some
   // excess just in case, let's limit to 300mA:
-  FastLED.setMaxPowerInVoltsAndMilliamps(5,300);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
 
   allLedsTo(CRGB::Black);
   FastLED.show();
@@ -96,10 +96,10 @@ void displayTarget() {
 }
 
 void displayShots() {
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for (int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
       int shotAt = shotsFired[playerIndex][shotIndex];
-      if(shotAt >= 0) {
+      if (shotAt >= 0) {
         leds[shotAt] = playerColors[playerIndex];
       }
     }
@@ -107,15 +107,15 @@ void displayShots() {
 }
 
 void resetShots() {
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for (int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
       shotsFired[playerIndex][shotIndex] = -1;
     }
   }
 }
 
 void resetScores() {
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
     playerScores[playerIndex] = 0;
   }
 }
@@ -133,24 +133,24 @@ int performShot() {
   delay(DEBOUNCE_DELAY);
 
   int shotAt = 0;
-  for(; shotAt < NUM_LEDS; shotAt++) {
-    if(digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
+  for (; shotAt < NUM_LEDS; shotAt++) {
+    if (digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
       break;
     }
     tone(BUZZER_PIN, 220 + shotAt);
     delay(8);
   }
 
-  if(digitalRead(BUTTON_PIN) == BUTTON_ACTIVE) { // messed up, out of bounds:
+  if (digitalRead(BUTTON_PIN) == BUTTON_ACTIVE) { // messed up, out of bounds:
     shotAt = -1;
 
-    for(int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++) {
       tone(BUZZER_PIN, 220 + NUM_LEDS + i * 4);
       delay(1);
     }
     noTone(BUZZER_PIN);
   } else {
-    for(int i = shotAt; i >= 0; i--) {
+    for (int i = shotAt; i >= 0; i--) {
       tone(BUZZER_PIN, 220 + i);
       delay(1);
     }
@@ -165,15 +165,15 @@ int performShot() {
 
 int getShotDistance(int playerIndex, int shotIndex) {
   int shotAt = shotsFired[playerIndex][shotIndex];
-  if(shotAt < 0) return INT_MAX;
+  if (shotAt < 0) return INT_MAX;
   return abs(target - shotAt);
 }
 
 void calculateScores() {
   int closestShotDistance = INT_MAX;
   int closestPlayerIndex = -1;
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for (int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
       int shotDistance = getShotDistance(playerIndex, shotIndex);
       if (shotDistance < closestShotDistance) {
         closestShotDistance = shotDistance;
@@ -183,9 +183,9 @@ void calculateScores() {
   }
 
   int closestShotDistanceOtherPlayers = INT_MAX;
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-    if(playerIndex == closestPlayerIndex) continue;
-    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    if (playerIndex == closestPlayerIndex) continue;
+    for (int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
       int shotDistance = getShotDistance(playerIndex, shotIndex);
       if (shotDistance < closestShotDistanceOtherPlayers) {
         closestShotDistanceOtherPlayers = shotDistance;
@@ -194,7 +194,7 @@ void calculateScores() {
   }
 
   int endScore = 0;
-  for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+  for (int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
     int shotDistance = getShotDistance(closestPlayerIndex, shotIndex);
     if (shotDistance < closestShotDistanceOtherPlayers) {
       endScore++;
@@ -208,8 +208,8 @@ void renderScores(int endIndex) {
   allLedsTo(CRGB::Black);
 
   int dot = NUM_LEDS;
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-    for(int i = 0; i < playerScores[playerIndex]; i++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for (int i = 0; i < playerScores[playerIndex]; i++) {
       leds[--dot] = playerColors[playerIndex];
       leds[--dot] = playerColors[playerIndex];
       leds[--dot] = playerColors[playerIndex];
@@ -217,7 +217,7 @@ void renderScores(int endIndex) {
     }
   }
 
-  for(; endIndex < ENDS_COUNT; endIndex++) {
+  for (; endIndex < ENDS_COUNT; endIndex++) {
     leds[--dot] = CRGB::DarkGrey;
     leds[--dot] = CRGB::DarkGrey;
     leds[--dot] = CRGB::DarkGrey;
@@ -230,9 +230,9 @@ void renderScores(int endIndex) {
 void winningCelebration() {
   int maxScore = 0;
   int winningPlayerIndex = 0;
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
     int playerScore = playerScores[playerIndex];
-    if(playerScore > maxScore) {
+    if (playerScore > maxScore) {
       winningPlayerIndex = playerIndex;
       maxScore = playerScore;
     }
@@ -241,8 +241,8 @@ void winningCelebration() {
   CRGB playerColor = playerColors[winningPlayerIndex];
 
   int i = 0;
-  while(i < NUM_LEDS || digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
-    for(int k = 0; k < min(i, NUM_LEDS); k++) {
+  while (i < NUM_LEDS || digitalRead(BUTTON_PIN) != BUTTON_ACTIVE) {
+    for (int k = 0; k < min(i, NUM_LEDS); k++) {
       CRGB ledColor = playerColor;
       ledColor %= -((NUM_LEDS + i + k) * 10);
       leds[k] = ledColor;
@@ -258,17 +258,17 @@ void winningCelebration() {
 
 bool isMultipleWinners() {
   int maxScore = 0;
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
     int playerScore = playerScores[playerIndex];
-    if(playerScore > maxScore) {
+    if (playerScore > maxScore) {
       maxScore = playerScore;
     }
   }
 
   int winnerCount = 0;
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
     int playerScore = playerScores[playerIndex];
-    if(playerScore == maxScore) {
+    if (playerScore == maxScore) {
       winnerCount++;
     }
   }
@@ -279,13 +279,13 @@ bool isMultipleWinners() {
 void pushAway(int lastShotAt) {
   if (lastShotAt < 0) return;
 
-  for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
-    for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+  for (int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for (int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
       int shotAt = shotsFired[playerIndex][shotIndex];
       if (shotAt < 0) continue;
       if (shotAt == lastShotAt) {
         int newShotAt;
-        if(shotAt < target) {
+        if (shotAt < target) {
           newShotAt = shotAt - 1;
         } else {
           newShotAt = shotAt + 1;
@@ -298,10 +298,10 @@ void pushAway(int lastShotAt) {
 }
 
 void loop() {
-  for(int endIndex = 0; endIndex < ENDS_COUNT || isMultipleWinners(); endIndex++) {
+  for (int endIndex = 0; endIndex < ENDS_COUNT || isMultipleWinners(); endIndex++) {
     resetShots();
 
-    if(endIndex < ENDS_COUNT / 4) {
+    if (endIndex < ENDS_COUNT / 4) {
       target = random(HOUSE_SIZE, NUM_LEDS / 4);
     } else if (endIndex < ENDS_COUNT / 2) {
       target = random(NUM_LEDS / 4, NUM_LEDS * 3 / 4);
@@ -311,7 +311,7 @@ void loop() {
 
     renderGame();
 
-    for(int rawPlayerIndex = 0; rawPlayerIndex < playerCount; rawPlayerIndex++) {
+    for (int rawPlayerIndex = 0; rawPlayerIndex < playerCount; rawPlayerIndex++) {
       int playerIndex = (rawPlayerIndex + endIndex) % playerCount;
       CRGB playerColor = playerColors[playerIndex];
 
@@ -322,7 +322,7 @@ void loop() {
       delay(1000);
       renderGame();
 
-      for(int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
+      for (int shotIndex = 0; shotIndex < SHOT_COUNT; shotIndex++) {
         int shotAt = performShot();
 
         pushAway(shotAt);
