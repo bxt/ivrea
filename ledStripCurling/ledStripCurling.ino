@@ -318,15 +318,13 @@ void loop() {
       }
     }
 
-    delay(500);
-    waitForButtonPress();
+    delay(1000);
 
     renderScores();
     delay(500);
     calculateScores();
     renderScores();
-    delay(500);
-    waitForButtonPress();
+    delay(1500);
   }
 
   winningCelebration();
