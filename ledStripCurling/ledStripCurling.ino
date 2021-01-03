@@ -86,8 +86,12 @@ int shotsFired[playerCount][SHOT_COUNT] = {0};
 
 void displayTarget() {
   leds[target + 1] = CRGB::Red;
+  leds[target + 2] = CRGB::Red;
+  leds[target - 2] = CRGB::Red;
   leds[target - 1] = CRGB::Red;
   leds[target + HOUSE_SIZE] = CRGB::Blue;
+  leds[target + HOUSE_SIZE - 1] = CRGB::Blue;
+  leds[target - HOUSE_SIZE + 1] = CRGB::Blue;
   leds[target - HOUSE_SIZE] = CRGB::Blue;
 }
 
@@ -200,14 +204,24 @@ void calculateScores() {
   playerScores[closestPlayerIndex] += endScore;
 }
 
-void renderScores() {
+void renderScores(int endIndex) {
   allLedsTo(CRGB::Black);
 
   int dot = NUM_LEDS;
   for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
     for(int i = 0; i < playerScores[playerIndex]; i++) {
       leds[--dot] = playerColors[playerIndex];
+      leds[--dot] = playerColors[playerIndex];
+      leds[--dot] = playerColors[playerIndex];
+      --dot;
     }
+  }
+
+  for(; endIndex < ENDS_COUNT; endIndex++) {
+    leds[--dot] = CRGB::DarkGrey;
+    leds[--dot] = CRGB::DarkGrey;
+    leds[--dot] = CRGB::DarkGrey;
+    --dot;
   }
 
   FastLED.show();
@@ -297,7 +311,8 @@ void loop() {
 
     renderGame();
 
-    for(int playerIndex = 0; playerIndex < playerCount; playerIndex++) {
+    for(int rawPlayerIndex = 0; rawPlayerIndex < playerCount; rawPlayerIndex++) {
+      int playerIndex = (rawPlayerIndex + endIndex) % playerCount;
       CRGB playerColor = playerColors[playerIndex];
 
       delay(1000);
@@ -319,10 +334,10 @@ void loop() {
 
     delay(1000);
 
-    renderScores();
+    renderScores(endIndex);
     delay(500);
     calculateScores();
-    renderScores();
+    renderScores(endIndex + 1);
     delay(1500);
   }
 
