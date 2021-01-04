@@ -96,6 +96,8 @@ For some time I thought about a way to store not only my 2048 high score, but al
 
 I was also curious how fast the various code bits actually run so I wrote some [timing code](https://github.com/bxt/ivrea/commit/6e1f95201eb98190553b70c67da136cdc932f61c) and while my game code is taking less than 2ms, sending the buffer to the OLED via I2C/TWI takes a whopping 37ms, so I guess one way of optimization would be only sending the changed regions, which would be possible from the screen's protocol, but the graphics library I'm using does not support that. Maybe some time in the future, I'll roll my own.
 
+![Animation showing a game of snake being played on a handheld Arduino breadboard gaming console](snek/snek.gif)
+
 I also finally took the time to replace the jumper wires with some 22 AWG solid wire, because the jumpers kept hanging over the OLED. I also found when you enter ["snake" into Goolge](https://www.google.com/search?q=snake) you can actually play the game, a graphically polished version of it with animations and more game modes, like multiple mice, swiss-cheese-snake and so on.
 
 <img alt="Photo showing an Arduino nano on a breaboard with other peripherals and the Anna Konda snake game splash screen on an OLED" src="snek/snek.jpg?raw=true" width="432" />
