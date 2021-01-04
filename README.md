@@ -100,6 +100,12 @@ I also finally took the time to replace the jumper wires with some 22 AWG solid 
 
 <img alt="Photo showing an Arduino nano on a breaboard with other peripherals and the Anna Konda snake game splash screen on an OLED" src="snek/snek.jpg?raw=true" width="432" />
 
+### LED strip curling
+
+After I got my hands on a 5m long LED strip, I was eager to test what could be done with it. My first experiments were to turn on/off single LEDs, which resulted in a sketch for sending out "worms", one in each color red, green and blue which is in [`ledStripWorms.ino`](ledStripWorms/ledStripWorms.ino). You can use a button to re-spawn a worm. I also tried a typical rainbow pattern in [`ledStripRainbow.ino`](ledStripRainbow/ledStripRainbow.ino) because it's really easy to do with FastLED. I was actually surprised that the Arduino seems to have no problem driving and powering the 300 LEDs at a decent performance if you don't increase the brightness too much.
+
+Then I wanted to start something bigger, and I did a game inspired by curling, [`ledStripCurling.ino`](ledStripCurling/ledStripCurling.ino). Aside from the 300 RGB LEDs it only uses a button and a buzzer. You hold down the button, the longer you hold the farther on the strip you "shoot", and the buzzer frequency gives you a hint how long you're holding. You'll try to hit a target area. If you land where another player has already landed, you displace their stone. After 3 shots, you get a score by how many of your stones are closer than any other player's stone. After a few rounds ("ends") whoever has accumulated the most point wins and a celebration animation in their respective color is displayed. There are a few differences to regular curling: I do also count stones landed outside the target area ("house") and since the LED strip is only 1-dimensional, you always pass through other player's stones en route. Also there's no strict limits on how many players/teams there are. And unfortunately sweeping is not possible.
+
 ### Planned projects / ideas
 
 * Game similar to froggy on the LED Matrix
