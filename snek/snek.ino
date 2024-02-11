@@ -230,14 +230,14 @@ void renderGame() {
       if (snekCount > 0) {
         int8_t additionalWidth = -1;
         if (x < FIELD_WIDTH - 1) {
-          int8_t leftSnekCount = snekCounts[y * FIELD_WIDTH + x + 1];
+          uint8_t leftSnekCount = snekCounts[y * FIELD_WIDTH + x + 1];
           if (leftSnekCount == snekCount + 1 || (leftSnekCount == snekCount - 1 && leftSnekCount != 0)) {
             additionalWidth = 0;
           }
         }
         int8_t additionalHeight = -1;
         if (y < FIELD_HEIGHT - 1) {
-          int8_t bottomSnekCount = snekCounts[(y + 1) * FIELD_WIDTH + x];
+          uint8_t bottomSnekCount = snekCounts[(y + 1) * FIELD_WIDTH + x];
           if (bottomSnekCount == snekCount + 1 || (bottomSnekCount == snekCount - 1 && bottomSnekCount != 0)) {
             additionalHeight = 0;
           }
