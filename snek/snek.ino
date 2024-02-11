@@ -74,12 +74,33 @@ DirectionButton downDirectionButton(PIN_DOWN);
 DirectionButton upDirectionButton(PIN_UP);
 DirectionButton rightDirectionButton(PIN_RIGHT);
 
-void displaySplashScreen() {
+void displaySplashScreen(bool won) {
   display.clearDisplay();
   display.drawBitmap(16, 2, splash_bmp, SPLASH_BMP_WIDTH, SPLASH_BMP_HEIGHT, 1);
-  display.setCursor(13, 55);
-  display.println(F("- press any key -"));
+  if (won) {
+    display.setCursor(20, 40);
+    display.println(F("YOU WIN"));
+  } else {
+    display.setCursor(13, 55);
+    display.println(F("- press any key -"));
+  }
   display.display();
+}
+
+void displayGameOverScreen(uint8_t score, uint8_t highScore) {
+    display.clearDisplay();
+    display.drawBitmap(16, 2, game_over_bmp, GAME_OVER_BMP_WIDTH, GAME_OVER_BMP_HEIGHT, 1);
+    display.setCursor(13, 55);
+    display.print(F("Sc. "));
+    display.print(score);
+    display.setCursor(61, 55);
+    display.print(F("High "));
+    if (score > highScore) {
+      display.print(F("NEW"));
+    } else {
+      display.print(highScore);
+    }
+    display.display();
 }
 
 void waitForAnyButtonPressed() {
@@ -155,7 +176,7 @@ void setup() {
 
   display.setTextColor(SSD1306_WHITE);
 
-  displaySplashScreen();
+  displaySplashScreen(false);
   waitForAnyButtonPressed();
   randomSeed(micros());
   initializeGame();
@@ -211,8 +232,12 @@ void advanceGameState() {
 
     snekCounts[positionY * FIELD_WIDTH + positionX] = snekLength;
 
-    if (eaten) {
-      setMousePosition();
+    if (snekLength >= FIELD_WIDTH * FIELD_HEIGHT) {
+      gameOver = true;
+    } else {
+      if (eaten) {
+        setMousePosition();
+      }
     }
   }
 }
@@ -269,19 +294,11 @@ void handleGameOver() {
 
     uint8_t score = snekLength - 3;
 
-    display.clearDisplay();
-    display.drawBitmap(16, 2, game_over_bmp, GAME_OVER_BMP_WIDTH, GAME_OVER_BMP_HEIGHT, 1);
-    display.setCursor(13, 55);
-    display.print(F("Sc. "));
-    display.print(score);
-    display.setCursor(61, 55);
-    display.print(F("High "));
-    if (score > highScore) {
-      display.print(F("NEW"));
+    if (snekLength >= FIELD_WIDTH * FIELD_HEIGHT) {
+      displaySplashScreen(true);
     } else {
-      display.print(highScore);
+      displayGameOverScreen(score, highScore);
     }
-    display.display();
 
     if (score > highScore) {
       highScore = score;
